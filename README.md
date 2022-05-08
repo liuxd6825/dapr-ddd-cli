@@ -1,27 +1,35 @@
 # dapr-ddd-cli
 
 #### 介绍
-dapr ddd 命令行工具
-
-#### 软件架构
-软件架构说明
 
 
-#### 安装教程
+dapr ddd 命令行脚手架工具，通过定义DDDML文件，可以快速生成DDD业务代码。
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
 
 #### 使用说明
 
-1. 初始化项目，生成项目代码\
-   dapr-ddd-cli init -name project -service ddd -lang go -out ./test/init_out/go
-2. 添加聚合根\
-   dapr-ddd-cli add -type agg -name user 
-3. 添加事件\
+
+1. 新建目录，在其中定义DDDML文件。可定义多个，脚手架会自动合并文件内容。
+2. 执行dapr-ddd-cli脚手架。\
+
+
+    $ dapr-ddd-cli init -model ./DDDML -lang go -out ./test/init_out/go 
+
+   
+   - 参数 -model： dddml模型目录。\
+   - 参数 -lang： 要生成代码的开发语言 可选go/java。\
+   - 参数 -out：生成代码的存放位置。
+
+
+#### DDDML 示例
+
+
+1. 请参见 DDDML目录.yaml文件 
+2. DDDML的语法定义参考了《深入实践DDD以DSL驱动复杂软件开发》一书。
+
 
 #### 参与贡献
+
 
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
