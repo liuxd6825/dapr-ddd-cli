@@ -11,7 +11,7 @@ import (
 
 var isDebug = false
 
-type fileItem struct {
+type TemplateFile struct {
 	sourceDir  string
 	sourceFile string
 	outDir     string
@@ -19,7 +19,7 @@ type fileItem struct {
 	dirEntry   fs.DirEntry
 }
 
-func newTemplate(dirEntry fs.DirEntry, sourceDirName, outDirName string) *fileItem {
+func newTemplateFile(dirEntry fs.DirEntry, sourceDirName, outDirName string) *TemplateFile {
 	sourceDir := strings.ReplaceAll(sourceDirName, "//", "/")
 	outDir := strings.ReplaceAll(outDirName, "//", "/")
 
@@ -30,7 +30,7 @@ func newTemplate(dirEntry fs.DirEntry, sourceDirName, outDirName string) *fileIt
 	}
 	outFile = strings.ReplaceAll(outFile, "//", "/")
 
-	return &fileItem{
+	return &TemplateFile{
 		sourceDir:  sourceDir,
 		sourceFile: sourceDirName + "/" + dirEntry.Name(),
 		outDir:     outDir,
@@ -39,26 +39,26 @@ func newTemplate(dirEntry fs.DirEntry, sourceDirName, outDirName string) *fileIt
 	}
 }
 
-func (f *fileItem) getFileName() string {
+func (f *TemplateFile) getFileName() string {
 	return f.sourceFile
 }
 
-func (f *fileItem) getName() string {
+func (f *TemplateFile) getName() string {
 	return f.dirEntry.Name()
 }
 
-func (f *fileItem) action() error {
+func (f *TemplateFile) action() error {
 	if f.isDir() {
 		return f.createDir()
 	}
 	return f.createFile()
 }
 
-func (f *fileItem) isDir() bool {
+func (f *TemplateFile) isDir() bool {
 	return f.dirEntry.IsDir()
 }
 
-func (f *fileItem) createDir() error {
+func (f *TemplateFile) createDir() error {
 	fmt.Printf("DIR  %s %s \r\n", f.dirEntry.Name(), f.outDir)
 	if !f.isDir() {
 		return nil
@@ -71,7 +71,7 @@ func (f *fileItem) createDir() error {
 	return nil
 }
 
-func (f *fileItem) createFile() error {
+func (f *TemplateFile) createFile() error {
 	if f.isDir() {
 		return nil
 	}
@@ -103,3 +103,4 @@ func (f *fileItem) createFile() error {
 	}
 	return nil
 }
+

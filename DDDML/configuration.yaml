@@ -1,0 +1,26 @@
+configuration:
+  # 界限上下文名称
+  boundedContextName: "Dddml.WMs"
+  # 默认模块的名称
+  defaultModule: "Dddml.Wms"
+  # 上下文中每个实体都需要的保留属性
+  defaultReservedProperties:
+    active: Active
+    createdBy: CreatedBy
+    createdAt: CreateAt
+    updateBy: UpdateBy
+    updateAt: updateAt
+    deleted: Deleted
+    version: version
+  # DDDML规范中没有明确定义的扩展点， 其值类型为Map<String, Object>
+  metadata:
+    HttpServicesAuthorizationEnalbled: false
+    SpringSecurityEnalbeld: true
+  c#:
+    specializationNamespace: "Dddml.Wms.Specialization"
+  java:
+    boundedContextPackage: "org.dddml.wms"
+    specializationPackage: "org.dddml.wms.specialization"
+  go:
+    boundedContextPackage: "gitee.com/liuxu6825/dddml"
+

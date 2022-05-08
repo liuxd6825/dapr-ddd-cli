@@ -1,0 +1,134 @@
+aggregates:
+  Car:
+    properties:
+      Id:
+        name: Id
+        type: string
+      Name:
+        type: PersonalName
+        defaultValue:
+          FirstName: JOHN
+          LastName: DOE
+      Description:
+        type: string
+      Wheels:
+        itemType: Wheel
+      Tires:
+        itemType: Tire
+    methods:
+      # ----------------------------------
+      Rotate:
+        eventName: TireWheelPairsRotated
+        parameters:
+          TireWheelIdPairs:
+            itemType: TireWheelIdPair
+    # ----------------------------------
+    fields:
+      CarFields:
+        properties:
+          id:
+            type: string
+            validate: "gt=0"
+            description: "nnnnnnnnn"
+          name:
+            type: string
+      CarDeleteField:
+        properties:
+          id:
+            type: string
+    commands:
+      CarCreateCommand:
+        aggregateId: data.id
+        isHandler: true
+        event: CarAddEvent
+        properties:
+          data:
+            type: CarFields
+            referenceType: CarFields
+    events:
+      CarCreateEvent:
+        aggregateId: data.id
+        properties:
+          data:
+            type: CarFields
+            referenceType: CarFields
+      CarUpdateEvent:
+        aggregateId: data.id
+        properties:
+          data:
+            type: CarFields
+            referenceType: CarFields
+      CarDeleteEvent:
+        aggregateId: data.id
+        properties:
+          data:
+            type: CarDeleteField
+            referenceType: CarDeleteField
+
+    projections:
+      CarView:
+        properties:
+          id:
+            type: string
+
+
+    # ----------------------------------
+    entities:
+      # ----------------------------------
+      Whell:
+        id:
+          name: WheelId
+          type: WheelId
+      Tire:
+        id:
+          name: TireId
+          type: string
+          arbitrary: true
+        properties:
+          Positions:
+            itemType: Position
+        # ----------------------------------
+        entities:
+          # ----------------------------------
+          Position:
+            id:
+              name: PositionsId
+              type: long
+              arbitrary: true
+            properties:
+              TimePeriod:
+                type: TimePeriod
+              MileAge:
+                type: long
+              WheelId:
+                type: WheelId
+                referenceType: Wheel
+    valueObjects:
+      # ----------------------------------
+      TimePeriod:
+        properties:
+          From:
+            type: DateTime
+          To:
+            type: DataTime
+      TireWheelIdPair:
+        properties:
+          TireId:
+            type: string
+          WheelId:
+            type: WheelId
+    enumObjects:
+      # ----------------------------------
+      WheelId:
+        baseType: string
+        values:
+          LE:
+            description: left front
+          LR:
+            description: left rear
+          RF:
+            description: right front
+          RR:
+            description: right rear
+
+

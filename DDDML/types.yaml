@@ -1,0 +1,27 @@
+# 领域基础类型
+typeDefinitions:
+  date-time:
+    sqlType: DATETIME
+    cSharpType: DateTime?
+    javaType: java.sql.Timestamp
+    goType: time.Date
+  id:
+    sqlType: VARCHAR(20)
+    cSharpType: string
+    javaType: String
+    goType: string
+  email:
+    sqlType: VARCHAR(320)
+    cSharpType: string
+    javaType: String
+    goType: string
+  decimal:
+    sqlType: DECIMAL(18,6)
+    cSharpType: decimal?
+    javaType: java.math.BigDecimal
+    goType: decimal
+  Money:
+    sqlType: DECIMAL(18,6)
+    cSharpType: MyMoneyLib.Money
+    javaType: MyMoneyLib.Money
+    goType: decimal

@@ -26,27 +26,22 @@ func main() {
 				Action:  cmd_init.Acton,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:    "name",
-						Aliases: []string{"n"},
+						Name:    "model",
+						Aliases: []string{"m"},
 						Value:   "",
-						Usage:   "Language for the greeting",
-					},
-					&cli.StringFlag{
-						Name:    "service",
-						Aliases: []string{"svc"},
-						Usage:   "Load configuration from `FILE`",
+						Usage:   "DDDML文件目录",
 					},
 					&cli.StringFlag{
 						Name:    "lang",
 						Aliases: []string{"l"},
 						Value:   "go",
-						Usage:   "Load configuration from `FILE`",
+						Usage:   "开发语言,默认是go，可选：go,java",
 					},
 					&cli.StringFlag{
 						Name:    "out",
 						Aliases: []string{"o"},
 						Value:   "./",
-						Usage:   "Load configuration from `FILE`",
+						Usage:   "生成源代码目录",
 					},
 				},
 			},

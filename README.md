@@ -15,9 +15,11 @@ dapr ddd 命令行工具
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. 初始化项目，生成项目代码\
+   dapr-ddd-cli init -name project -service ddd -lang go -out ./test/init_out/go
+2. 添加聚合根\
+   dapr-ddd-cli add -type agg -name user 
+3. 添加事件\
 
 #### 参与贡献
 
