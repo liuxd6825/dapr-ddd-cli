@@ -1,0 +1,192 @@
+aggregates:
+  User:
+    # ----------------------------------
+    properties:
+      Id:
+        type: string
+      UserCode:
+        type: string
+      UserName:
+        type: string
+      Email:
+        type: string
+      Telephone:
+        type: string
+      IsDelete:
+        type: bool
+      Addresses:
+        type: string
+    # ----------------------------------
+    fields:
+      UserFields:
+        properties:
+          Id:
+            type: string
+            validate: "gt=0"
+            description: ""
+          UserCode:
+            type: string
+          UserName:
+            type: string
+          Email:
+            type: string
+          Telephone:
+            type: string
+          IsDelete:
+            type: bool
+          Addresses:
+            type: string
+      UserDeleteFields:
+        properties:
+          Id:
+            type: string
+    # ----------------------------------
+    commands:
+      UserCreateCommand:
+        aggregateId: data.id
+        event: UserCreateEvent
+        properties:
+          data:
+            type: UserFields
+            referenceType: UserFields
+      UserUpdateCommand:
+        aggregateId: data.id
+        event: UserUpdateEvent
+        properties:
+          data:
+            type: UserFields
+            referenceType: UserFields
+      UserDeleteCommand:
+        aggregateId: data.id
+        event: UserDeleteEvent
+        properties:
+          data:
+            type: UserDeleteFields
+            referenceType: UserDeleteFields
+    # ----------------------------------
+    events:
+      UserCreateEventV1:
+        aggregateId: data.id
+        properties:
+          data:
+            type: UserFields
+      UserUpdateEventV1:
+        aggregateId: data.id
+        properties:
+          data:
+            type: UserFields
+      UserDeleteEventV1:
+        aggregateId: data.id
+        properties:
+          data:
+            type: UserDeleteFields
+    # ----------------------------------
+    factory:
+      NewUserCreateEvent:
+        paramter:
+          cmd:
+            type: UserCreateCommand
+        return:
+          name: res
+          type: UserCreateEvent
+        mappingType: auto
+      NewUserUpdateEvent:
+        paramter:
+          cmd:
+            type: UserUpdateCommand
+        return:
+          name: res
+          type: UserUpdateEvent
+        mappingType: auto
+
+    # ----------------------------------
+    entities:
+      # ----------------------------------
+      Whell:
+        id:
+          name: WheelId
+          type: WheelId
+      Tire:
+        id:
+          name: TireId
+          type: string
+          arbitrary: true
+        properties:
+          Positions:
+            itemType: Position
+        # ----------------------------------
+        entities:
+          # ----------------------------------
+          Position:
+            id:
+              name: PositionsId
+              type: long
+              arbitrary: true
+            properties:
+              TimePeriod:
+                type: TimePeriod
+              MileAge:
+                type: long
+              WheelId:
+                type: WheelId
+                referenceType: Wheel
+    # ----------------------------------
+    valueObjects:
+      # ----------------------------------
+      TimePeriod:
+        properties:
+          From:
+            type: DateTime
+          To:
+            type: DataTime
+      TireWheelIdPair:
+        properties:
+          TireId:
+            type: string
+          WheelId:
+            type: WheelId
+    # ----------------------------------
+    enumObjects:
+      # ----------------------------------
+      WheelId:
+        baseType: string
+        values:
+          LE:
+            description: left front
+          LR:
+            description: left rear
+          RF:
+            description: right front
+          RR:
+            description: right rear
+    # ----------------------------------
+    projections:
+      UserCreateView:
+        properties:
+          Id:
+            type: string
+            validate: "gt=0"
+            description: ""
+          UserCode:
+            type: string
+          UserName:
+            type: string
+          Email:
+            type: string
+          Telephone:
+            type: string
+          IsDelete:
+            type: bool
+          Addresses:
+            type: string
+        handler:
+          UserCreateEventV1Handler:
+            event: UserCreateEventV1
+          UserUpdateEventV1Handler:
+            event: UserUpdateEventV1
+          UserDeleteEventV1Handler:
+            event: UserDeleteEventV1
+
+
+
+

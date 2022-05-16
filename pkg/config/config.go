@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+type LongType int
+
 type Config struct {
 	Aggregates      Aggregates      `yaml:"aggregates"`
 	ValueObjects    ValueObjects    `yaml:"valueObjects"`
@@ -13,7 +15,36 @@ type Config struct {
 	Configuration   *Configuration  `yaml:"configuration"`
 }
 
-var langType = "go"
+const (
+	Go LongType = iota
+	Java
+	CShape
+)
+
+//  当前语言类型
+var _longType LongType
+
+//
+// setLangType
+// @Description:
+// @param lang
+// @return error
+//
+func setLangType(lang string) error {
+	l := strings.ToLower(lang)
+	switch l {
+	case "go":
+		_longType = Go
+	case "java":
+		_longType = Java
+	case "c#":
+	case "cshape":
+		_longType = CShape
+	default:
+		return NewLangTypeError(lang)
+	}
+	return nil
+}
 
 func NewConfig(fileName string) (*Config, error) {
 	bytes, err := ioutil.ReadFile(fileName)
@@ -32,11 +63,18 @@ func NewConfigEmpty() *Config {
 	}
 }
 
-func NewConfigWithDir(dirName string) (*Config, error) {
+func NewConfigWithDir(dirName string, lang string) (*Config, error) {
+	if err := setLangType(lang); err != nil {
+		return nil, err
+	}
+
 	configs := make([]*Config, 0)
 	fileInfos, err := ioutil.ReadDir(dirName)
 	if err != nil {
 		return nil, err
+	}
+	if len(fileInfos) == 0 {
+		return nil, NewReadDirError(dirName)
 	}
 	for _, fileInfo := range fileInfos {
 		fileName := fileInfo.Name()
@@ -48,11 +86,13 @@ func NewConfigWithDir(dirName string) (*Config, error) {
 			configs = append(configs, config)
 		}
 	}
+
 	config := NewConfigEmpty()
 	for _, c := range configs {
 		config.merge(c)
 	}
 	return config, nil
+
 }
 
 func NewConfigWithByte(bytes []byte) (*Config, error) {

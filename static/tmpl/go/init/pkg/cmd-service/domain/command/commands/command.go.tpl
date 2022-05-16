@@ -40,5 +40,10 @@ func (c *{{.ClassName}}) Validate() error {
 	if c.Data.TenantId == "" {
 		errs.AppendField("data.tenantId", "不能为空")
 	}
+
+	/*
+	填写其他数据检查
+	*/
+
 	return errs.GetError()
 }

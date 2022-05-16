@@ -9,12 +9,12 @@ func (a *Aggregates) init() {
 	for name, agg := range *a {
 		agg.Name = name
 		agg.init()
-
 		agg.Commands.init()
 		agg.Events.init()
 		agg.FieldsObjects.init()
 		agg.Events.init()
 		agg.EnumObjects.init()
+		agg.Factory.init()
 	}
 }
 
@@ -29,6 +29,7 @@ type Aggregate struct {
 	FieldsObjects FieldsObjects `yaml:"fields"`
 	Events        Events        `yaml:"events"`
 	Commands      Commands      `yaml:"commands"`
+	Factory       Factory       `yaml:"factory"`
 }
 
 func (a *Aggregate) init() {

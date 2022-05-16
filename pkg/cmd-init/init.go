@@ -37,7 +37,7 @@ func Acton(c *cli.Context) error {
 }
 
 func initProject(modelPath string, lang string, out string) error {
-	cfg, err := config.NewConfigWithDir(modelPath)
+	cfg, err := config.NewConfigWithDir(modelPath, lang)
 	if err != nil {
 		return err
 	}
@@ -46,6 +46,7 @@ func initProject(modelPath string, lang string, out string) error {
 		build := cmd_service.NewBuildLayerDomain(cfg, agg, out+"/cmd-service/domain")
 		build.Build()
 	}
+
 	return nil
 	//tmplDir := fmt.Sprintf("static/tmpl/%s/init/start.tpl", lang)
 	//return utils.RunTemplate(tmplDir, cfg, "")
