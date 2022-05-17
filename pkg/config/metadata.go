@@ -4,8 +4,41 @@ type Any map[string]interface{}
 
 type Metadata map[string]string
 
-type GoMetadata Metadata
+type MetadataUtil struct {
+	mapValue Metadata
+}
 
-type JavaMetadata Metadata
+func NewMetadataUtil(mapValue Metadata) *MetadataUtil {
+	return &MetadataUtil{
+		mapValue: mapValue,
+	}
+}
 
-type CSharpMetadata Metadata
+func (u *MetadataUtil) GetValue2(key string) (string, bool) {
+	if u == nil {
+		var s string
+		return s, false
+	}
+	value, ok := u.mapValue[key]
+	return value, ok
+}
+
+//
+// GetValue
+// @Description: 获取值
+// @receiver u
+// @param key 关键字
+// @param defaultValue 默认
+// @return string
+//
+func (u *MetadataUtil) GetValue(key string, defaultValue string) string {
+	v, ok := u.GetValue2(key)
+	if ok {
+		return v
+	}
+	return defaultValue
+}
+
+func (u *MetadataUtil) Namespace() string {
+	return u.GetValue("namespace", "{{.namespace}}")
+}

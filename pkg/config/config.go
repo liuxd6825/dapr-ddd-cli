@@ -6,47 +6,37 @@ import (
 	"strings"
 )
 
-type LongType int
+type LangType int
 
 type Config struct {
 	Aggregates      Aggregates      `yaml:"aggregates"`
 	ValueObjects    ValueObjects    `yaml:"valueObjects"`
 	TypeDefinitions TypeDefinitions `yaml:"typeDefinitions"`
 	Configuration   *Configuration  `yaml:"configuration"`
+	//  当前语言类型
+	longType LangType
 }
 
 const (
-	Go LongType = iota
+	Go LangType = iota
 	Java
 	CShape
 )
 
-//  当前语言类型
-var _longType LongType
-
-//
-// setLangType
-// @Description:
-// @param lang
-// @return error
-//
-func setLangType(lang string) error {
-	l := strings.ToLower(lang)
-	switch l {
-	case "go":
-		_longType = Go
-	case "java":
-		_longType = Java
-	case "c#":
-	case "cshape":
-		_longType = CShape
-	default:
-		return NewLangTypeError(lang)
+func NewConfig(lang string) (*Config, error) {
+	res := &Config{
+		Aggregates:      make(map[string]*Aggregate),
+		ValueObjects:    make(map[string]*ValueObject),
+		TypeDefinitions: make(map[string]*TypeDefinition),
+		Configuration:   &Configuration{},
 	}
-	return nil
+	if err := res.setLangType(lang); err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
-func NewConfig(fileName string) (*Config, error) {
+func NewConfigWidthFile(fileName string) (*Config, error) {
 	bytes, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return nil, err
@@ -54,19 +44,7 @@ func NewConfig(fileName string) (*Config, error) {
 	return NewConfigWithByte(bytes)
 }
 
-func NewConfigEmpty() *Config {
-	return &Config{
-		Aggregates:      make(map[string]*Aggregate),
-		ValueObjects:    make(map[string]*ValueObject),
-		TypeDefinitions: make(map[string]*TypeDefinition),
-		Configuration:   &Configuration{},
-	}
-}
-
 func NewConfigWithDir(dirName string, lang string) (*Config, error) {
-	if err := setLangType(lang); err != nil {
-		return nil, err
-	}
 
 	configs := make([]*Config, 0)
 	fileInfos, err := ioutil.ReadDir(dirName)
@@ -76,10 +54,11 @@ func NewConfigWithDir(dirName string, lang string) (*Config, error) {
 	if len(fileInfos) == 0 {
 		return nil, NewReadDirError(dirName)
 	}
+
 	for _, fileInfo := range fileInfos {
 		fileName := fileInfo.Name()
 		if !fileInfo.IsDir() && strings.HasSuffix(fileName, ".yaml") {
-			config, err := NewConfig(dirName + "/" + fileName)
+			config, err := NewConfigWidthFile(dirName + "/" + fileName)
 			if err != nil {
 				return nil, err
 			}
@@ -87,10 +66,17 @@ func NewConfigWithDir(dirName string, lang string) (*Config, error) {
 		}
 	}
 
-	config := NewConfigEmpty()
+	config, err := NewConfig(lang)
+	if err != nil {
+		return nil, err
+	}
 	for _, c := range configs {
 		config.merge(c)
 	}
+	if config.Configuration != nil {
+		config.Configuration.Init(config.longType)
+	}
+
 	return config, nil
 
 }
@@ -128,4 +114,26 @@ func (c *Config) merge(source *Config) {
 	if source.Configuration != nil {
 		c.Configuration = source.Configuration
 	}
+}
+
+//
+// setLangType
+// @Description:
+// @param lang
+// @return error
+//
+func (c *Config) setLangType(lang string) error {
+	l := strings.ToLower(lang)
+	switch l {
+	case "go":
+		c.longType = Go
+	case "java":
+		c.longType = Java
+	case "c#":
+	case "cshape":
+		c.longType = CShape
+	default:
+		return NewLangTypeError(lang)
+	}
+	return nil
 }

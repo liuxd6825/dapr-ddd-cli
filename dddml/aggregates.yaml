@@ -43,26 +43,32 @@ aggregates:
     # ----------------------------------
     commands:
       UserCreateCommand:
+        description: 新建用户命令
         aggregateId: data.id
         event: UserCreateEvent
         properties:
           data:
             type: UserFields
             referenceType: UserFields
+            description: 业务数据
       UserUpdateCommand:
+        description: 更新用户命令
         aggregateId: data.id
         event: UserUpdateEvent
         properties:
           data:
             type: UserFields
             referenceType: UserFields
+            description: 业务数据
       UserDeleteCommand:
+        description: 删除用户命令
         aggregateId: data.id
         event: UserDeleteEvent
         properties:
           data:
             type: UserDeleteFields
             referenceType: UserDeleteFields
+            description: 业务数据
     # ----------------------------------
     events:
       UserCreateEventV1:

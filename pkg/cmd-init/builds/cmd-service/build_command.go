@@ -30,7 +30,7 @@ func (b *BuildCommand) Values() map[string]interface{} {
 	res["Description"] = b.command.Description
 	res["Name"] = b.command.Name
 	res["IsHandler"] = b.command.IsHandler
-	res["InitId"] = b.command.AggregateId
+	res["AggregateId"] = b.command.AggregateId
 	res["Package"] = b.Package()
 	return res
 }

@@ -22,5 +22,5 @@ configuration:
     boundedContextPackage: "org.dddml.wms"
     specializationPackage: "org.dddml.wms.specialization"
   go:
-    boundedContextPackage: "gitee.com/liuxu6825/dddml"
+    namespace: "gitee.com/liuxu6825/dddml"
 
