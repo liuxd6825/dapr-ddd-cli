@@ -1,5 +1,7 @@
 package config
 
+import "strings"
+
 type Aggregates map[string]*Aggregate
 
 func (a *Aggregates) init() {
@@ -21,6 +23,7 @@ func (a *Aggregates) init() {
 type Aggregate struct {
 	Name          string        `yaml:"name"`
 	Id            *Property     `yaml:"id"`
+	Version       string        `yaml:"version"`
 	Description   string        `yaml:"description"`
 	Properties    Properties    `yaml:"properties"`
 	ValueObjects  ValueObjects  `yaml:"valueObject"`
@@ -50,4 +53,8 @@ func (a *Aggregate) initId() *Property {
 	}
 	a.Id = NewProperty("Id", "string")
 	return nil
+}
+
+func (a *Aggregate) LowerName() string {
+	return strings.ToLower(a.Name)
 }

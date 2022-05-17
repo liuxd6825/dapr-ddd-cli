@@ -53,5 +53,6 @@ func (b *BaseBuild) Values() map[string]interface{} {
 	res["AggregateName"] = b.AggregateName()
 	res["aggregateName"] = b.aggregateName()
 	res["Namespace"] = b.Namespace()
+	res["Aggregates"] = b.Config.Aggregates
 	return res
 }

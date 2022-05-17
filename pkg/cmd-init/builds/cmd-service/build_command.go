@@ -32,6 +32,7 @@ func (b *BuildCommand) Values() map[string]interface{} {
 	res["IsHandler"] = b.command.IsHandler
 	res["AggregateId"] = b.command.AggregateId
 	res["Package"] = b.Package()
+	res["IsCreate"] = b.command.IsCreate
 	return res
 }
 
@@ -40,5 +41,5 @@ func (b *BuildCommand) ClassName() string {
 }
 
 func (b *BuildCommand) Package() string {
-	return fmt.Sprintf("%s_command", utils.FirstLower(b.AggregateName()))
+	return fmt.Sprintf("%s_commands", utils.FirstLower(b.AggregateName()))
 }

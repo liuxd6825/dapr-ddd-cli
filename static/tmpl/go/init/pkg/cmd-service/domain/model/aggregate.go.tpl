@@ -1,10 +1,10 @@
-package model
+package {{.Package}}_model
 
 import (
 	"context"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/domain/command/{{.CommandPackageName}}"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/domain/event/{{.EventPackageName}}"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/domain/factory/user_factory"
+	"{{Namespace}}/pkg/cmd-service/domain/command/{{.CommandPackageName}}"
+	"{{Namespace}}/pkg/cmd-service/domain/event/{{.EventPackageName}}"
+	"{{Namespace}}/pkg/cmd-service/domain/factory/user_factory"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
@@ -59,7 +59,7 @@ func (a *{{.ClassName}}) OnUserDeleteEventV1s0(ctx context.Context, event *user_
 }
 
 func (a *{{.ClassName}}) GetAggregateRevision() string {
-	return "1.0"
+	return {{.Aggregate}}
 }
 
 func (a *{{.ClassName}}) GetAggregateType() string {

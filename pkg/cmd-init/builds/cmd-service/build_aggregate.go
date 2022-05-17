@@ -5,7 +5,6 @@ import (
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
-	"strings"
 )
 
 type BuildAggregate struct {
@@ -36,10 +35,6 @@ func (b *BuildAggregate) Values() map[string]interface{} {
 	res["Id"] = b.aggregate.Id
 	res["FieldsObjects"] = b.aggregate.FieldsObjects
 	res["Aggregate"] = b.aggregate
-
-	aggregate := strings.ToLower(b.aggregate.Name)
-	res["CommandPackageName"] = fmt.Sprintf("%s_command", aggregate)
-	res["EventPackageName"] = fmt.Sprintf("%s_event", aggregate)
 	return res
 }
 

@@ -1,10 +1,15 @@
 package config
 
+import (
+	"strings"
+)
+
 type Commands map[string]*Command
 
 type Command struct {
 	Name        string
 	IsHandler   bool       `yaml:"isHandler"`
+	IsCreate    bool       `yaml:"isCreate"`
 	Event       string     `yaml:"event"`
 	AggregateId string     `yaml:"aggregateId"`
 	Properties  Properties `yaml:"properties"`
@@ -18,4 +23,11 @@ func (c *Commands) init() {
 			cmd.Properties.init()
 		}
 	}
+}
+
+func (c *Command) ServiceFuncName() string {
+	if strings.HasSuffix(c.Name, "Command") {
+		return c.Name[0 : len(c.Name)-len("Command")]
+	}
+	return c.Name
 }

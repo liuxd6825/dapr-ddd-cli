@@ -1,7 +1,6 @@
 package cmd_service
 
 import (
-	"fmt"
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
@@ -34,12 +33,7 @@ func (b *BuildFields) Values() map[string]interface{} {
 	res["Name"] = utils.FirstUpper(b.fields.Name)
 	res["ClassName"] = utils.FirstUpper(b.fields.Name)
 	res["Properties"] = b.fields.Properties
-	res["Package"] = b.Package()
 	res["Description"] = b.fields.Description
 	res["Fields"] = b.fields
 	return res
-}
-
-func (b *BuildFields) Package() string {
-	return fmt.Sprintf("%s_fields", b.LowerAggregateName())
 }

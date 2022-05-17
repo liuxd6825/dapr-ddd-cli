@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic/user_models/user_fields"
+	"{{.Namespace}}/pkg/cmd-service/domain/model/{{.aggregateName}}_models/user_fields"
 )
 
 type AddressValue struct {

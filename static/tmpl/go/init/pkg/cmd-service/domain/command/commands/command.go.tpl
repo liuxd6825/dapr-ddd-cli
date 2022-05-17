@@ -13,7 +13,7 @@ import (
 type {{.ClassName}} struct {
     ddd.BaseCommand
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}}   {{$property.DataType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`    # {{$property.Description}}
+    {{$property.UpperName}}   {{$property.DataType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
 {{- end}}
 }
 
@@ -63,9 +63,7 @@ func (c *{{.ClassName}}) Validate() error {
         errs.AppendField("data.tenantId", "不能为空")
     }
 
-    /*
-    填写其他数据检查
-    */
+    /* 添加其他数据检查  */
 
     return errs.GetError()
 }

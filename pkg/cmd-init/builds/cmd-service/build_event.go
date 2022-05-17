@@ -30,7 +30,7 @@ func NewBuildEvent(base builds.BaseBuild, name string, event *config.Event, dir 
 
 func (b *BuildEvent) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
-	res["Package"] = b.Package()
+	res["Namespace"] = b.Namespace()
 	res["ClassName"] = b.ClassName()
 	res["Version"] = b.Version()
 	res["Properties"] = b.event.Properties

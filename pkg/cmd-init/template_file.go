@@ -83,11 +83,19 @@ func (f *TemplateFile) createFile() error {
 	if err != nil {
 		return err
 	}
-	tmpl, err := template.New(f.getName()).Parse(string(bytes))
+	
+	funcs := map[string]any{
+		"ToLower": ToLower,
+		"ToUpper": ToUpper,
+	}
+
+	tmpl, err := template.New(f.getName()).Funcs(funcs).Parse(string(bytes))
+
 	if err != nil {
 		fmt.Println("template.Parse():", err)
 		return err
 	}
+
 	w := os.Stdout
 	defer w.Close()
 
@@ -104,3 +112,10 @@ func (f *TemplateFile) createFile() error {
 	return nil
 }
 
+func ToLower(str string) string {
+	return strings.ToLower(str)
+}
+
+func ToUpper(str string) string {
+	return strings.ToUpper(str)
+}

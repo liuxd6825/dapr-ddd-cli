@@ -34,3 +34,17 @@ func FirstLower(s string) string {
 	}
 	return strings.ToLower(s[:1]) + s[1:]
 }
+
+func ToUpper(s string) string {
+	if s == "" {
+		return ""
+	}
+	return strings.ToUpper(s)
+}
+
+func ToLower(s string) string {
+	if s == "" {
+		return ""
+	}
+	return strings.ToLower(s)
+}

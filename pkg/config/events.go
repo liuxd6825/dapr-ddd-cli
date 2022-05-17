@@ -21,3 +21,7 @@ func (e *Events) init() {
 		}
 	}
 }
+
+func (e *Event) ClassName() string {
+	return e.Name
+}
