@@ -1,4 +1,4 @@
-package cmd_service
+package domain
 
 import (
 	"fmt"
@@ -12,13 +12,13 @@ type BuildDomainService struct {
 	aggregate *config.Aggregate
 }
 
-func NewBuildDomainService(base builds.BaseBuild, aggregate *config.Aggregate) *BuildDomainService {
+func NewBuildDomainService(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildDomainService {
 	res := &BuildDomainService{
 		BaseBuild: base,
 		aggregate: aggregate,
 	}
 	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/service/domain_service.go.tpl"
-	res.OutFile = ""
+	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
 }

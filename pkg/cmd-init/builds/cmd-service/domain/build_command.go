@@ -1,4 +1,4 @@
-package cmd_service
+package domain
 
 import (
 	"fmt"
@@ -12,13 +12,13 @@ type BuildCommand struct {
 	command *config.Command
 }
 
-func NewBuildCommand(base builds.BaseBuild, command *config.Command) *BuildCommand {
+func NewBuildCommand(base builds.BaseBuild, command *config.Command, outFile string) *BuildCommand {
 	res := &BuildCommand{
 		BaseBuild: base,
 		command:   command,
 	}
 	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/command/commands/command.go.tpl"
-	res.OutFile = ""
+	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
 }

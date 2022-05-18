@@ -1,4 +1,4 @@
-package {{.aggregateName}}_fields
+package {{.Package}}
 
 //
 // {{.ClassName}}
@@ -10,3 +10,6 @@ type {{.ClassName}} struct {
 {{- end}}
 }
 
+func New{{.ClassName}}() *{{.ClassName}} {
+    return &{{.ClassName}}{}
+}

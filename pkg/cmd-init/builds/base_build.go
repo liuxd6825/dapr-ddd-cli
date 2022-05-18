@@ -5,6 +5,10 @@ import (
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
 )
 
+type Build interface {
+	Build() error
+}
+
 type BaseBuild struct {
 	Config     *config.Config
 	Aggregate  *config.Aggregate

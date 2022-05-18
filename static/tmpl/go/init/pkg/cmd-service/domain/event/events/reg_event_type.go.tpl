@@ -1,7 +1,7 @@
 package {{.Aggregate.LowerName}}_events
 
 import (
-	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 //

@@ -1,4 +1,4 @@
-package cmd_service
+package domain
 
 import (
 	"fmt"
@@ -32,8 +32,10 @@ func (b *BuildEvent) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Namespace"] = b.Namespace()
 	res["ClassName"] = b.ClassName()
+	res["Name"] = b.name
 	res["Version"] = b.Version()
 	res["Properties"] = b.event.Properties
+	res["Package"] = fmt.Sprintf("%s_events", b.Aggregate.LowerName())
 	return res
 }
 
@@ -47,7 +49,7 @@ func (b *BuildEvent) ClassName() string {
 	if version[0] == 'v' {
 		version = version[1:]
 	}
-	return fmt.Sprintf("%sV%s", utils.FirstUpper(b.event.Name), version)
+	return fmt.Sprintf("%s", utils.FirstUpper(b.event.Name))
 }
 
 func (b *BuildEvent) Version() string {

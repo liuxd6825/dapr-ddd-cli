@@ -2,7 +2,7 @@ package cmd_init
 
 import (
 	"fmt"
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/cmd-service"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/cmd-service/domain"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
 	"github.com/dapr/dapr-ddd-cli/pkg/resource"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
@@ -43,7 +43,7 @@ func initProject(modelPath string, lang string, out string) error {
 	}
 
 	for _, agg := range cfg.Aggregates {
-		build := cmd_service.NewBuildLayerDomain(cfg, agg, out+"/cmd-service/domain")
+		build := domain.NewBuildDomainLayer(cfg, agg, out+"/cmd-service/domain")
 		build.Build()
 	}
 

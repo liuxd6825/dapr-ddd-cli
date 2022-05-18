@@ -16,6 +16,9 @@ aggregates:
         type: bool
       Addresses:
         type: string
+      Items:
+        type: Item
+        isArray: true
     # ----------------------------------
     fields:
       UserFields:
@@ -105,41 +108,22 @@ aggregates:
           name: res
           type: UserUpdateEvent
         mappingType: auto
-
     # ----------------------------------
     entities:
-      # ----------------------------------
-      Whell:
+      Item:
         id:
-          name: WheelId
-          type: WheelId
-      Tire:
-        id:
-          name: TireId
-          type: string
-          arbitrary: true
+          name: ItemId
         properties:
-          Positions:
-            itemType: Position
-        # ----------------------------------
-        entities:
-          # ----------------------------------
-          Position:
-            id:
-              name: PositionsId
-              type: long
-              arbitrary: true
-            properties:
-              TimePeriod:
-                type: TimePeriod
-              MileAge:
-                type: long
-              WheelId:
-                type: WheelId
-                referenceType: Wheel
+          ItemId:
+            type: string
+          TimePeriod:
+            type: TimePeriod
+          MileAge:
+            type: long
+          WheelId:
+            type: WheelId
     # ----------------------------------
     valueObjects:
-      # ----------------------------------
       TimePeriod:
         properties:
           From:
@@ -154,7 +138,6 @@ aggregates:
             type: WheelId
     # ----------------------------------
     enumObjects:
-      # ----------------------------------
       WheelId:
         baseType: string
         values:
@@ -186,13 +169,17 @@ aggregates:
             type: bool
           Addresses:
             type: string
-        handler:
-          UserCreateEventV1Handler:
-            event: UserCreateEventV1
-          UserUpdateEventV1Handler:
-            event: UserUpdateEventV1
-          UserDeleteEventV1Handler:
-            event: UserDeleteEventV1
+    # ----------------------------------
+    querys:
+      handlers:
+        UserQueryHandler:
+          onEvents:
+            OnUserCreateEventV1:
+              event: UserCreateEventV1
+            OnUserUpdateEventV1:
+              event: UserUpdateEventV1
+            OnUserDeleteEventV1:
+              event: UserDeleteEventV1
 
 
 

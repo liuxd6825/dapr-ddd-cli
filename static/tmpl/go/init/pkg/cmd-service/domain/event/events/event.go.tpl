@@ -1,43 +1,42 @@
 package {{.Package}}
 
 import (
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic/user_models/user_fields"
+    "github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic/user_models/user_fields"
 )
 
 type {{.ClassName}} struct {
-	TenantId  string                 `json:"tenantId"`
-	CommandId string                 `json:"commandId"`
-	EventId   string                 `json:"eventId"`
+    TenantId  string    `json:"tenantId"`
+    CommandId string    `json:"commandId"`
+    EventId   string    `json:"eventId"`
 {{- range $name, $property := .Properties}}
-    # {{$property.Description}}
-    {{$property.UpperName}}   {{$property.DataType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`
+    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.DataType}} `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}//{{$property.Description}}{{ end }}
 {{- end}}
 }
 
 func New{{.ClassName}}() *{{.ClassName}} {
-	return &{{.ClassName}}{}
+    return &{{.ClassName}}{}
 }
 
 func (e *{{.ClassName}}) GetEventId() string {
-	return e.EventId
+    return e.EventId
 }
 
 func (e *{{.ClassName}}) GetEventType() string {
-	return UserCreateEventType.String()
+    return {{.Name}}Type.String()
 }
 
 func (e *{{.ClassName}}) GetEventRevision() string {
-	return "1.0"
+    return "1.0"
 }
 
 func (e *{{.ClassName}}) GetCommandId() string {
-	return e.CommandId
+    return e.CommandId
 }
 
 func (e *{{.ClassName}}) GetTenantId() string {
-	return e.TenantId
+    return e.TenantId
 }
 
 func (e *{{.ClassName}}) GetAggregateId() string {
-	return e.Data.Id
+    return e.Data.Id
 }

@@ -3,10 +3,10 @@ package service
 {{- $modelPackage := .ModelPackage }}
 
 import (
-	"context"
-	"{{.Namespace}}/pkg/cmd-service/domain/command/{{$commandPackage}}"
-	"{{.Namespace}}/pkg/cmd-service/domain/model/{{$modelPackage}}"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
+    "context"
+    "{{.Namespace}}/pkg/cmd-service/domain/command/{{$commandPackage}}"
+    "{{.Namespace}}/pkg/cmd-service/domain/model/{{$modelPackage}}"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
 type {{.ClassName}} struct {
@@ -19,7 +19,7 @@ type {{.ClassName}} struct {
 // @return *{{.ClassName}}
 //
 func New{{.ClassName}}() *{{.ClassName}} {
-	return &{{.ClassName}}{}
+    return &{{.ClassName}}{}
 }
 
 {{- $ClassName := .ClassName}}

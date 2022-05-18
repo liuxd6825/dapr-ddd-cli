@@ -22,6 +22,7 @@ func RunTemplate(tmplFile string, data interface{}, outFile string) error {
 		"runTemplate": RunTemplate,
 		"firstUpper":  FirstUpper,
 		"firstLower":  FirstLower,
+		"getData":     GetData,
 	})
 	tmpl, err = tmpl.Parse(string(bytes))
 	if err != nil {
@@ -36,15 +37,23 @@ func RunTemplate(tmplFile string, data interface{}, outFile string) error {
 		}
 	}()
 
-	if len(outFile) > 0 {
+	/*	if len(outFile) > 0 {
 		w, err = os.Create(outFile)
 		if err != nil {
 			return err
 		}
-	}
+	}*/
+
 	if err := tmpl.Execute(w, data); err != nil {
 		println("")
 		return err
+	}
+	return nil
+}
+
+func GetData(dataMap map[string]interface{}) interface{} {
+	if res, ok := dataMap["data"]; ok {
+		return res
 	}
 	return nil
 }

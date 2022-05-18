@@ -1,4 +1,4 @@
-package cmd_service
+package domain
 
 import (
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"

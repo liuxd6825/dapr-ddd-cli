@@ -28,19 +28,19 @@ type FactoryMapping struct {
 	Value string `yaml:"value"`
 }
 
-func (f *Factory) init() {
+func (f *Factory) init(a *Aggregate) {
 	if f == nil {
 		return
 	}
 	for name, fun := range *f {
 		fun.Name = name
-		fun.Parameters.init()
-		fun.Mappings.init()
-		fun.Result.init()
+		fun.Parameters.init(a)
+		fun.Mappings.init(a)
+		fun.Result.init(a)
 	}
 }
 
-func (p *FactoryFuncParameters) init() {
+func (p *FactoryFuncParameters) init(a *Aggregate) {
 	if p == nil {
 		return
 	}
@@ -49,7 +49,7 @@ func (p *FactoryFuncParameters) init() {
 	}
 }
 
-func (m *FactoryMappings) init() {
+func (m *FactoryMappings) init(a *Aggregate) {
 	if m == nil {
 		return
 	}
@@ -58,7 +58,7 @@ func (m *FactoryMappings) init() {
 	}
 }
 
-func (f *FactoryFuncResult) init() {
+func (f *FactoryFuncResult) init(a *Aggregate) {
 	if f == nil {
 		return
 	}

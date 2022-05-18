@@ -1,4 +1,4 @@
-package cmd_service
+package domain
 
 import (
 	"fmt"
@@ -12,14 +12,14 @@ type BuildAggregate struct {
 	aggregate *config.Aggregate
 }
 
-func NewBuildAggregate(base builds.BaseBuild, aggregate *config.Aggregate) *BuildAggregate {
+func NewBuildAggregate(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildAggregate {
 	res := &BuildAggregate{
 		BaseBuild: base,
 		aggregate: aggregate,
 	}
 	res.ValuesFunc = res.Values
 	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/model/aggregate.go.tpl"
-	res.OutFile = ""
+	res.OutFile = outFile
 	return res
 }
 
@@ -35,6 +35,10 @@ func (b *BuildAggregate) Values() map[string]interface{} {
 	res["Id"] = b.aggregate.Id
 	res["FieldsObjects"] = b.aggregate.FieldsObjects
 	res["Aggregate"] = b.aggregate
+	res["CommandPackage"] = fmt.Sprintf("%s_commands", utils.ToLower(b.aggregate.Name))
+	res["EventPackage"] = fmt.Sprintf("%s_events", utils.ToLower(b.aggregate.Name))
+	res["Package"] = fmt.Sprintf("%s_model", utils.ToLower(b.aggregate.Name))
+	res["Version"] = b.aggregate.Version
 	return res
 }
 

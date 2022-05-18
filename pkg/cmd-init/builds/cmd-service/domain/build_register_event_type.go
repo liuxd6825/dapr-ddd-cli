@@ -1,4 +1,4 @@
-package cmd_service
+package domain
 
 import (
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
@@ -24,14 +24,13 @@ func NewBuildRegisterAllEventType(base builds.BaseBuild, aggregate *config.Aggre
 	return res
 }
 
-func NewBuildRegisterAggregateEventType(base builds.BaseBuild, aggregate *config.Aggregate, dir string) *BuildRegisterEventType {
+func NewBuildRegisterAggregateEventType(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildRegisterEventType {
 	res := &BuildRegisterEventType{
 		BaseBuild: base,
 		aggregate: aggregate,
-		dir:       dir,
 	}
 	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/events/reg_event_type.go.tpl"
-	res.OutFile = ""
+	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
 }

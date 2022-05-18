@@ -14,15 +14,21 @@ type Command struct {
 	AggregateId string     `yaml:"aggregateId"`
 	Properties  Properties `yaml:"properties"`
 	Description string     `yaml:"description"`
+	Aggregate   *Aggregate
 }
 
-func (c *Commands) init() {
+func (c *Commands) init(a *Aggregate) {
 	if c != nil {
 		for name, cmd := range *c {
-			cmd.Name = name
-			cmd.Properties.init()
+			cmd.init(a, name)
 		}
 	}
+}
+
+func (c *Command) init(a *Aggregate, name string) {
+	c.Aggregate = a
+	c.Name = name
+	c.Properties.init(a)
 }
 
 func (c *Command) ServiceFuncName() string {

@@ -11,12 +11,6 @@ func (a *Aggregates) init() {
 	for name, agg := range *a {
 		agg.Name = name
 		agg.init()
-		agg.Commands.init()
-		agg.Events.init()
-		agg.FieldsObjects.init()
-		agg.Events.init()
-		agg.EnumObjects.init()
-		agg.Factory.init()
 	}
 }
 
@@ -26,7 +20,7 @@ type Aggregate struct {
 	Version       string        `yaml:"version"`
 	Description   string        `yaml:"description"`
 	Properties    Properties    `yaml:"properties"`
-	ValueObjects  ValueObjects  `yaml:"valueObject"`
+	ValueObjects  ValueObjects  `yaml:"valueObjects"`
 	EnumObjects   EnumObjects   `yaml:"enumObjects"`
 	Entities      Entities      `yaml:"entities"`
 	FieldsObjects FieldsObjects `yaml:"fields"`
@@ -37,6 +31,18 @@ type Aggregate struct {
 
 func (a *Aggregate) init() {
 	a.initId()
+	if a.Version == "" {
+		a.Version = "1.0"
+	}
+	a.Properties.init(a)
+	a.Events.init(a)
+	a.Commands.init(a)
+	a.FieldsObjects.init(a)
+	a.EnumObjects.init(a)
+	a.Entities.init(a)
+	a.Factory.init(a)
+	a.ValueObjects.init(a)
+
 }
 
 func (a *Aggregate) initId() *Property {
