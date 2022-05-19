@@ -1,2 +1,0 @@
-package queryservice_impl
-

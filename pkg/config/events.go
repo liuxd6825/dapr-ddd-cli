@@ -1,5 +1,7 @@
 package config
 
+import "github.com/dapr/dapr-ddd-cli/pkg/utils"
+
 type Event struct {
 	Name         string
 	AggregateId  string     `yaml:"aggregateId"`
@@ -55,4 +57,8 @@ func (e *Event) init(a *Aggregate, name string) {
 
 func (e *Event) ClassName() string {
 	return e.Name
+}
+
+func (e *Event) FirstLowerName() string {
+	return utils.FirstLower(e.Name)
 }

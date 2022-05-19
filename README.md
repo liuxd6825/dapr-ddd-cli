@@ -15,11 +15,11 @@ dapr ddd 命令行脚手架工具，通过定义DDDML文件，可以快速生成
 2. 执行dapr-ddd-cli脚手架。\
 
 
-    $ dapr-ddd-cli init -model ./DDDML -lang go -out ./test/init_out/go 
+    $ dapr-ddd-cli init -model ./dddml -lang go -out ./test/init_out/go 
 
    
    - 参数 -model： dddml模型目录。\
-   - 参数 -lang： 要生成代码的开发语言 可选go/java。\
+   - 参数 -lang： 要生成代码的开发语言 可选go/java/csharp。目前仅支持go\
    - 参数 -out：生成代码的存放位置。
 
 

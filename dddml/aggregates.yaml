@@ -157,32 +157,32 @@ aggregates:
           RR:
             description: right rear
     # ----------------------------------
-    projections:
-      UserCreateView:
-        properties:
-          Id:
-            type: string
-            validate: "gt=0"
-            description: ""
-          UserCode:
-            type: string
-          UserName:
-            type: string
-          Email:
-            type: string
-          Telephone:
-            type: string
-          IsDelete:
-            type: bool
-          Addresses:
-            type: string
-    # ----------------------------------
-    querys:
+    query:
+      projections:
+        UserView:
+          properties:
+            Id:
+              type: string
+              validate: "gt=0"
+              description: ""
+            UserCode:
+              type: string
+            UserName:
+              type: string
+            Email:
+              type: string
+            Telephone:
+              type: string
+            IsDelete:
+              type: bool
+            Addresses:
+              type: string
       handlers:
         UserQueryHandler:
           onEvents:
             OnUserCreateEventV1:
               event: UserCreateEventV1
+              projection: UserView
             OnUserUpdateEventV1:
               event: UserUpdateEventV1
             OnUserDeleteEventV1:

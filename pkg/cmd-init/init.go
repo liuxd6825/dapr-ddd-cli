@@ -2,8 +2,8 @@ package cmd_init
 
 import (
 	"fmt"
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/cmd-service/application"
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/cmd-service/domain"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/query-service/query_domain"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/query-service/query_infrastructure"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
 	"github.com/dapr/dapr-ddd-cli/pkg/resource"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
@@ -40,14 +40,32 @@ func initProject(modelPath string, lang string, out string) error {
 		return err
 	}
 
+	/*	for _, agg := range cfg.Aggregates {
+			buildDomain := cmd_domain.NewBuildInfrastructureLayer(cfg, agg, out+"/cmd-service/domain")
+			if err := buildDomain.Build(); err != nil {
+				panic(err)
+			}
+
+			buildApplication := cmd_application.NewBuildApplicationLayer(cfg, agg, out+"/cmd-service/application")
+			if err := buildApplication.Build(); err != nil {
+				panic(err)
+			}
+
+			buildUserInterface := cmd_userinterface.NewBuildRestControllerLayer(cfg, agg, out+"/cmd-service/userinterface")
+			if err := buildUserInterface.Build(); err != nil {
+				panic(err)
+			}
+		}
+	*/
+
 	for _, agg := range cfg.Aggregates {
-		buildDomain := domain.NewBuildDomainLayer(cfg, agg, out+"/cmd-service/domain")
+		buildDomain := query_domain.NewBuildDomainLayer(cfg, agg, out+"/query-service/domain")
 		if err := buildDomain.Build(); err != nil {
 			panic(err)
 		}
 
-		buildApplication := application.NewBuildApplicationLayer(cfg, agg, out+"/cmd-service/application")
-		if err := buildApplication.Build(); err != nil {
+		buildInfrastructure := query_infrastructure.NewBuildInfrastructureLayer(cfg, agg, out+"/query-service/infrastructure")
+		if err := buildInfrastructure.Build(); err != nil {
 			panic(err)
 		}
 	}

@@ -75,3 +75,10 @@ func (p *Property) LowerName() string {
 func (p *Property) JsonName() string {
 	return utils.FirstLower(p.Name)
 }
+func (p *Property) BsonName() string {
+	v := utils.FirstLower(p.Name)
+	if v == "id" {
+		v = "_id"
+	}
+	return v
+}

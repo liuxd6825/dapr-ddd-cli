@@ -1,5 +1,7 @@
 package config
 
+import "github.com/dapr/dapr-ddd-cli/pkg/utils"
+
 type Entities map[string]*Entity
 
 type Entity struct {
@@ -25,4 +27,8 @@ func (e *Entity) int(a *Aggregate, name string) {
 	e.Name = name
 	e.Aggregate = a
 	e.Properties.init(a)
+}
+
+func (e *Entity) FirstLowerName() string {
+	return utils.FirstLower(e.Name)
 }
