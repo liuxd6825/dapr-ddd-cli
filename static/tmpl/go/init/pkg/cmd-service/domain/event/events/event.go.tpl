@@ -1,11 +1,10 @@
 package {{.Package}}
 
 import (
-    "github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic/user_models/user_fields"
+    "{{.Namespace}}/pkg/cmd-service/domain/fields/{{.FieldsPackage}}"
 )
 
 type {{.ClassName}} struct {
-    TenantId  string    `json:"tenantId"`
     CommandId string    `json:"commandId"`
     EventId   string    `json:"eventId"`
 {{- range $name, $property := .Properties}}
@@ -22,7 +21,7 @@ func (e *{{.ClassName}}) GetEventId() string {
 }
 
 func (e *{{.ClassName}}) GetEventType() string {
-    return {{.Name}}Type.String()
+    return {{.EventType}}Type.String()
 }
 
 func (e *{{.ClassName}}) GetEventRevision() string {
@@ -34,7 +33,7 @@ func (e *{{.ClassName}}) GetCommandId() string {
 }
 
 func (e *{{.ClassName}}) GetTenantId() string {
-    return e.TenantId
+    return e.Data.TenantId
 }
 
 func (e *{{.ClassName}}) GetAggregateId() string {

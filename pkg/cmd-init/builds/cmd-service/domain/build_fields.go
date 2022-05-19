@@ -10,20 +10,18 @@ type BuildFields struct {
 	builds.BaseBuild
 	name   string
 	fields *config.Fields
-	dir    string
 	values interface{}
 }
 
-func NewBuildFields(base builds.BaseBuild, name string, field *config.Fields, dir string) *BuildFields {
+func NewBuildFields(base builds.BaseBuild, name string, field *config.Fields, outFile string) *BuildFields {
 	res := &BuildFields{
 		BaseBuild: base,
 		name:      name,
 		fields:    field,
-		dir:       dir,
 	}
 	res.ValuesFunc = res.Values
 	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/fields/fields/fields.go.tpl"
-	res.OutFile = ""
+	res.OutFile = outFile
 	return res
 }
 

@@ -3,6 +3,7 @@ package config
 type Event struct {
 	Name         string
 	AggregateId  string     `yaml:"aggregateId"`
+	EventType    string     `yaml:"eventType"`
 	Version      string     `yaml:"version"`
 	Description  string     `yaml:"description"`
 	Properties   Properties `yaml:"properties"`
@@ -18,6 +19,21 @@ func (e *Events) init(a *Aggregate) {
 			event.init(a, name)
 		}
 	}
+}
+
+func (e *Events) GetEventTypes() *[]string {
+	typesMap := map[string]string{}
+	res := []string{}
+	if e != nil {
+		for _, event := range *e {
+			_, ok := typesMap[event.EventType]
+			if !ok {
+				typesMap[event.EventType] = event.EventType
+				res = append(res, event.EventType)
+			}
+		}
+	}
+	return &res
 }
 
 func (e *Event) init(a *Aggregate, name string) {

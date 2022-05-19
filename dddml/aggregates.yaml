@@ -23,6 +23,8 @@ aggregates:
     fields:
       UserFields:
         properties:
+          TenantId:
+            type: string
           Id:
             type: string
             validate: "gt=0"
@@ -77,16 +79,21 @@ aggregates:
     events:
       UserCreateEventV1:
         aggregateId: data.id
+        eventType: UserCreateEvent
         properties:
           data:
             type: UserFields
       UserUpdateEventV1:
         aggregateId: data.id
+        eventType: UserUpdateEvent
+        version: 1.0
         properties:
           data:
             type: UserFields
       UserDeleteEventV1:
         aggregateId: data.id
+        eventType: UserDeleteEvent
+        version: 1.0
         properties:
           data:
             type: UserDeleteFields

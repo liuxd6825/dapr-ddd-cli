@@ -3,6 +3,7 @@ package config
 type Configuration struct {
 	BoundedContextName        string   `yaml:"boundedContextName"`
 	DefaultModule             string   `yaml:"defaultModule"`
+	ServiceName               string   `yaml:"serviceName"`
 	DefaultReservedProperties Metadata `yaml:"defaultReservedProperties"`
 	Metadata                  Metadata `yaml:"metadata"`
 	CSharp                    Metadata `yaml:"cSharp"`

@@ -45,7 +45,7 @@ func (c *{{.ClassName}}) GetCommandId() string {
 }
 
 //
-// GetCommandId
+// GetTenantId
 // @Description: 获取租户Id
 //
 func (c *{{.ClassName}}) GetTenantId() string {
@@ -53,7 +53,7 @@ func (c *{{.ClassName}}) GetTenantId() string {
 }
 
 //
-// GetCommandId
+// Validate
 // @Description: 命令数据验证
 //
 func (c *{{.ClassName}}) Validate() error {

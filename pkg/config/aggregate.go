@@ -1,6 +1,9 @@
 package config
 
-import "strings"
+import (
+	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"strings"
+)
 
 type Aggregates map[string]*Aggregate
 
@@ -27,6 +30,7 @@ type Aggregate struct {
 	Events        Events        `yaml:"events"`
 	Commands      Commands      `yaml:"commands"`
 	Factory       Factory       `yaml:"factory"`
+	Config        *Config
 }
 
 func (a *Aggregate) init() {
@@ -63,4 +67,12 @@ func (a *Aggregate) initId() *Property {
 
 func (a *Aggregate) LowerName() string {
 	return strings.ToLower(a.Name)
+}
+
+func (a *Aggregate) FirstLowerName() string {
+	return utils.FirstLower(a.Name)
+}
+
+func (a *Aggregate) FirstUpperName() string {
+	return utils.FirstUpper(a.Name)
 }

@@ -12,14 +12,13 @@ type BuildRegisterEventType struct {
 	dir       string
 }
 
-func NewBuildRegisterAllEventType(base builds.BaseBuild, aggregate *config.Aggregate, dir string) *BuildRegisterEventType {
+func NewBuildRegisterAllEventType(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildRegisterEventType {
 	res := &BuildRegisterEventType{
 		BaseBuild: base,
 		aggregate: aggregate,
-		dir:       dir,
 	}
 	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/reg_all_event_type.go.tpl"
-	res.OutFile = ""
+	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
 }
@@ -38,5 +37,7 @@ func NewBuildRegisterAggregateEventType(base builds.BaseBuild, aggregate *config
 func (b *BuildRegisterEventType) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Events"] = b.aggregate.Events
+	res["ServiceName"] = b.Config.Configuration.ServiceName
+	res["EventTypes"] = b.aggregate.Events.GetEventTypes()
 	return res
 }

@@ -1,13 +1,33 @@
 package config
 
-import "github.com/dapr/dapr-ddd-cli/pkg/utils"
+import (
+	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+)
 
 type Properties map[string]*Property
+
+const TenantId = "TenantId"
 
 func (p *Properties) init(a *Aggregate) {
 	if p != nil {
 		for name, property := range *p {
 			property.init(a, name)
+		}
+	}
+}
+
+func (p *Properties) AddTenantId(a *Aggregate) {
+	if p != nil {
+		return
+	}
+	m := *p
+	if _, ok := m[TenantId]; !ok {
+		m[TenantId] = &Property{
+			Name:        TenantId,
+			DataType:    "string",
+			Validate:    "gt=0",
+			Aggregate:   a,
+			Description: "租户Id",
 		}
 	}
 }

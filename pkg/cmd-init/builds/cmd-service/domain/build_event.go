@@ -12,18 +12,16 @@ type BuildEvent struct {
 	builds.BaseBuild
 	name  string
 	event *config.Event
-	dir   string
 }
 
-func NewBuildEvent(base builds.BaseBuild, name string, event *config.Event, dir string) *BuildEvent {
+func NewBuildEvent(base builds.BaseBuild, name string, event *config.Event, outFile string) *BuildEvent {
 	res := &BuildEvent{
 		BaseBuild: base,
 		name:      name,
 		event:     event,
-		dir:       dir,
 	}
 	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/events/event.go.tpl"
-	res.OutFile = ""
+	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
 }
@@ -36,6 +34,11 @@ func (b *BuildEvent) Values() map[string]interface{} {
 	res["Version"] = b.Version()
 	res["Properties"] = b.event.Properties
 	res["Package"] = fmt.Sprintf("%s_events", b.Aggregate.LowerName())
+	res["FieldsPackage"] = fmt.Sprintf("%s_fields", b.Aggregate.LowerName())
+	res["Aggregate"] = b.Aggregate
+	res["AggregateName"] = b.Aggregate.Name
+	res["ServiceName"] = b.Config.Configuration.ServiceName
+	res["EventType"] = b.event.EventType
 	return res
 }
 

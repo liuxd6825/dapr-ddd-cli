@@ -3,6 +3,7 @@ configuration:
   boundedContextName: "Dddml.WMs"
   # 默认模块的名称
   defaultModule: "Dddml.Wms"
+  serviceName: "dapr-ddd-demo"
   # 上下文中每个实体都需要的保留属性
   defaultReservedProperties:
     active: Active

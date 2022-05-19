@@ -4,16 +4,11 @@ import (
 	"fmt"
 	"github.com/dapr/dapr-ddd-cli/pkg/resource"
 	"os"
+	"strings"
 	"text/template"
 )
 
 func RunTemplate(tmplFile string, data interface{}, outFile string) error {
-	if len(outFile) > 0 {
-		if err := os.MkdirAll(outFile, os.ModePerm); err != nil {
-			return err
-		}
-	}
-
 	bytes, err := resource.Local().ReadFile(tmplFile)
 	if err != nil {
 		return err
@@ -23,6 +18,7 @@ func RunTemplate(tmplFile string, data interface{}, outFile string) error {
 		"firstUpper":  FirstUpper,
 		"firstLower":  FirstLower,
 		"getData":     GetData,
+		"add":         Add,
 	})
 	tmpl, err = tmpl.Parse(string(bytes))
 	if err != nil {
@@ -37,16 +33,22 @@ func RunTemplate(tmplFile string, data interface{}, outFile string) error {
 		}
 	}()
 
-	/*	if len(outFile) > 0 {
-		w, err = os.Create(outFile)
-		if err != nil {
+	if len(outFile) > 0 {
+		dirName := GetDirName(outFile)
+		if err = os.MkdirAll(dirName, os.ModePerm); err != nil {
 			return err
 		}
-	}*/
 
-	if err := tmpl.Execute(w, data); err != nil {
-		println("")
+		if w, err = os.Create(outFile); err != nil {
+			return err
+		}
+	}
+
+	if err = tmpl.Execute(w, data); err != nil {
+		println("error: " + outFile)
 		return err
+	} else {
+		println("success: " + outFile)
 	}
 	return nil
 }
@@ -56,4 +58,16 @@ func GetData(dataMap map[string]interface{}) interface{} {
 		return res
 	}
 	return nil
+}
+
+func GetDirName(fileName string) string {
+	last := strings.LastIndex(fileName, "/")
+	if last > -1 {
+		return fileName[0:last]
+	}
+	last = strings.LastIndex(fileName, "\\")
+	if last > -1 {
+		return fileName[0:last]
+	}
+	return ""
 }

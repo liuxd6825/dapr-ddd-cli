@@ -2,6 +2,7 @@ package cmd_init
 
 import (
 	"fmt"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/cmd-service/application"
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/cmd-service/domain"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
 	"github.com/dapr/dapr-ddd-cli/pkg/resource"
@@ -9,9 +10,6 @@ import (
 	"github.com/urfave/cli/v2"
 	"strings"
 )
-
-var _templatePath string
-var _outPath string
 
 func Acton(c *cli.Context) error {
 	fmt.Println("init project added task: ", c.Args())
@@ -43,15 +41,18 @@ func initProject(modelPath string, lang string, out string) error {
 	}
 
 	for _, agg := range cfg.Aggregates {
-		build := domain.NewBuildDomainLayer(cfg, agg, out+"/cmd-service/domain")
-		build.Build()
-	}
+		buildDomain := domain.NewBuildDomainLayer(cfg, agg, out+"/cmd-service/domain")
+		if err := buildDomain.Build(); err != nil {
+			panic(err)
+		}
 
+		buildApplication := application.NewBuildApplicationLayer(cfg, agg, out+"/cmd-service/application")
+		if err := buildApplication.Build(); err != nil {
+			panic(err)
+		}
+	}
+	println("build success.")
 	return nil
-	//tmplDir := fmt.Sprintf("static/tmpl/%s/init/start.tpl", lang)
-	//return utils.RunTemplate(tmplDir, cfg, "")
-	/*	tmplDir := fmt.Sprintf("static/tmpl/%s/init", lang)
-		return run(tmplDir, out, cfg)*/
 }
 
 func run(tmplDir string, out string, cfg *config.Config) error {
