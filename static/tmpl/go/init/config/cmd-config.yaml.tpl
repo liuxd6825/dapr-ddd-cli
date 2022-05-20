@@ -1,7 +1,7 @@
 envType: dev
 dev:
   app:
-    id: duxm-fundflow-cmdservice
+    id: {{.ServiceName}}-cmdservice
     httpPort: 9010
     rootUrl: /api/v1.0
   dapr:
@@ -14,7 +14,7 @@ dev:
     level: debug
 test:
   app:
-    id: duxm-fundflow-cmdservice
+    id: {{.ServiceName}}-cmdservice
     httpPort: 8080
     rootUrl: /api/v1.0
   dapr:
@@ -27,7 +27,7 @@ test:
     level: debug
 prod:
   app:
-    id: duxm-fundflow-cmdservice
+    id: {{.ServiceName}}-cmdservice
     httpPort: 8080
     rootUrl: /api/v1.0
   dapr:

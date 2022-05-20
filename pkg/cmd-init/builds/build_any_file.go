@@ -17,3 +17,6 @@ func NewBuildAnyFile(base BaseBuild, values map[string]interface{}, tmplFile, ou
 	res.ValuesFunc = res.Values
 	return res
 }
+func (b *BuildAnyFile) Values() map[string]interface{} {
+	return b.values
+}

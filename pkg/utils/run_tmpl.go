@@ -9,6 +9,7 @@ import (
 )
 
 func RunTemplate(tmplFile string, data interface{}, outFile string) error {
+	println("building: " + tmplFile)
 	bytes, err := resource.Local().ReadFile(tmplFile)
 	if err != nil {
 		return err
@@ -45,7 +46,6 @@ func RunTemplate(tmplFile string, data interface{}, outFile string) error {
 	}
 
 	if err = tmpl.Execute(w, data); err != nil {
-		println("error: " + outFile)
 		return err
 	} else {
 		println("success: " + outFile)

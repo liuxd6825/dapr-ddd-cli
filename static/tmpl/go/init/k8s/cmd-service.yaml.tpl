@@ -4,11 +4,11 @@ metadata:
   name: cmd-service
   namespace: dapr-system
   labels:
-    app: cmd-service
+    app: {{.Namespace}}-cmd-service
 spec:
   type: NodePort
   selector:
-    app: cmd-service
+    app: {{.Namespace}}-cmd-service
   ports:
     - port: 8080
       targetPort: 8080
@@ -18,7 +18,7 @@ spec:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: cmd-service
+  name: {{.Namespace}}-cmd-service
   namespace: dapr-system
   labels:
     app: cmd-service
@@ -26,20 +26,20 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cmd-service
+      app: {{.Namespace}}-cmd-service
   template:
     metadata:
       labels:
-        app: cmd-service
+        app: {{.Namespace}}-cmd-service
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "cmd-service"
+        dapr.io/app-id: "{{.Namespace}}-cmd-service"
         dapr.io/app-port: "8080"
     spec:
       # hostNetwork: true
       containers:
         - name: cmd-service
-          image: 192.168.64.12/cmd-service:dapr-linux-arm64
+          image: 192.168.64.12/{{.Namespace}}-cmd-service:dapr-linux-arm64
           ports:
           - containerPort: 8080
 
@@ -53,10 +53,10 @@ spec:
   rules:
   - http:
       paths:
-      - path: /darp-cmd
+      - path: /{{.Namespace}}/cmd/
         pathType: Prefix
         backend:
           service:
-            name: cmd-service
+            name: {{.Namespace}}-cmd-service
             port:
               number: 8080

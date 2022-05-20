@@ -33,20 +33,8 @@ func (b *BuildRestControllerLayer) init() {
 }
 
 func (b *BuildRestControllerLayer) Build() error {
-	list := []builds.Build{}
+	var list []builds.Build
 
 	list = append(list, b.buildRestController)
-	return b.doBuild(list...)
-}
-
-func (b *BuildRestControllerLayer) doBuild(builds ...builds.Build) error {
-	if builds == nil {
-		return nil
-	}
-	for _, build := range builds {
-		if err := build.Build(); err != nil {
-			return err
-		}
-	}
-	return nil
+	return b.DoBuild(list...)
 }

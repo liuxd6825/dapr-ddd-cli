@@ -1,7 +1,7 @@
 envType: dev
 dev:
   app:
-    id: duxm-fundflow-queryservice
+    id: {{.ServiceName}}-queryservice
     httpPort: 9020
     rootUrl: /api/v1.0
   dapr:
@@ -21,7 +21,7 @@ dev:
     maxPoolSize: 20
 test :
   app:
-    id: duxm-fundflow-queryservice
+    id: {{.ServiceName}}-queryservice
     httpPort: 8080
     rootUrl: /api/v1.0
   dapr:
@@ -33,13 +33,13 @@ test :
   mongo:
     host: 192.168.64.8:27018, 192.168.64.8:27019, 192.168.64.8:27020
     replicaSet: mongors
-    dbname: duxm-fundflow-query-test
+    dbname: {{.ServiceName}}-query-test
     user: fundflow
     pwd: 123456
     maxPoolSize: 20
 prod:
   app:
-    id: duxm-fundflow-queryservice
+    id: {{.ServiceName}}-queryservice
     httpPort: 8080
     rootUrl: /api/v1.0
   dapr:
@@ -51,7 +51,7 @@ prod:
   mongo:
     host: 192.168.64.8:27018, 192.168.64.8:27019, 192.168.64.8:27020
     replicaSet: mongors
-    dbname: duxm-fundflow-query-prod
+    dbname: {{.ServiceName}}-query-prod
     user: fundflow
     pwd: 123456
     maxPoolSize: 20

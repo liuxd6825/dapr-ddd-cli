@@ -4,16 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"github.com/kataras/iris/v12"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/userinterface/rest/controller"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic"
-	_ "github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic"
+	"{{.Namespace}}/pkg/cmd-service/domain/event"
+	"{{.Namespace}}/pkg/cmd-service/userinterface/rest/controller"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 var app *iris.Application
 
 func main() {
-	fmt.Println("----------{{serviceName}} cmd-service ----------")
+	fmt.Println("---------- {{.ServiceName}} cmd-service ----------")
 	help := flag.Bool("help", false, "参数提示。")
 	envType := flag.String("envType", "", "替换配置文件中的envType值。")
 	config := flag.String("config", "./config/cmd-config.yaml", "配置文件。")
@@ -43,5 +42,5 @@ func controllers() *[]restapp.Controller {
 
 // 注册Http控制器
 func events() *[]restapp.RegisterEventType {
-	return xpublic.GetRegisterEventTypes()
+	return event.GetRegisterEventTypes()
 }

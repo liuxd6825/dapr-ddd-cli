@@ -42,22 +42,9 @@ func (b *BuildApplicationLayer) init() {
 }
 
 func (b *BuildApplicationLayer) Build() error {
-	list := []builds.Build{}
-
+	var list []builds.Build
 	list = append(list, b.buildCmdApplicationService)
 	list = append(list, b.buildQueryApplicationService)
 	list = append(list, b.buildBaseQueryApplicationService)
-	return b.doBuild(list...)
-}
-
-func (b *BuildApplicationLayer) doBuild(builds ...builds.Build) error {
-	if builds == nil {
-		return nil
-	}
-	for _, build := range builds {
-		if err := build.Build(); err != nil {
-			return err
-		}
-	}
-	return nil
+	return b.DoBuild(list...)
 }

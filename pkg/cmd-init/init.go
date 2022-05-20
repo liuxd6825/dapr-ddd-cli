@@ -2,10 +2,20 @@ package cmd_init
 
 import (
 	"fmt"
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/query-service/query_domain"
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/query-service/query_infrastructure"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_cmd"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_config"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_docker"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_k8s"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_makefile"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/cmd-service/cmd_application"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/cmd-service/cmd_domain"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/cmd-service/cmd_infrastructure"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/cmd-service/cmd_userinterface"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/query-service/query_application"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/query-service/query_domain"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/query-service/query_infrastructure"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/query-service/query_userinterface"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
-	"github.com/dapr/dapr-ddd-cli/pkg/resource"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
 	"github.com/urfave/cli/v2"
 	"strings"
@@ -40,61 +50,80 @@ func initProject(modelPath string, lang string, out string) error {
 		return err
 	}
 
-	/*	for _, agg := range cfg.Aggregates {
-			buildDomain := cmd_domain.NewBuildInfrastructureLayer(cfg, agg, out+"/cmd-service/domain")
+	buildMain := build_cmd.NewMainLayer(cfg, out+"/cmd")
+	if err := buildMain.Build(); err != nil {
+		panic(err)
+	}
+
+	buildConfig := build_config.NewBuildConfigLayer(cfg, out+"/config")
+	if err := buildConfig.Build(); err != nil {
+		panic(err)
+	}
+
+	buildDocker := build_docker.NewBuildDockerLayer(cfg, out+"/docker")
+	if err := buildDocker.Build(); err != nil {
+		panic(err)
+	}
+
+	buildK8s := build_k8s.NewBuildK8sLayer(cfg, out+"/k8s")
+	if err := buildK8s.Build(); err != nil {
+		panic(err)
+	}
+
+	buildMakefile := build_makefile.NewBuildMakefile(cfg, out)
+	if err := buildMakefile.Build(); err != nil {
+		panic(err)
+	}
+
+	isBuild := true
+	if isBuild {
+		cmdDir := fmt.Sprintf("%s/pkg/cmd-service", out)
+		for _, agg := range cfg.Aggregates {
+			buildDomain := cmd_domain.NewBuildDomainLayer(cfg, agg, cmdDir+"/domain")
 			if err := buildDomain.Build(); err != nil {
 				panic(err)
 			}
 
-			buildApplication := cmd_application.NewBuildApplicationLayer(cfg, agg, out+"/cmd-service/application")
+			buildInfr := cmd_infrastructure.NewBuildInfrastructureLayer(cfg, agg, cmdDir+"/infrastructure")
+			if err := buildInfr.Build(); err != nil {
+				panic(err)
+			}
+
+			buildApplication := cmd_application.NewBuildApplicationLayer(cfg, agg, cmdDir+"/application")
 			if err := buildApplication.Build(); err != nil {
 				panic(err)
 			}
 
-			buildUserInterface := cmd_userinterface.NewBuildRestControllerLayer(cfg, agg, out+"/cmd-service/userinterface")
+			buildUserInterface := cmd_userinterface.NewBuildRestControllerLayer(cfg, agg, cmdDir+"/userinterface")
 			if err := buildUserInterface.Build(); err != nil {
 				panic(err)
 			}
 		}
-	*/
-
-	for _, agg := range cfg.Aggregates {
-		buildDomain := query_domain.NewBuildDomainLayer(cfg, agg, out+"/query-service/domain")
-		if err := buildDomain.Build(); err != nil {
-			panic(err)
-		}
-
-		buildInfrastructure := query_infrastructure.NewBuildInfrastructureLayer(cfg, agg, out+"/query-service/infrastructure")
-		if err := buildInfrastructure.Build(); err != nil {
-			panic(err)
-		}
 	}
-	println("build success.")
-	return nil
-}
+	if isBuild {
+		queryDir := fmt.Sprintf("%s/pkg/query-service", out)
+		for _, agg := range cfg.Aggregates {
+			buildDomain := query_domain.NewBuildDomainLayer(cfg, agg, queryDir+"/domain")
+			if err := buildDomain.Build(); err != nil {
+				panic(err)
+			}
 
-func run(tmplDir string, out string, cfg *config.Config) error {
-	dirs, err := resource.Local().ReadDir(tmplDir)
-	if err != nil {
-		return err
-	}
+			buildInfrastructure := query_infrastructure.NewBuildInfrastructureLayer(cfg, agg, queryDir+"/infrastructure")
+			if err := buildInfrastructure.Build(); err != nil {
+				panic(err)
+			}
 
-	for _, dir := range dirs {
-		if dir.Name() == "./" {
-			continue
-		}
-		t := newTemplateFile(dir, tmplDir, out)
-		if err := t.action(); err != nil {
-			println(err)
-			return err
-		}
-		if t.isDir() {
-			outPath := out + "/" + dir.Name()
-			tmplPath := tmplDir + "/" + t.getName()
-			if err := run(tmplPath, outPath, cfg); err != nil {
-				return err
+			buildApplication := query_application.NewBuildApplicationLayer(cfg, agg, queryDir+"/application")
+			if err := buildApplication.Build(); err != nil {
+				panic(err)
+			}
+
+			buildUserInterface := query_userinterface.NewBuildUserInterfaceLayer(cfg, agg, queryDir+"/userinterface")
+			if err := buildUserInterface.Build(); err != nil {
+				panic(err)
 			}
 		}
 	}
+	println("build success.")
 	return nil
 }

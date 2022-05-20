@@ -13,8 +13,8 @@ type BuildDomainLayer struct {
 	outDir                           string
 	buildFields                      []*BuildFields
 	buildCommands                    []*BuildCommand
-	buildRegisterAllEventType        *BuildRegisterEventType
-	buildRegisterAggregateEventTypes []*BuildRegisterEventType
+	buildRegisterAllEventType        *BuildRegisterAllEventType
+	buildRegisterAggregateEventTypes []*BuildRegisterAggregateEventType
 	buildEvents                      []*BuildEvent
 	buildAggregate                   *BuildAggregate
 	buildDomainService               *BuildDomainService
@@ -47,14 +47,14 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 }
 
 func (b *BuildDomainLayer) Build() error {
-	list := []builds.Build{}
+	var list []builds.Build
 
 	// aggregate
 	list = append(list, b.buildAggregate)
 
 	// valueObject
 	buildValueObjects := func() []builds.Build {
-		res := []builds.Build{}
+		var res []builds.Build
 		for _, item := range b.buildValueObjects {
 			res = append(res, item)
 		}
@@ -64,7 +64,7 @@ func (b *BuildDomainLayer) Build() error {
 
 	// entityObject
 	buildEntityObjects := func() []builds.Build {
-		res := []builds.Build{}
+		var res []builds.Build
 		for _, item := range b.buildEntityObjects {
 			res = append(res, item)
 		}
@@ -78,7 +78,7 @@ func (b *BuildDomainLayer) Build() error {
 
 	// fields
 	buildFields := func() []builds.Build {
-		res := []builds.Build{}
+		var res []builds.Build
 		for _, item := range b.buildFields {
 			res = append(res, item)
 		}
@@ -88,7 +88,7 @@ func (b *BuildDomainLayer) Build() error {
 
 	// commands
 	buildCommands := func() []builds.Build {
-		res := []builds.Build{}
+		var res []builds.Build
 		for _, b := range b.buildCommands {
 			res = append(res, b)
 		}
@@ -98,14 +98,14 @@ func (b *BuildDomainLayer) Build() error {
 
 	// events
 	buildEvents := func() []builds.Build {
-		res := []builds.Build{}
+		var res []builds.Build
 		for _, b := range b.buildEvents {
 			res = append(res, b)
 		}
 		return res
 	}
 	buildRegisterAggregateEventTypes := func() []builds.Build {
-		res := []builds.Build{}
+		var res []builds.Build
 		for _, item := range b.buildRegisterAggregateEventTypes {
 			res = append(res, item)
 		}
@@ -115,19 +115,7 @@ func (b *BuildDomainLayer) Build() error {
 	list = append(list, b.buildRegisterAllEventType)
 	list = append(list, buildRegisterAggregateEventTypes()...)
 
-	return b.doBuild(list...)
-}
-
-func (b *BuildDomainLayer) doBuild(builds ...builds.Build) error {
-	if builds == nil {
-		return nil
-	}
-	for _, build := range builds {
-		if err := build.Build(); err != nil {
-			return err
-		}
-	}
-	return nil
+	return b.DoBuild(list...)
 }
 
 func (b *BuildDomainLayer) doBuildDomainService() error {
@@ -162,7 +150,7 @@ func (b *BuildDomainLayer) initEvents() {
 }
 
 func (b *BuildDomainLayer) initRegisterAggregateEventTypes() {
-	regs := []*BuildRegisterEventType{}
+	regs := []*BuildRegisterAggregateEventType{}
 	for name, agg := range b.Config.Aggregates {
 		outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/event/%s_events/event_type.go", b.outDir, utils.SnakeString(name))
 		reg := NewBuildRegisterAggregateEventType(b.BaseBuild, agg, utils.ToLower(outFile))
@@ -173,7 +161,7 @@ func (b *BuildDomainLayer) initRegisterAggregateEventTypes() {
 
 func (b *BuildDomainLayer) initRegisterAllEventType() {
 	outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/event/reg_all_event_type.go", b.outDir)
-	b.buildRegisterAllEventType = NewBuildRegisterAllEventType(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	b.buildRegisterAllEventType = NewBuildRegisterAllEventType(b.BaseBuild, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initFields() {

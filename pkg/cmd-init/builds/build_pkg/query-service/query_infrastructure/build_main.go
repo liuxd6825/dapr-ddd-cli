@@ -38,14 +38,14 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 }
 
 func (b *BuildInfrastructureLayer) Build() error {
-	list := []builds.Build{}
+	var list []builds.Build
 
 	// aggregate
 	list = append(list, b.buildRepositoryImplAggregate)
 
 	// entityObject
 	buildRepositoryImplEntities := func() []builds.Build {
-		res := []builds.Build{}
+		var res []builds.Build
 		for _, item := range b.buildRepositoryImplEntities {
 			res = append(res, item)
 		}
@@ -58,7 +58,7 @@ func (b *BuildInfrastructureLayer) Build() error {
 
 	// entityObject
 	buildQueryServiceImplEntities := func() []builds.Build {
-		res := []builds.Build{}
+		var res []builds.Build
 		for _, item := range b.buildQueryServiceImplEntities {
 			res = append(res, item)
 		}
@@ -66,19 +66,7 @@ func (b *BuildInfrastructureLayer) Build() error {
 	}
 	list = append(list, buildQueryServiceImplEntities()...)
 
-	return b.doBuild(list...)
-}
-
-func (b *BuildInfrastructureLayer) doBuild(builds ...builds.Build) error {
-	if builds == nil {
-		return nil
-	}
-	for _, build := range builds {
-		if err := build.Build(); err != nil {
-			return err
-		}
-	}
-	return nil
+	return b.DoBuild(list...)
 }
 
 func (b *BuildInfrastructureLayer) initRepositoryEntities() {

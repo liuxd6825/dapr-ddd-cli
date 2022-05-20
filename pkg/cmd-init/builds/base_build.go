@@ -7,6 +7,7 @@ import (
 
 type Build interface {
 	Build() error
+	GetOutFile() string
 }
 
 type BaseBuild struct {
@@ -47,16 +48,51 @@ func (b *BaseBuild) Namespace() string {
 }
 
 func (b *BaseBuild) Build() error {
-	return utils.RunTemplate(b.TmplFile, b.ValuesFunc(), b.OutFile)
+	defer func() {
+		if rec := recover(); rec != nil {
+			if err, ok := rec.(error); ok {
+				println(err)
+			} else {
+				println(rec)
+			}
+		}
+	}()
+	if b.ValuesFunc != nil {
+		return utils.RunTemplate(b.TmplFile, b.ValuesFunc(), b.OutFile)
+	}
+	return utils.RunTemplate(b.TmplFile, nil, b.OutFile)
 }
 
 func (b *BaseBuild) Values() map[string]interface{} {
 	res := make(map[string]interface{})
 	res["Config"] = b.Config
-	res["Aggregate"] = b.Aggregate
-	res["AggregateName"] = b.AggregateName()
-	res["aggregateName"] = b.aggregateName()
-	res["Namespace"] = b.Namespace()
 	res["Aggregates"] = b.Config.Aggregates
+	if b.Aggregate != nil {
+		res["Aggregate"] = b.Aggregate
+		res["AggregateName"] = b.AggregateName()
+		res["aggregateName"] = b.aggregateName()
+		res["Namespace"] = b.Namespace()
+	}
 	return res
+}
+
+func (b *BaseBuild) NewFileBuild(tmplFile, outFile string, values map[string]interface{}) *BuildAnyFile {
+	return NewBuildAnyFile(*b, values, "static/tmpl/go/init"+tmplFile, outFile)
+}
+
+func (b *BaseBuild) DoBuild(builds ...Build) error {
+
+	if builds == nil {
+		return nil
+	}
+	for _, build := range builds {
+		if err := build.Build(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (b *BaseBuild) GetOutFile() string {
+	return b.OutFile
 }
