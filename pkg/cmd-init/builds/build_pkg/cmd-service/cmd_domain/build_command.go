@@ -25,14 +25,20 @@ func NewBuildCommand(base builds.BaseBuild, command *config.Command, outFile str
 
 func (b *BuildCommand) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
-	res["ClassName"] = b.ClassName()
+	res["ClassName"] = utils.FirstUpper(b.command.Name)
 	res["Properties"] = b.command.Properties
 	res["Description"] = b.command.Description
 	res["Name"] = b.command.Name
 	res["IsHandler"] = b.command.IsHandler
 	res["AggregateId"] = b.command.AggregateId
-	res["Package"] = b.Package()
-	res["IsCreate"] = b.command.IsCreate
+	res["Package"] = fmt.Sprintf("%s_commands", utils.ToLower(b.AggregateName()))
+	res["EventsPackage"] = fmt.Sprintf("%s_events", utils.ToLower(b.AggregateName()))
+	res["FieldsPackage"] = fmt.Sprintf("%s_fields", utils.ToLower(b.AggregateName()))
+	res["Action"] = b.command.Action
+	res["IsCreate"] = b.command.IsCreate()
+	res["IsUpdate"] = b.command.IsUpdate()
+	res["IsDelete"] = b.command.IsDelete()
+	res["EventName"] = b.command.Event
 	return res
 }
 
@@ -41,5 +47,5 @@ func (b *BuildCommand) ClassName() string {
 }
 
 func (b *BuildCommand) Package() string {
-	return fmt.Sprintf("%s_commands", utils.FirstLower(b.AggregateName()))
+	return fmt.Sprintf("%s_commands", utils.ToLower(b.AggregateName()))
 }

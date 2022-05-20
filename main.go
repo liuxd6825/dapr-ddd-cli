@@ -22,7 +22,7 @@ func main() {
 			{
 				Name:    "init",
 				Aliases: []string{""},
-				Usage:   "初始代项目",
+				Usage:   "初始化项目结构与代码",
 				Action:  cmd_init.Acton,
 				Flags: []cli.Flag{
 					&cli.StringFlag{

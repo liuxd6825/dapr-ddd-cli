@@ -7,7 +7,7 @@ import (
     "context"
     "{{.Namespace}}/pkg/cmd-service/domain/command/{{.CommandPackage}}"
     "{{.Namespace}}/pkg/cmd-service/domain/event/{{.EventPackage}}"
-    "{{.Namespace}}/pkg/cmd-service/domain/factory/user_factory"
+    "{{.Namespace}}/pkg/cmd-service/domain/factory/{{.}}_factory"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
@@ -35,8 +35,10 @@ func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *{{$CommandPacka
 {{- range $eventName, $event := .Events }}
 
 func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, event *{{$EventPackage}}.{{$event.Name}}) error {
+    {{- if $event.IsCreateOrUpdate }}
     {{- range $propName, $prop := $event.DataFields.Properties }}
-    a.{{$propName}} = event.data.{{$propName}}
+    a.{{$propName}} = event.Data.{{$propName}}
+	{{- end }}
 	{{- end }}
     return nil
 }

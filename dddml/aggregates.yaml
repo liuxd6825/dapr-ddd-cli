@@ -49,8 +49,8 @@ aggregates:
     commands:
       UserCreateCommand:
         description: 新建用户命令
-        aggregateId: data.id
-        isCreate: true
+        aggregateId: Data.Id
+        action: create
         event: UserCreateEvent
         properties:
           data:
@@ -59,7 +59,8 @@ aggregates:
             description: 业务数据
       UserUpdateCommand:
         description: 更新用户命令
-        aggregateId: data.id
+        aggregateId: Data.Id
+        action: update
         event: UserUpdateEvent
         properties:
           data:
@@ -70,6 +71,7 @@ aggregates:
         description: 删除用户命令
         aggregateId: data.id
         event: UserDeleteEvent
+        action: delete
         properties:
           data:
             type: UserDeleteFields
@@ -78,22 +80,25 @@ aggregates:
     # ----------------------------------
     events:
       UserCreateEventV1:
-        aggregateId: data.id
+        aggregateId: Data.Id
         eventType: UserCreateEvent
+        action: create
         properties:
           data:
             type: UserFields
       UserUpdateEventV1:
-        aggregateId: data.id
+        aggregateId: Data.Id
         eventType: UserUpdateEvent
         version: 1.0
+        action: update
         properties:
           data:
             type: UserFields
       UserDeleteEventV1:
-        aggregateId: data.id
+        aggregateId: Data.Id
         eventType: UserDeleteEvent
         version: 1.0
+        action: delete
         properties:
           data:
             type: UserDeleteFields

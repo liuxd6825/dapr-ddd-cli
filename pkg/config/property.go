@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"strings"
 )
 
 type Properties map[string]*Property
@@ -75,10 +76,15 @@ func (p *Property) LowerName() string {
 func (p *Property) JsonName() string {
 	return utils.FirstLower(p.Name)
 }
+
 func (p *Property) BsonName() string {
 	v := utils.FirstLower(p.Name)
 	if v == "id" {
 		v = "_id"
 	}
 	return v
+}
+
+func (p *Property) IsData() bool {
+	return strings.ToLower(p.Name) == "data"
 }

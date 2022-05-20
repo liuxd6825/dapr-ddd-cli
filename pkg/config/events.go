@@ -1,11 +1,15 @@
 package config
 
-import "github.com/dapr/dapr-ddd-cli/pkg/utils"
+import (
+	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"strings"
+)
 
 type Event struct {
 	Name         string
 	AggregateId  string     `yaml:"aggregateId"`
 	EventType    string     `yaml:"eventType"`
+	Action       string     `yaml:"action"`
 	Version      string     `yaml:"version"`
 	Description  string     `yaml:"description"`
 	Properties   Properties `yaml:"properties"`
@@ -61,4 +65,32 @@ func (e *Event) ClassName() string {
 
 func (e *Event) FirstLowerName() string {
 	return utils.FirstLower(e.Name)
+}
+
+func (e *Event) IsCreate() bool {
+	if e.Action == "" && strings.HasSuffix(strings.ToLower(e.Name), "createevent") {
+		return true
+	}
+	return strings.ToLower(e.Action) == "create"
+}
+
+func (e *Event) IsUpdate() bool {
+	if e.Action == "" && strings.HasSuffix(strings.ToLower(e.Name), "updateevent") {
+		return true
+	}
+	return strings.ToLower(e.Action) == "update"
+}
+
+func (e *Event) IsDelete() bool {
+	if e.Action == "" && strings.HasSuffix(strings.ToLower(e.Name), "deleteevent") {
+		return true
+	}
+	return strings.ToLower(e.Action) == "delete"
+}
+
+func (e *Event) IsCreateOrUpdate() bool {
+	if e.IsUpdate() || e.IsUpdate() {
+		return true
+	}
+	return false
 }

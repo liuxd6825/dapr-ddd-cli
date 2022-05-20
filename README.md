@@ -15,7 +15,7 @@ dapr ddd 命令行脚手架工具，通过定义DDDML文件，可以快速生成
 2. 执行dapr-ddd-cli脚手架。\
 
 
-    $ dapr-ddd-cli init -model ./dddml -lang go -out ./test/init_out/go 
+    $ dapr-ddd-cli init -model ./dddml -lang go -out . 
 
    
    - 参数 -model： dddml模型目录。\
