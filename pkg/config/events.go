@@ -47,11 +47,11 @@ func (e *Event) init(a *Aggregate, name string) {
 	if len(e.Version) == 0 {
 		e.Version = "1"
 	}
-	e.Properties.init(a)
+	e.Properties.Init(a)
 	if data := e.Properties["data"]; data != nil {
 		e.DataProperty = data
-		if a.FieldsObjects != nil && e.DataProperty.DataType != "" {
-			fields := a.FieldsObjects[e.DataProperty.DataType]
+		if a.FieldsObjects != nil && e.DataProperty.Type != "" {
+			fields := a.FieldsObjects[e.DataProperty.Type]
 			if fields != nil {
 				e.DataFields = fields
 			}

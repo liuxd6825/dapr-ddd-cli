@@ -6,7 +6,7 @@ import (
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_config"
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_docker"
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_k8s"
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_makefile"
+	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_other"
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/cmd-service/cmd_application"
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/cmd-service/cmd_domain"
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds/build_pkg/cmd-service/cmd_infrastructure"
@@ -70,7 +70,7 @@ func initProject(modelPath string, lang string, out string) error {
 		panic(err)
 	}
 
-	buildMakefile := build_makefile.NewBuildMakefile(cfg, out)
+	buildMakefile := build_other.NewBuildMakefile(cfg, out)
 	if err := buildMakefile.Build(); err != nil {
 		panic(err)
 	}

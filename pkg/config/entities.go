@@ -13,10 +13,18 @@ type Entity struct {
 }
 
 func (e *Entities) init(a *Aggregate) {
-	if e != nil {
-		for name, entity := range *e {
-			entity.int(a, name)
+	if e == nil {
+		return
+	}
+	entities := *e
+	props := a.Config.GetDefaultEntityProperties()
+	for _, entity := range entities {
+		if entity.Properties != nil {
+			entity.Properties.Adds(props)
 		}
+	}
+	for name, entity := range *e {
+		entity.int(a, name)
 	}
 }
 
@@ -26,7 +34,7 @@ func (e *Entity) int(a *Aggregate, name string) {
 	}
 	e.Name = name
 	e.Aggregate = a
-	e.Properties.init(a)
+	e.Properties.Init(a)
 }
 
 func (e *Entity) FirstLowerName() string {

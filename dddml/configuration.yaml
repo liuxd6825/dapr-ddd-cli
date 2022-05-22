@@ -6,22 +6,37 @@ configuration:
   serviceName: "dapr-ddd-demo"
   # 上下文中每个实体都需要的保留属性
   defaultReservedProperties:
-    active: Active
-    createdBy: CreatedBy
-    createdAt: CreateAt
-    updateBy: UpdateBy
-    updateAt: updateAt
-    deleted: Deleted
-    version: version
+    aggregate:
+      IsDelete:
+        type: bool
+    entity:
+      IsDelete:
+        type: bool
+    view:
+      TenantId:
+        type: string
+      CreatedById:
+        type: string
+      CreatedByName:
+        type: string
+      CreatedAt:
+        type: dateTime
+      UpdateById:
+        type: string
+      UpdateByName:
+        type: string
+      UpdateAt:
+        type: dateTime
+      IsDelete:
+        type: bool
   # DDDML规范中没有明确定义的扩展点， 其值类型为Map<String, Object>
   metadata:
     HttpServicesAuthorizationEnalbled: false
     SpringSecurityEnalbeld: true
   c#:
-    specializationNamespace: "Dddml.Wms.Specialization"
+    namespace: "com.liuxu6825.dapr-ddd-demo"
   java:
-    boundedContextPackage: "org.dddml.wms"
-    specializationPackage: "org.dddml.wms.specialization"
+    namespace: "com.liuxu6825.dapr-ddd-demo"
   go:
-    namespace: "gitee.com/liuxu6825/dddml"
+    namespace: "gitee.com/liuxu6825/dapr-ddd-demo"
 

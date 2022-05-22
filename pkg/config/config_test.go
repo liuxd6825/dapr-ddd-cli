@@ -34,7 +34,7 @@ aggregates:
 }
 
 func TestNewConfigWithDir(t *testing.T) {
-	config, err := NewConfigWithDir("./DDDML")
+	config, err := NewConfigWithDir("./dddml", "go")
 	if err != nil {
 		t.Error(err)
 	} else {

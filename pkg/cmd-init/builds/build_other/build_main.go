@@ -1,4 +1,4 @@
-package build_makefile
+package build_other
 
 import (
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
@@ -24,9 +24,12 @@ func (b *BuildMakefile) Build() error {
 	var list []builds.Build
 	values := map[string]interface{}{}
 	values["ServiceName"] = b.Config.Configuration.ServiceName
+	values["Description"] = b.Config.Configuration.Description
 
 	outDir := b.outDir
 	list = append(list, b.NewFileBuild("/Makefile.tpl", outDir+"/Makefile", values))
+	list = append(list, b.NewFileBuild("/go.mod.tpl", outDir+"/go.mod", values))
+	list = append(list, b.NewFileBuild("/README.md.tpl", outDir+"/README.md", values))
 
 	return b.DoBuild(list...)
 }

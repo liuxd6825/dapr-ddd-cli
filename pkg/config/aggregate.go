@@ -7,12 +7,13 @@ import (
 
 type Aggregates map[string]*Aggregate
 
-func (a *Aggregates) init() {
+func (a *Aggregates) init(config *Config) {
 	if a == nil {
 		return
 	}
 	for name, agg := range *a {
 		agg.Name = name
+		agg.Config = config
 		agg.init()
 	}
 }
@@ -38,14 +39,31 @@ func (a *Aggregate) init() {
 	if a.Version == "" {
 		a.Version = "1.0"
 	}
-	a.Properties.init(a)
+	if a.Properties == nil {
+		a.Properties = Properties{}
+	}
+	// 添加聚合默认属性
+	if a.Config != nil && a.Config.Configuration != nil && a.Config.Configuration.DefaultReservedProperties != nil {
+		aggregateProperties := a.Config.Configuration.DefaultReservedProperties.AggregateProperties
+		a.Properties.Adds(&aggregateProperties)
+	}
+	a.Properties.Init(a)
+
+	if a.Entities == nil {
+		a.Entities = Entities{}
+	}
+	a.Entities.init(a)
+
+	if a.ValueObjects == nil {
+		a.ValueObjects = ValueObjects{}
+	}
+	a.ValueObjects.init(a)
+
 	a.Events.init(a)
 	a.Commands.init(a)
 	a.FieldsObjects.init(a)
 	a.EnumObjects.init(a)
-	a.Entities.init(a)
 	a.Factory.init(a)
-	a.ValueObjects.init(a)
 
 }
 

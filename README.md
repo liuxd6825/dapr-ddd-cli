@@ -7,6 +7,9 @@
 
 dapr ddd 命令行脚手架工具，通过定义DDDML文件，可以快速生成DDD业务代码。
 
+#### 编译可执行文件
+
+$  CGO_ENABLED=0 GOOS=darwin  GOARCH=arm64  go build -o /Users/lxd/go/bin/dapr-ddd-cli ./main.go
 
 #### 使用说明
 

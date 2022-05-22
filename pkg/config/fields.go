@@ -14,6 +14,6 @@ func (f *FieldsObjects) init(a *Aggregate) {
 	}
 	for name, fields := range *f {
 		fields.Name = name
-		fields.Properties.init(a)
+		fields.Properties.Init(a)
 	}
 }

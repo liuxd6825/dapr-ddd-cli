@@ -18,5 +18,5 @@ func (p *Projections) init(a *Aggregate) {
 
 func (p *Projection) init(a *Aggregate, name string) {
 	p.Name = name
-	p.Properties.init(a)
+	p.Properties.Init(a)
 }

@@ -28,7 +28,7 @@ func (c *Commands) init(a *Aggregate) {
 func (c *Command) init(a *Aggregate, name string) {
 	c.Aggregate = a
 	c.Name = name
-	c.Properties.init(a)
+	c.Properties.Init(a)
 }
 
 func (c *Command) ServiceFuncName() string {
