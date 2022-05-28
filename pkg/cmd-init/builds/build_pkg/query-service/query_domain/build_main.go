@@ -69,17 +69,14 @@ func (b *BuildDomainLayer) Build() error {
 	list = append(list, buildEntityObjects()...)
 
 	// fields
-	buildFieldsObjects := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildFields {
-			res = append(res, item)
+	/*	buildFieldsObjects := func() []builds.Build {
+			var res []builds.Build
+			for _, item := range b.buildFields {
+				res = append(res, item)
+			}
+			return res
 		}
-		return res
-	}
-	list = append(list, buildFieldsObjects()...)
-
-	// query_service
-	list = append(list, b.buildQueryServiceAggregate)
+		list = append(list, buildFieldsObjects()...)*/
 
 	// repository
 	buildRepositoryEntities := func() []builds.Build {
@@ -103,31 +100,51 @@ func (b *BuildDomainLayer) Build() error {
 	list = append(list, b.buildQueryHandlerAggregate)
 	list = append(list, buildQueryHandlerEntities()...)
 
+	// query_service
+	buildQueryServiceEntities := func() []builds.Build {
+		var res []builds.Build
+		for _, item := range b.buildQueryServiceEntities {
+			res = append(res, item)
+		}
+		return res
+	}
+	list = append(list, b.buildQueryServiceAggregate)
+	list = append(list, buildQueryServiceEntities()...)
+
 	return b.DoBuild(list...)
 }
 
 func (b *BuildDomainLayer) initFields() {
-	for name, fields := range b.aggregate.FieldsObjects {
-		outFile := fmt.Sprintf("%s/fields/%s_fields/%s.go", b.outDir, b.aggregate.Name, utils.SnakeString(fields.Name))
-		item := NewBuildFields(b.BaseBuild, name, fields, utils.ToLower(outFile))
+	for name, field := range b.aggregate.FieldsObjects {
+		outFile := fmt.Sprintf("%s/field/%s_field/%s.go", b.outDir, b.Aggregate.FileName(), field.FileName())
+		item := NewBuildFields(b.BaseBuild, name, field, utils.ToLower(outFile))
 		b.buildFields = append(b.buildFields, item)
 	}
 }
 
 func (b *BuildDomainLayer) initQueryServiceAggregate() {
-	outFile := fmt.Sprintf("%s/queryservice/%s_query_service.go", b.outDir, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/queryservice/%s_queryservice/%s_query_service.go", b.outDir, b.Aggregate.FileName(), b.aggregate.FileName())
 	b.buildQueryServiceAggregate = NewBuildQueryServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
+func (b *BuildDomainLayer) initQueryServiceEntities() {
+	b.buildQueryServiceEntities = []*BuildQueryServiceEntity{}
+	for _, item := range b.aggregate.Entities {
+		outFile := fmt.Sprintf("%s/queryservice/%s_queryservice/%s_query_service.go", b.outDir, b.Aggregate.FileName(), item.FileName())
+		buildEntityObject := NewBuildQueryServiceEntity(b.BaseBuild, item, utils.ToLower(outFile))
+		b.buildQueryServiceEntities = append(b.buildQueryServiceEntities, buildEntityObject)
+	}
+}
+
 func (b *BuildDomainLayer) initEntityQueryHandlerEntities() {
-	outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.aggregate.Name, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
 	b.buildQueryHandlerAggregate = NewBuildQueryHandler(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initProjectionEntities() {
 	b.buildProjectionEntities = []*BuildProjectionEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/projection/%s_view.go", b.outDir, item.Name)
+		outFile := fmt.Sprintf("%s/projection/%s_view.go", b.outDir, item.FileName())
 		buildEntityObject := NewBuildProjectionEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildProjectionEntities = append(b.buildProjectionEntities, buildEntityObject)
 	}
@@ -136,41 +153,32 @@ func (b *BuildDomainLayer) initProjectionEntities() {
 func (b *BuildDomainLayer) initRepositoryEntities() {
 	b.buildRepositoryEntities = []*BuildRepositoryEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/repository/%s_repository/%s_repository.go", b.outDir, b.aggregate.Name, item.Name)
-		buildEntityObject := NewBuildRepositoryEntity(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildRepositoryEntities = append(b.buildRepositoryEntities, buildEntityObject)
-	}
-}
-
-func (b *BuildDomainLayer) initQueryServiceEntities() {
-	b.buildQueryServiceEntities = []*BuildQueryServiceEntity{}
-	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/queryservice/%s_service.go", b.outDir, item.Name)
+		outFile := fmt.Sprintf("%s/repository/%s_repository/%s_repository.go", b.outDir, b.Aggregate.FileName(), utils.SnakeString(item.Name))
 		buildEntityObject := NewBuildRepositoryEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildRepositoryEntities = append(b.buildRepositoryEntities, buildEntityObject)
 	}
 }
 
 func (b *BuildDomainLayer) initRepositoryAggregate() {
-	outFile := fmt.Sprintf("%s/repository/%s_repository/%s_repository.go", b.outDir, b.aggregate.Name, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/repository/%s_repository/%s_repository.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
 	b.buildRepositoryAggregate = NewBuildRepositoryAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initProjectionAggregate() {
-	outFile := fmt.Sprintf("%s/projection/%s_view.go", b.outDir, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/projection/%s_view.go", b.outDir, b.Aggregate.FileName())
 	b.buildProjectionAggregate = NewBuildProjectionAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initQueryHandlerEntities() {
 	b.buildQueryHandlerEntities = []*BuildQueryHandlerEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.aggregate.Name, item.Name)
+		outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.Aggregate.FileName(), item.FileName())
 		buildEntityObject := NewBuildQueryHandlerEntity(b.BaseBuild, b.aggregate, item, utils.ToLower(outFile))
 		b.buildQueryHandlerEntities = append(b.buildQueryHandlerEntities, buildEntityObject)
 	}
 }
 
 func (b *BuildDomainLayer) initQueryHandlerAggregate() {
-	outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.aggregate.Name, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
 	b.buildQueryHandlerAggregate = NewBuildQueryHandler(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }

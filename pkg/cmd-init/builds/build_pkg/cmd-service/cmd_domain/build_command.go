@@ -17,7 +17,7 @@ func NewBuildCommand(base builds.BaseBuild, command *config.Command, outFile str
 		BaseBuild: base,
 		command:   command,
 	}
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/command/commands/command.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/command/command/command.go.tpl"
 	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
@@ -31,9 +31,7 @@ func (b *BuildCommand) Values() map[string]interface{} {
 	res["Name"] = b.command.Name
 	res["IsHandler"] = b.command.IsHandler
 	res["AggregateId"] = b.command.AggregateId
-	res["Package"] = fmt.Sprintf("%s_commands", utils.ToLower(b.AggregateName()))
-	res["EventsPackage"] = fmt.Sprintf("%s_events", utils.ToLower(b.AggregateName()))
-	res["FieldsPackage"] = fmt.Sprintf("%s_fields", utils.ToLower(b.AggregateName()))
+	res["Package"] = fmt.Sprintf("%s_command", utils.ToLower(b.AggregateName()))
 	res["Action"] = b.command.Action
 	res["IsCreate"] = b.command.IsCreate()
 	res["IsUpdate"] = b.command.IsUpdate()

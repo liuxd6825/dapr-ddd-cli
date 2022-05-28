@@ -1,4 +1,4 @@
-package repository
+package {{.aggregate_name}}_repository
 
 import (
 	"context"
@@ -7,9 +7,9 @@ import (
 )
 
 type {{.Name}}ViewRepository interface {
-	Create(ctx context.Context, user *projection.{{.Name}}View) (*projection.{{.Name}}View, error)
-	UpdateById(ctx context.Context, user *projection.{{.Name}}View) (*projection.{{.Name}}View, error)
+	Create(ctx context.Context, view *projection.{{.Name}}View) (*projection.{{.Name}}View, error)
+	UpdateById(ctx context.Context, view *projection.{{.Name}}View) (*projection.{{.Name}}View, error)
 	DeleteById(ctx context.Context, tenantId string, id string) error
 	FindById(ctx context.Context, tenantId string, id string) (*projection.{{.Name}}View, bool, error)
-	FindPaging(ctx context.Context, query *ddd_repository.PagingQuery) (res *ddd_repository.PagingData, isFound bool, err error)
+	FindPaging(ctx context.Context, query *ddd_repository.PagingQuery) (res *ddd_repository.PagingData[*projection.{{.Name}}View], isFound bool, err error)
 }

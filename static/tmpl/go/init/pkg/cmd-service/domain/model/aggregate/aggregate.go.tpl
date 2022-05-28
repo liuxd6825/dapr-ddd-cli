@@ -5,9 +5,9 @@ package {{.Package}}
 
 import (
     "context"
-    "{{.Namespace}}/pkg/cmd-service/domain/command/{{.CommandPackage}}"
-    "{{.Namespace}}/pkg/cmd-service/domain/event/{{.EventPackage}}"
-    "{{.Namespace}}/pkg/cmd-service/domain/factory/{{.}}_factory"
+    "{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
+    "{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
+    "{{.Namespace}}/pkg/cmd-service/domain/factory/{{.AggregateFactoryPackage}}"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 

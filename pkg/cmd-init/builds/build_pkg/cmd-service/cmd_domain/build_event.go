@@ -20,7 +20,7 @@ func NewBuildEvent(base builds.BaseBuild, name string, event *config.Event, outF
 		name:      name,
 		event:     event,
 	}
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/events/event.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/event/event.go.tpl"
 	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
@@ -33,8 +33,8 @@ func (b *BuildEvent) Values() map[string]interface{} {
 	res["Name"] = b.name
 	res["Version"] = b.Version()
 	res["Properties"] = b.event.Properties
-	res["Package"] = fmt.Sprintf("%s_events", b.Aggregate.LowerName())
-	res["FieldsPackage"] = fmt.Sprintf("%s_fields", b.Aggregate.LowerName())
+	res["Package"] = fmt.Sprintf("%s_event", b.Aggregate.LowerName())
+	res["FieldsPackage"] = fmt.Sprintf("%s_field", b.Aggregate.LowerName())
 	res["Aggregate"] = b.Aggregate
 	res["AggregateName"] = b.Aggregate.Name
 	res["ServiceName"] = b.Config.Configuration.ServiceName

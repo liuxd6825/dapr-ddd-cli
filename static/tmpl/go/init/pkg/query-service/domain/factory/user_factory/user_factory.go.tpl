@@ -1,11 +1,11 @@
 package user_factory
 
 import (
-	projection2 "github.com/liuxd6825/dapr-go-ddd-example/pkg/query-service/domain/projection"
-	user_events2 "github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic/user_models/user_events"
+	"github.com/liuxd6825/dapr-go-ddd-example/pkg/query-service/domain/projection"
+	"github.com/liuxd6825/dapr-go-ddd-example/pkg/command-service/domain/domain/event/{{.aggreage_name}}_event"
 )
 
-func NewAddressViewByUserCreateEventV1(event *user_events2.AddressCreateEventV1) *projection2.AddressView {
+func NewAddressViewByUserCreateEventV1(event *{{.aggreage_name}}_event.AddressCreateEventV1) *projection2.AddressView {
 	addressView := projection2.AddressView{
 		TenantId: event.Data.TenantId,
 		Id:       event.Data.Id,
@@ -18,7 +18,7 @@ func NewAddressViewByUserCreateEventV1(event *user_events2.AddressCreateEventV1)
 	return &addressView
 }
 
-func NewAddressViewByUserUpdateEventV1(event *user_events2.AddressUpdateEventV1) *projection2.AddressView {
+func NewAddressViewByUserUpdateEventV1(event *{{.aggreage_name}}_event.AddressUpdateEventV1) *projection2.AddressView {
 	userView := projection2.AddressView{
 		TenantId: event.Data.TenantId,
 		Id:       event.Data.Id,
@@ -31,7 +31,7 @@ func NewAddressViewByUserUpdateEventV1(event *user_events2.AddressUpdateEventV1)
 	return &userView
 }
 
-func NewUserViewByUserCreateEventV1(event *user_events2.UserCreateEventV1) *projection2.UserView {
+func NewUserViewByUserCreateEventV1(event *{{.aggreage_name}}_event.UserCreateEventV1) *projection2.UserView {
 	userView := projection2.UserView{
 		Id:        event.Data.Id,
 		UserName:  event.Data.UserName,

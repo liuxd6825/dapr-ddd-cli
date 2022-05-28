@@ -20,7 +20,7 @@ type Config struct {
 const (
 	Go LangType = iota
 	Java
-	CShape
+	CSharp
 	Sql
 )
 
@@ -133,9 +133,9 @@ func (c *Config) setLangType(lang string) error {
 	case "java":
 		c.langType = Java
 	case "c#":
-		c.langType = CShape
-	case "cshape":
-		c.langType = CShape
+		c.langType = CSharp
+	case "csharp":
+		c.langType = CSharp
 	default:
 		return NewLangTypeError(lang)
 	}
@@ -181,7 +181,7 @@ func (c *Config) GetType(value string) string {
 			return t.GoType
 		case Java:
 			return t.JavaType
-		case CShape:
+		case CSharp:
 			return t.CSharpType
 		case Sql:
 			return t.SqlType

@@ -34,6 +34,6 @@ func (b *BuildProjectionEntity) Values() map[string]interface{} {
 	res["Properties"] = b.entity.Properties
 	res["DefaultProperties"] = defaultProperties
 	res["Description"] = b.entity.Description
-	res["Aggregate"] = b.entity
+	res["Aggregate"] = b.Aggregate
 	return res
 }

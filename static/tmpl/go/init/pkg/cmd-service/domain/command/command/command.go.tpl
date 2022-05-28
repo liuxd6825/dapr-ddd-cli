@@ -1,8 +1,8 @@
 package {{.Package}}
 {{$FieldsPackage := .FieldsPackage}}
 import (
-    "{{.Namespace}}/pkg/cmd-service/domain/event/{{.EventsPackage}}"
-    "{{.Namespace}}/pkg/cmd-service/domain/fields/{{.FieldsPackage}}"
+    "{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
+    "{{.Namespace}}/pkg/cmd-service/domain/field/{{.AggregateFieldPackage}}"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 

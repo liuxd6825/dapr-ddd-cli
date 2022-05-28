@@ -3,31 +3,44 @@ configuration:
   boundedContextName: "Dddml.WMs"
   # 默认模块的名称
   defaultModule: "Dddml.Wms"
+  # 服务名
   serviceName: "dapr-ddd-demo"
+  # 命名空间
+  namespace:
+    go: "gitee.com/liuxu6825/dapr-ddd-demo"
+    c#: "com.liuxu6825.dapr-ddd-demo"
+    java: "com.liuxu6825.dapr-ddd-demo"
+
   # 上下文中每个实体都需要的保留属性
   defaultReservedProperties:
     aggregate:
-      IsDelete:
+      IsDeleted:
         type: bool
     entity:
-      IsDelete:
+      IsDeleted:
         type: bool
     view:
       TenantId:
         type: string
-      CreatedById:
+      CreatedId:
         type: string
-      CreatedByName:
+      CreatedName:
         type: string
-      CreatedAt:
+      CreatedTime:
         type: dateTime
-      UpdateById:
+      UpdatedId:
         type: string
-      UpdateByName:
+      UpdatedName:
         type: string
-      UpdateAt:
+      UpdatedTime:
         type: dateTime
-      IsDelete:
+      DeletedId:
+        type: string
+      DeletedName:
+        type: string
+      DeletedTime:
+        type: dateTime
+      IsDeleted:
         type: bool
   # DDDML规范中没有明确定义的扩展点， 其值类型为Map<String, Object>
   metadata:

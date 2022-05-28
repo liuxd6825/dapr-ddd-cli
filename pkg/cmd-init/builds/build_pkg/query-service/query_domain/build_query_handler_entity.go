@@ -38,11 +38,6 @@ func (b *BuildQueryHandlerEntity) Values() map[string]interface{} {
 	res["entityName"] = b.entity.FirstLowerName()
 	res["Properties"] = b.entity.Properties
 	res["Package"] = fmt.Sprintf("%s_queryhandler", b.aggregate.Name)
-	res["CommandPackage"] = fmt.Sprintf("%s_commands", utils.ToLower(b.aggregate.Name))
-	res["EventPackage"] = fmt.Sprintf("%s_events", utils.ToLower(b.aggregate.Name))
-	res["ModelPackage"] = fmt.Sprintf("%s_model", utils.ToLower(b.aggregate.Name))
-	res["FactoryPackage"] = fmt.Sprintf("%s_factory", utils.ToLower(b.aggregate.Name))
 	res["ServiceName"] = b.Config.Configuration.ServiceName
-	res["Namespace"] = b.Namespace()
 	return res
 }

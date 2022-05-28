@@ -1,7 +1,7 @@
 package {{.Package}}
 
 import (
-    "{{.Namespace}}/pkg/cmd-service/domain/fields/{{.FieldsPackage}}"
+    "{{.Namespace}}/pkg/cmd-service/domain/fields/{{.AggregateFieldPackage}}"
 )
 
 type {{.ClassName}} struct {

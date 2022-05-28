@@ -1,5 +1,7 @@
 package config
 
+import "github.com/dapr/dapr-ddd-cli/pkg/utils"
+
 type FieldsObjects map[string]*Fields
 
 type Fields struct {
@@ -16,4 +18,8 @@ func (f *FieldsObjects) init(a *Aggregate) {
 		fields.Name = name
 		fields.Properties.Init(a)
 	}
+}
+
+func (e *Fields) FileName() string {
+	return utils.SnakeString(e.Name)
 }

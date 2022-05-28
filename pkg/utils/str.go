@@ -73,7 +73,11 @@ func SnakeString(s string) string {
 		data = append(data, d)
 	}
 	//ToLower把大写字母统一转小写
-	return strings.ToLower(string(data[:]))
+	res := strings.ToLower(string(data[:]))
+	if strings.HasPrefix(res, "_") {
+		return res[1:]
+	}
+	return res
 }
 
 //

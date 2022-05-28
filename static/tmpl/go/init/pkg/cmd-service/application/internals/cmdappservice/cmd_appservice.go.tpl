@@ -2,7 +2,7 @@ package cmdappservice
 
 import (
 	"context"
-	"{{.Namespace}}/pkg/cmd-service/domain/command/{{.CommandPackage}}"
+	"{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
 	"{{.Namespace}}/pkg/cmd-service/domain/model"
 	domain_service "{{.Namespace}}/pkg/cmd-service/domain/service"
 )

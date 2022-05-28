@@ -1,13 +1,13 @@
 package {{.entityName}}_queryhandler
 
 {{- $AggregateName := .AggregateName}}
-{{- $EventPackage := .EventPackage}}
+{{- $EventPackage := .AggregateEventPackage}}
 {{- $EntityName := .EntityName}}
 import (
 	"context"
-	"{{.Namespace}}/pkg/cmd-service/domain/event/{{.EventPackage}}"
-	"{{.Namespace}}/pkg/query-service/domain/factory/{{.FactoryPackage}}"
-	"{{.Namespace}}/pkg/query-service/domain/queryservice"
+	"{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
+	"{{.Namespace}}/pkg/query-service/domain/factory/{{.AggregateFactoryPackage}}"
+	"{{.Namespace}}/pkg/query-service/domain/queryservice/{{.aggreage_name}}_queryservice}}"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )

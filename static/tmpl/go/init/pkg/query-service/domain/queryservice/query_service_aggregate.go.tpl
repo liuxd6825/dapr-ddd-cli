@@ -1,4 +1,4 @@
-package queryservice
+package {{.aggregate_name}}_queryservice
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 )
 
 type {{.Name}}QueryService interface {
-	FindById(ctx context.Context, tenantId, userId string) (*projection.{{.Name}}View, bool, error)
+	FindById(ctx context.Context, tenantId, id string) (*projection.{{.Name}}View, bool, error)
 	Create(ctx context.Context, user *projection.{{.Name}}View) error
 	Update(ctx context.Context, user *projection.{{.Name}}View) error
 	DeleteById(ctx context.Context, tenantId string, id string) error
@@ -16,5 +16,5 @@ type {{.Name}}QueryService interface {
 }
 
 func New{{.Name}}QueryService() {{.Name}}QueryService {
-	return queryservice_impl.New{{.Name}}QueryService()
+	return queryservice_impl.mongodb.New{{.Name}}QueryService()
 }

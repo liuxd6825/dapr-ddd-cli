@@ -94,3 +94,7 @@ func (a *Aggregate) FirstLowerName() string {
 func (a *Aggregate) FirstUpperName() string {
 	return utils.FirstUpper(a.Name)
 }
+
+func (a *Aggregate) FileName() string {
+	return utils.SnakeString(a.Name)
+}

@@ -53,8 +53,7 @@ func (e *Event) init(a *Aggregate, name string) {
 
 	e.Aggregate = a
 	e.Name = name
-	e.Route = fmt.Sprintf("%s/%s/ver:%s", e.Aggregate.Name, e.Name, e.Version)
-	e.Route = strings.ToLower(e.Route)
+	e.Route = fmt.Sprintf("%s/%s/ver:%s", utils.SnakeString(e.Aggregate.Name), utils.SnakeString(e.Name), utils.SnakeString(e.Version))
 
 	e.Properties.Init(a)
 	data := e.Properties["data"]
@@ -115,7 +114,7 @@ func (e *Event) IsCreateOrUpdate() bool {
 // @return bool
 //
 func (e *Event) IsAggregate() bool {
-	if e.To == "" || e.To == e.Aggregate.Name {
+	if e.To == "" || strings.ToLower(e.To) == strings.ToLower(e.Aggregate.Name) {
 		return true
 	}
 	return false
@@ -129,5 +128,9 @@ func (e *Event) IsAggregate() bool {
 // @return bool
 //
 func (e *Event) IsEntity(entityName string) bool {
-	return e.To == entityName
+	if e.To == "" {
+		return false
+	}
+	res := strings.ToLower(e.To) == strings.ToLower(entityName)
+	return res
 }

@@ -6,26 +6,26 @@ import (
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
 )
 
-type BuildFields struct {
+type BuildField struct {
 	builds.BaseBuild
 	name   string
 	fields *config.Fields
 	values interface{}
 }
 
-func NewBuildFields(base builds.BaseBuild, name string, field *config.Fields, outFile string) *BuildFields {
-	res := &BuildFields{
+func NewBuildField(base builds.BaseBuild, name string, field *config.Fields, outFile string) *BuildField {
+	res := &BuildField{
 		BaseBuild: base,
 		name:      name,
 		fields:    field,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/fields/fields/fields.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/field/field/field.go.tpl"
 	res.OutFile = outFile
 	return res
 }
 
-func (b *BuildFields) Values() map[string]interface{} {
+func (b *BuildField) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["name"] = utils.FirstLower(b.fields.Name)
 	res["Name"] = utils.FirstUpper(b.fields.Name)

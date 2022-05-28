@@ -1,4 +1,4 @@
-package {{.Aggregate.LowerName}}_events
+package {{.Aggregate.LowerName}}_event
 
 import (
     "github.com/liuxd6825/dapr-go-ddd-sdk/restapp"

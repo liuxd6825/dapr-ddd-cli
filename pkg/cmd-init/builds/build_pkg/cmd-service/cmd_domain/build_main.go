@@ -11,7 +11,7 @@ type BuildDomainLayer struct {
 	builds.BaseBuild
 	aggregate                        *config.Aggregate
 	outDir                           string
-	buildFields                      []*BuildFields
+	buildFields                      []*BuildField
 	buildCommands                    []*BuildCommand
 	buildRegisterAllEventType        *BuildRegisterAllEventType
 	buildRegisterAggregateEventTypes []*BuildRegisterAggregateEventType
@@ -138,7 +138,7 @@ func (b *BuildDomainLayer) doBuildDomainService() error {
 
 func (b *BuildDomainLayer) initCommands() {
 	for name, command := range b.aggregate.Commands {
-		outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/command/%s_commands/%s.go", b.outDir, b.aggregate.Name, utils.SnakeString(name))
+		outFile := fmt.Sprintf("%s/command/%s_command/%s.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(name))
 		buildCommand := NewBuildCommand(b.BaseBuild, command, utils.ToLower(outFile))
 		b.buildCommands = append(b.buildCommands, buildCommand)
 	}
@@ -146,7 +146,7 @@ func (b *BuildDomainLayer) initCommands() {
 
 func (b *BuildDomainLayer) initEvents() {
 	for name, event := range b.aggregate.Events {
-		outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/event/%s_events/%s.go", b.outDir, b.aggregate.Name, utils.SnakeString(name))
+		outFile := fmt.Sprintf("%s/event/%s_event/%s.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(name))
 		item := NewBuildEvent(b.BaseBuild, name, event, utils.ToLower(outFile))
 		b.buildEvents = append(b.buildEvents, item)
 	}
@@ -154,8 +154,8 @@ func (b *BuildDomainLayer) initEvents() {
 
 func (b *BuildDomainLayer) initRegisterAggregateEventTypes() {
 	regs := []*BuildRegisterAggregateEventType{}
-	for name, agg := range b.Config.Aggregates {
-		outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/event/%s_events/event_type.go", b.outDir, utils.SnakeString(name))
+	for _, agg := range b.Config.Aggregates {
+		outFile := fmt.Sprintf("%s/event/%s_event/event_type.go", b.outDir, agg.FileName())
 		reg := NewBuildRegisterAggregateEventType(b.BaseBuild, agg, utils.ToLower(outFile))
 		regs = append(regs, reg)
 	}
@@ -163,42 +163,42 @@ func (b *BuildDomainLayer) initRegisterAggregateEventTypes() {
 }
 
 func (b *BuildDomainLayer) initRegisterAllEventType() {
-	outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/event/reg_all_event_type.go", b.outDir)
+	outFile := fmt.Sprintf("%s/event/reg_all_event_type.go", b.outDir)
 	b.buildRegisterAllEventType = NewBuildRegisterAllEventType(b.BaseBuild, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initBuildRegisterAggregateTypes() {
-	outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/model/reg_aggregate_type.go", b.outDir)
+	outFile := fmt.Sprintf("%s/model/reg_aggregate_type.go", b.outDir)
 	b.buildRegisterAggregateType = NewBuildRegisterAggregateType(b.BaseBuild, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initFields() {
-	for name, fields := range b.aggregate.FieldsObjects {
-		outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/fields/%s_fields/%s.go", b.outDir, b.aggregate.Name, utils.SnakeString(fields.Name))
-		item := NewBuildFields(b.BaseBuild, name, fields, utils.ToLower(outFile))
+	for name, field := range b.aggregate.FieldsObjects {
+		outFile := fmt.Sprintf("%s/field/%s_field/%s.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(field.Name))
+		item := NewBuildField(b.BaseBuild, name, field, utils.ToLower(outFile))
 		b.buildFields = append(b.buildFields, item)
 	}
 }
 
 func (b *BuildDomainLayer) initModel() {
-	outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/model/%s_model/%s_aggregate.go", b.outDir, b.aggregate.Name, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/model/%s_model/%s_aggregate.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildAggregate = NewBuildAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initDomainService() {
 	values := make(map[string]interface{})
 	tmplFile := "static/tmpl/go/init/pkg/cmd-service/domain/service/base.go.tpl"
-	outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/service/base.go", b.outDir)
+	outFile := fmt.Sprintf("%s/service/base.go", b.outDir)
 	b.buildBaseDomainService = builds.NewBuildAnyFile(b.BaseBuild, values, tmplFile, utils.ToLower(outFile))
 
-	outFile = fmt.Sprintf("%s/pkg/cmd-service/domain/service/%s_domain_service.go", b.outDir, b.aggregate.Name)
+	outFile = fmt.Sprintf("%s/service/%s_domain_service.go", b.outDir, b.aggregate.FileName())
 	b.buildDomainService = NewBuildDomainService(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initBuildValueObjects() {
 	b.buildValueObjects = []*BuildValueObject{}
 	for _, item := range b.aggregate.ValueObjects {
-		outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/model/%s_model/%s_value_object.go", b.outDir, b.aggregate.Name, item.Name)
+		outFile := fmt.Sprintf("%s/model/%s_model/%s_value_object.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
 		buildValueObject := NewBuildValueObject(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildValueObjects = append(b.buildValueObjects, buildValueObject)
 	}
@@ -207,7 +207,7 @@ func (b *BuildDomainLayer) initBuildValueObjects() {
 func (b *BuildDomainLayer) initBuildEntityObjects() {
 	b.buildEntityObjects = []*BuildEntityObject{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/model/%s_model/%s_entity.go", b.outDir, b.aggregate.Name, item.Name)
+		outFile := fmt.Sprintf("%s/model/%s_model/%s_entity.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
 		buildEntityObject := NewBuildEntityObject(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildEntityObjects = append(b.buildEntityObjects, buildEntityObject)
 	}

@@ -40,3 +40,11 @@ func (e *Entity) int(a *Aggregate, name string) {
 func (e *Entity) FirstLowerName() string {
 	return utils.FirstLower(e.Name)
 }
+
+func (e *Entity) FirstUpperName() string {
+	return utils.FirstUpper(e.Name)
+}
+
+func (e *Entity) FileName() string {
+	return utils.SnakeString(e.Name)
+}

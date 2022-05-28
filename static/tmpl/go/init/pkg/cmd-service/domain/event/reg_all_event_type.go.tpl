@@ -2,7 +2,7 @@ package event
 {{$namespace := .Namespace}}
 import (
 {{- range $name, $agg := .Aggregates}}
-    "{{$namespace}}/pkg/cmd-service/domain/event/{{$agg.LowerName}}_events"
+    "{{$namespace}}/pkg/cmd-service/domain/event/{{$agg.LowerName}}_event"
 {{- end}}
     "github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )

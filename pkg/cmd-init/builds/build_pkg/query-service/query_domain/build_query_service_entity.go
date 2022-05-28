@@ -7,13 +7,13 @@ import (
 
 type BuildQueryServiceEntity struct {
 	builds.BaseBuild
-	entity *config.Entity
+	Entity *config.Entity
 }
 
 func NewBuildQueryServiceEntity(base builds.BaseBuild, entity *config.Entity, outFile string) *BuildQueryServiceEntity {
 	res := &BuildQueryServiceEntity{
 		BaseBuild: base,
-		entity:    entity,
+		Entity:    entity,
 	}
 	res.ValuesFunc = res.Values
 	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/queryservice/query_service_entity.go.tpl"
@@ -23,6 +23,6 @@ func NewBuildQueryServiceEntity(base builds.BaseBuild, entity *config.Entity, ou
 
 func (b *BuildQueryServiceEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
-	res["Name"] = b.entity.Name
+	res["Name"] = b.Entity.Name
 	return res
 }

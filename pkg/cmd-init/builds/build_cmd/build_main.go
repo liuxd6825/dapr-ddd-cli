@@ -25,7 +25,7 @@ func (b *BuildMainLayer) Build() error {
 	var list []builds.Build
 	values := map[string]interface{}{}
 	values["ServiceName"] = b.Config.Configuration.ServiceName
-	values["Namespace"] = b.Config.Configuration.Namespace()
+	values["GetNamespace"] = b.Config.Configuration.GetNamespace()
 	list = append(list, b.NewFileBuild("/cmd/cmd-service/main.go.tpl", b.outDir+"/cmd-service/main.go", values))
 	list = append(list, b.NewFileBuild("/cmd/query-service/main.go.tpl", b.outDir+"/query-service/main.go", values))
 	return b.DoBuild(list...)

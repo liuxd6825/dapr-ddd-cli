@@ -1,6 +1,7 @@
 package builds
 
 import (
+	"fmt"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
 	"strings"
@@ -45,7 +46,7 @@ func (b *BaseBuild) aggregateName() string {
 }
 
 func (b *BaseBuild) Namespace() string {
-	return b.Config.Configuration.Namespace()
+	return b.Config.Configuration.GetNamespace()
 }
 
 func (b *BaseBuild) Build() error {
@@ -71,9 +72,17 @@ func (b *BaseBuild) Values() map[string]interface{} {
 	res["namespace"] = strings.ToLower(b.Namespace())
 	res["Aggregates"] = b.Config.Aggregates
 	if b.Aggregate != nil {
+		aggregateName := utils.SnakeString(b.Aggregate.Name)
 		res["Aggregate"] = b.Aggregate
 		res["AggregateName"] = b.AggregateName()
 		res["aggregateName"] = b.aggregateName()
+		res["aggregate_name"] = aggregateName
+		res["AggregateCommandPackage"] = fmt.Sprintf("%s_command", aggregateName)
+		res["AggregateEventPackage"] = fmt.Sprintf("%s_event", aggregateName)
+		res["AggregateFieldPackage"] = fmt.Sprintf("%s_field", aggregateName)
+		res["AggregateModelPackage"] = fmt.Sprintf("%s_model", aggregateName)
+		res["AggregateFactoryPackage"] = fmt.Sprintf("%s_factory", aggregateName)
+
 	}
 	return res
 }

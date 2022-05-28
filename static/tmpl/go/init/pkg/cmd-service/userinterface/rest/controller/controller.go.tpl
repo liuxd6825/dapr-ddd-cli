@@ -6,7 +6,7 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"{{.Namespace}}/pkg/cmd-service/application/internals/cmdappservice"
 	"{{.Namespace}}/pkg/cmd-service/application/internals/queryappservice"
-	"{{.Namespace}}/pkg/cmd-service/domain/command/{{.CommandPackage}}"
+	"{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 {{- $AggregateName := .AggregateName}}

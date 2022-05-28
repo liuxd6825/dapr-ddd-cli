@@ -1,4 +1,4 @@
-package {{.aggregateName}}_fields
+package {{.aggregateName}}_field
 
 //
 // {{.ClassName}}
