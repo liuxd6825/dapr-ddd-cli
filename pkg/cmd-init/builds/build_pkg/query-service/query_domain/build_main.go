@@ -14,13 +14,15 @@ type BuildDomainLayer struct {
 	buildFields              []*BuildFields
 	buildProjectionAggregate *BuildProjectionAggregate
 	buildProjectionEntities  []*BuildProjectionEntity
-	buildQueryHandler        *BuildQueryHandler
 
 	buildQueryServiceAggregate *BuildQueryServiceAggregate
 	buildQueryServiceEntities  []*BuildQueryServiceEntity
 
 	buildRepositoryAggregate *BuildRepositoryAggregate
 	buildRepositoryEntities  []*BuildRepositoryEntity
+
+	buildQueryHandlerAggregate *BuildQueryHandlerAggregate
+	buildQueryHandlerEntities  []*BuildQueryHandlerEntity
 }
 
 func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildDomainLayer {
@@ -35,8 +37,6 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 
 	res.initFields()
 
-	res.initQueryHandler()
-
 	res.initProjectionAggregate()
 	res.initProjectionEntities()
 
@@ -45,6 +45,9 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 
 	res.initQueryServiceAggregate()
 	res.initQueryServiceEntities()
+
+	res.initQueryHandlerAggregate()
+	res.initQueryHandlerEntities()
 
 	return res
 }
@@ -75,11 +78,8 @@ func (b *BuildDomainLayer) Build() error {
 	}
 	list = append(list, buildFieldsObjects()...)
 
-	// service
+	// query_service
 	list = append(list, b.buildQueryServiceAggregate)
-
-	// handler
-	list = append(list, b.buildQueryHandler)
 
 	// repository
 	buildRepositoryEntities := func() []builds.Build {
@@ -91,6 +91,17 @@ func (b *BuildDomainLayer) Build() error {
 	}
 	list = append(list, b.buildRepositoryAggregate)
 	list = append(list, buildRepositoryEntities()...)
+
+	// query_handler
+	buildQueryHandlerEntities := func() []builds.Build {
+		var res []builds.Build
+		for _, item := range b.buildQueryHandlerEntities {
+			res = append(res, item)
+		}
+		return res
+	}
+	list = append(list, b.buildQueryHandlerAggregate)
+	list = append(list, buildQueryHandlerEntities()...)
 
 	return b.DoBuild(list...)
 }
@@ -104,13 +115,13 @@ func (b *BuildDomainLayer) initFields() {
 }
 
 func (b *BuildDomainLayer) initQueryServiceAggregate() {
-	outFile := fmt.Sprintf("%s/service/%s_query_service.go", b.outDir, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/queryservice/%s_query_service.go", b.outDir, b.aggregate.Name)
 	b.buildQueryServiceAggregate = NewBuildQueryServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
-func (b *BuildDomainLayer) initQueryHandler() {
-	outFile := fmt.Sprintf("%s/handler/%s_query_handler.go", b.outDir, b.aggregate.Name)
-	b.buildQueryHandler = NewBuildQueryHandler(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+func (b *BuildDomainLayer) initEntityQueryHandlerEntities() {
+	outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.aggregate.Name, b.aggregate.Name)
+	b.buildQueryHandlerAggregate = NewBuildQueryHandler(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initProjectionEntities() {
@@ -148,4 +159,18 @@ func (b *BuildDomainLayer) initRepositoryAggregate() {
 func (b *BuildDomainLayer) initProjectionAggregate() {
 	outFile := fmt.Sprintf("%s/projection/%s_view.go", b.outDir, b.aggregate.Name)
 	b.buildProjectionAggregate = NewBuildProjectionAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+}
+
+func (b *BuildDomainLayer) initQueryHandlerEntities() {
+	b.buildQueryHandlerEntities = []*BuildQueryHandlerEntity{}
+	for _, item := range b.aggregate.Entities {
+		outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.aggregate.Name, item.Name)
+		buildEntityObject := NewBuildQueryHandlerEntity(b.BaseBuild, b.aggregate, item, utils.ToLower(outFile))
+		b.buildQueryHandlerEntities = append(b.buildQueryHandlerEntities, buildEntityObject)
+	}
+}
+
+func (b *BuildDomainLayer) initQueryHandlerAggregate() {
+	outFile := fmt.Sprintf("%s/queryhandler/%s_queryhandler/%s_query_handler.go", b.outDir, b.aggregate.Name, b.aggregate.Name)
+	b.buildQueryHandlerAggregate = NewBuildQueryHandler(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }

@@ -7,23 +7,23 @@ import (
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
 )
 
-type BuildQueryHandler struct {
+type BuildQueryHandlerAggregate struct {
 	builds.BaseBuild
 	aggregate *config.Aggregate
 }
 
-func NewBuildQueryHandler(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildQueryHandler {
-	res := &BuildQueryHandler{
+func NewBuildQueryHandler(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildQueryHandlerAggregate {
+	res := &BuildQueryHandlerAggregate{
 		BaseBuild: base,
 		aggregate: aggregate,
 	}
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/queryhandler/query_handler.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/queryhandler/aggregate/aggregate_query_handler.go.tpl"
 	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
 }
 
-func (b *BuildQueryHandler) Values() map[string]interface{} {
+func (b *BuildQueryHandlerAggregate) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["ClassName"] = fmt.Sprintf("%sQueryHandler", utils.FirstUpper(b.AggregateName()))
 	res["AggregateName"] = utils.FirstUpper(b.Aggregate.Name)

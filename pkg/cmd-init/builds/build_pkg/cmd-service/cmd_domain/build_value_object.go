@@ -21,7 +21,7 @@ func NewBuildValueObject(base builds.BaseBuild, valueObject *config.ValueObject,
 		outFile:     outFile,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/model/value_object.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/model/aggregate/value_object.go.tpl"
 	res.OutFile = outFile
 	return res
 }

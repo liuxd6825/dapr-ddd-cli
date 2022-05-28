@@ -6,10 +6,10 @@ package {{.aggregateName}}_view
 //
 type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.DataType}} `json:"{{$property.JsonName}}"  bson:"{{$property.BsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.DataType}} `json:"{{$property.JsonName}}"  bson:"{{$property.BsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }} // {{$property.Description}}{{ end }}
 {{- end}}
 {{- range $name, $property := .DefaultProperties}}
-    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.DataType}} `json:"{{$property.JsonName}}"  bson:"{{$property.BsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.DataType}} `json:"{{$property.JsonName}}"  bson:"{{$property.BsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }} // {{$property.Description}}{{ end }}
 {{- end}}
 }
 

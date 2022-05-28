@@ -10,21 +10,18 @@ aggregates:
         type: string
       Email:
         type: string
-      Telephone:
-        type: string
       IsDelete:
         type: bool
-      Addresses:
-        type: string
-      Items:
-        type: Item
+      Address:
+        type: Address
+      Contacts:
+        type:  ContactItem
         isArray: true
+
     # ----------------------------------
     fields:
       UserFields:
         properties:
-          TenantId:
-            type: string
           Id:
             type: string
             validate: "gt=0"
@@ -35,15 +32,27 @@ aggregates:
             type: string
           Email:
             type: string
-          Telephone:
-            type: string
-          IsDelete:
-            type: bool
-          Addresses:
-            type: string
+          Address:
+            type: Address
       UserDeleteFields:
         properties:
           Id:
+            type: string
+      ContactFields:
+        properties:
+          Id:
+            type: string
+            validate: "gt=0"
+            description: ""
+          ContactType:
+            type: ContactType
+          ContactValue:
+            type: string
+      ContactDeleteFields:
+        properties:
+          Id:
+            type: string
+          UserId:
             type: string
     # ----------------------------------
     commands:
@@ -53,7 +62,7 @@ aggregates:
         action: create
         event: UserCreateEvent
         properties:
-          data:
+          Data:
             type: UserFields
             referenceType: UserFields
             description: 业务数据
@@ -63,7 +72,7 @@ aggregates:
         action: update
         event: UserUpdateEvent
         properties:
-          data:
+          Data:
             type: UserFields
             referenceType: UserFields
             description: 业务数据
@@ -73,23 +82,51 @@ aggregates:
         event: UserDeleteEvent
         action: delete
         properties:
-          data:
+          Data:
             type: UserDeleteFields
             referenceType: UserDeleteFields
             description: 业务数据
+      ContactCreateCommand:
+        description: 添加联系方式
+        aggregateId: Data.UserId
+        action: create
+        event: ContactCreateEventV1
+        properties:
+          Data:
+            type: Contact
+            referenceType: Contact
+      ContactUpdateCommand:
+        description: 更新联系方式
+        aggregateId: Data.UserId
+        action: update
+        event: ContactUpdateEventV1
+        properties:
+          Data:
+            type: Contact
+            referenceType: Contact
+      ContactDeleteCommand:
+        description: 删除联系方式
+        aggregateId: Data.UserId
+        event: ContactDeleteEventV1
+        action: delete
+        properties:
+          Data:
+            type: ContactDeleteFields
+            referenceType: ContactDeleteFields
     # ----------------------------------
     events:
       UserCreateEventV1:
         aggregateId: Data.Id
         eventType: UserCreateEvent
         action: create
+        version: V1
         properties:
           data:
             type: UserFields
       UserUpdateEventV1:
         aggregateId: Data.Id
         eventType: UserUpdateEvent
-        version: 1.0
+        version: V1
         action: update
         properties:
           data:
@@ -97,70 +134,75 @@ aggregates:
       UserDeleteEventV1:
         aggregateId: Data.Id
         eventType: UserDeleteEvent
-        version: 1.0
+        version: V1
         action: delete
         properties:
           data:
             type: UserDeleteFields
-    # ----------------------------------
-    factory:
-      NewUserCreateEvent:
-        paramter:
-          cmd:
-            type: UserCreateCommand
-        return:
-          name: res
-          type: UserCreateEvent
-        mappingType: auto
-      NewUserUpdateEvent:
-        paramter:
-          cmd:
-            type: UserUpdateCommand
-        return:
-          name: res
-          type: UserUpdateEvent
-        mappingType: auto
+      ContactCreateEventV1:
+        aggregateId: Data.Id
+        eventType: ContactCreateEvent
+        action: create
+        version: V1
+        to: Contact
+        properties:
+          data:
+            type: UserFields
+      ContactUpdateEventV1:
+        aggregateId: Data.Id
+        eventType: ContactUpdateEvent
+        version: V1
+        action: update
+        to: Contact
+        properties:
+          data:
+            type: UserFields
+      ContactDeleteEventV1:
+        aggregateId: Data.Id
+        eventType: ContactDeleteEvent
+        version: V1
+        action: delete
+        to: Contact
+        properties:
+          UserId:
+            type: stirng
+          Id:
+            type: string
     # ----------------------------------
     entities:
-      Item:
+      Contact:
         id:
-          name: ItemId
+          name: UserId
         properties:
-          ItemId:
+          Id:
             type: string
-          TimePeriod:
-            type: TimePeriod
-          MileAge:
-            type: long
-          WheelId:
-            type: WheelId
+          UserId:
+            type: string
+          ContactType:
+            type: ContactType
+          ContactValue:
+            type: string
     # ----------------------------------
     valueObjects:
-      TimePeriod:
+      Address:
         properties:
-          From:
-            type: DateTime
-          To:
-            type: DataTime
-      TireWheelIdPair:
-        properties:
-          TireId:
+          Province:
             type: string
-          WheelId:
-            type: WheelId
+          City:
+            type: string
+          Detail:
+            type: string
     # ----------------------------------
     enumObjects:
-      WheelId:
+      ContactType:
         baseType: string
         values:
-          LE:
-            description: left front
-          LR:
-            description: left rear
-          RF:
-            description: right front
-          RR:
-            description: right rear
+          Phone:
+            description: 电话
+          QQ:
+            description: QQ号
+          WeChat:
+            description: 微信号
     # ----------------------------------
     query:
       projections:
@@ -182,16 +224,6 @@ aggregates:
               type: bool
             Addresses:
               type: string
-      handlers:
-        UserQueryHandler:
-          onEvents:
-            OnUserCreateEventV1:
-              event: UserCreateEventV1
-              projection: UserView
-            OnUserUpdateEventV1:
-              event: UserUpdateEventV1
-            OnUserDeleteEventV1:
-              event: UserDeleteEventV1
 
 
 

@@ -1,20 +1,24 @@
 package config
 
 import (
+	"fmt"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
 	"strings"
 )
 
 type Event struct {
-	Name         string
-	AggregateId  string     `yaml:"aggregateId"`
-	EventType    string     `yaml:"eventType"`
-	Action       string     `yaml:"action"`
-	Version      string     `yaml:"version"`
-	Description  string     `yaml:"description"`
-	Properties   Properties `yaml:"properties"`
-	DataProperty *Property
-	DataFields   *Fields
+	Name         string     // 事件名称
+	AggregateId  string     `yaml:"aggregateId"` // 聚合id属性名称
+	EventType    string     `yaml:"eventType"`   // 事件类型
+	Action       string     `yaml:"action"`      // 活动类型: create, update, delete
+	Version      string     `yaml:"version"`     // 版本号， 默认：V1
+	To           string     `yaml:"to"`          // 事件所应用到对象类型
+	Description  string     `yaml:"description"` // 事件说明
+	Properties   Properties `yaml:"properties"`  // 属性
+	DataProperty *Property  // 关联的数据属性
+	DataFields   *Fields    // 关联的数据字段
+	Aggregate    *Aggregate // 聚合
+	Route        string     // dapr消息监听的web地址
 }
 
 type Events map[string]*Event
@@ -29,7 +33,7 @@ func (e *Events) init(a *Aggregate) {
 
 func (e *Events) GetEventTypes() *[]string {
 	typesMap := map[string]string{}
-	res := []string{}
+	var res []string
 	if e != nil {
 		for _, event := range *e {
 			_, ok := typesMap[event.EventType]
@@ -43,12 +47,21 @@ func (e *Events) GetEventTypes() *[]string {
 }
 
 func (e *Event) init(a *Aggregate, name string) {
-	e.Name = name
 	if len(e.Version) == 0 {
-		e.Version = "1"
+		e.Version = "V1"
 	}
+
+	e.Aggregate = a
+	e.Name = name
+	e.Route = fmt.Sprintf("%s/%s/ver:%s", e.Aggregate.Name, e.Name, e.Version)
+	e.Route = strings.ToLower(e.Route)
+
 	e.Properties.Init(a)
-	if data := e.Properties["data"]; data != nil {
+	data := e.Properties["data"]
+	if data == nil {
+		data = e.Properties["Data"]
+	}
+	if data != nil {
 		e.DataProperty = data
 		if a.FieldsObjects != nil && e.DataProperty.Type != "" {
 			fields := a.FieldsObjects[e.DataProperty.Type]
@@ -93,4 +106,28 @@ func (e *Event) IsCreateOrUpdate() bool {
 		return true
 	}
 	return false
+}
+
+//
+// IsAggregate
+// @Description: 是聚合对象上的事件
+// @receiver e
+// @return bool
+//
+func (e *Event) IsAggregate() bool {
+	if e.To == "" || e.To == e.Aggregate.Name {
+		return true
+	}
+	return false
+}
+
+//
+// IsEntity
+// @Description: 是实体对象上的事件
+// @receiver e
+// @param entityName 实体名称
+// @return bool
+//
+func (e *Event) IsEntity(entityName string) bool {
+	return e.To == entityName
 }

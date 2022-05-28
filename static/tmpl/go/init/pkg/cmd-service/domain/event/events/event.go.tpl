@@ -24,7 +24,7 @@ func (e *{{.ClassName}}) GetEventType() string {
     return {{.EventType}}Type.String()
 }
 
-func (e *{{.ClassName}}) GetEventRevision() string {
+func (e *{{.ClassName}}) GetEventVersion() string {
     return "1.0"
 }
 

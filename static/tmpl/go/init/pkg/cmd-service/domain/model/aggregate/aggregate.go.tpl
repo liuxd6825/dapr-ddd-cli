@@ -21,8 +21,14 @@ type {{.ClassName}} struct {
 {{- end}}
 }
 
+const AggregateType = "{{.AggregateType}}"
+
 func New{{.ClassName}}() *{{.ClassName}} {
     return &{{.ClassName}}{}
+}
+
+func NewAggregate() ddd.Aggregate {
+	return New{{.ClassName}}()
 }
 
 {{- range $cmdName, $cmd := .Commands }}
@@ -44,12 +50,12 @@ func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, event *{{$EventP
 }
 {{- end }}
 
-func (a *{{.ClassName}}) GetAggregateRevision() string {
+func (a *{{.ClassName}}) GetAggregateVersion() string {
     return "{{.Aggregate.Version}}"
 }
 
 func (a *{{.ClassName}}) GetAggregateType() string {
-    return "{{.AggregateType}}"
+    return AggregateType
 }
 
 func (a *{{.ClassName}}) GetAggregateId() string {

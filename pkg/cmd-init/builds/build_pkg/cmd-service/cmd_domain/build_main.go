@@ -21,6 +21,7 @@ type BuildDomainLayer struct {
 	buildBaseDomainService           *builds.BuildAnyFile
 	buildValueObjects                []*BuildValueObject
 	buildEntityObjects               []*BuildEntityObject
+	buildRegisterAggregateType       *BuildRegisterAggregateType
 }
 
 func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildDomainLayer {
@@ -42,6 +43,7 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 	res.initDomainService()
 	res.initBuildValueObjects()
 	res.initBuildEntityObjects()
+	res.initBuildRegisterAggregateTypes()
 
 	return res
 }
@@ -114,6 +116,7 @@ func (b *BuildDomainLayer) Build() error {
 	list = append(list, buildEvents()...)
 	list = append(list, b.buildRegisterAllEventType)
 	list = append(list, buildRegisterAggregateEventTypes()...)
+	list = append(list, b.buildRegisterAggregateType)
 
 	return b.DoBuild(list...)
 }
@@ -162,6 +165,11 @@ func (b *BuildDomainLayer) initRegisterAggregateEventTypes() {
 func (b *BuildDomainLayer) initRegisterAllEventType() {
 	outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/event/reg_all_event_type.go", b.outDir)
 	b.buildRegisterAllEventType = NewBuildRegisterAllEventType(b.BaseBuild, utils.ToLower(outFile))
+}
+
+func (b *BuildDomainLayer) initBuildRegisterAggregateTypes() {
+	outFile := fmt.Sprintf("%s/pkg/cmd-service/domain/model/reg_aggregate_type.go", b.outDir)
+	b.buildRegisterAggregateType = NewBuildRegisterAggregateType(b.BaseBuild, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initFields() {

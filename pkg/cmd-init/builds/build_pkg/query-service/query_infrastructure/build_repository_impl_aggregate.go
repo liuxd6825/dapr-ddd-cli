@@ -18,7 +18,7 @@ func NewBuildRepositoryImplAggregate(base builds.BaseBuild, aggregate *config.Ag
 		aggregate: aggregate,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/repository_impl/mongodb/repository_impl.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/repository_impl/mongodb/repository_impl_aggregate.go.tpl"
 	res.OutFile = outFile
 	return res
 }

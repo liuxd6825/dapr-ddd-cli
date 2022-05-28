@@ -18,7 +18,7 @@ func NewBuildRepositoryImplEntity(base builds.BaseBuild, entity *config.Entity, 
 		entity:    entity,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/repository_impl/mongodb/repository_impl.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/repository_impl/mongodb/repository_impl_entity.go.tpl"
 	res.OutFile = outFile
 	return res
 }

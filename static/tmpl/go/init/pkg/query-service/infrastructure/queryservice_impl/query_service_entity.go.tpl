@@ -32,10 +32,14 @@ func (u *{{.Name}}QueryService) Update(ctx context.Context, view *projection.{{.
 	return err
 }
 
-func (u *UserQueryService) DeleteById(ctx context.Context, tenantId string, id string) error {
+func (u *{{.Name}}QueryService) DeleteById(ctx context.Context, tenantId string, id string) error {
 	return u.repos.DeleteById(ctx, tenantId, id)
 }
 
-func (u *UserQueryService) FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*projection.{{.Name}}View], bool, error) {
+func (u *{{.Name}}QueryService) FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*projection.{{.Name}}View], bool, error) {
+	return u.repos.FindPaging(ctx, query).Result()
+}
+
+func (u *{{.Name}}QueryService) FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*projection.{{.Name}}View], bool, error) {
 	return u.repos.FindPaging(ctx, query).Result()
 }

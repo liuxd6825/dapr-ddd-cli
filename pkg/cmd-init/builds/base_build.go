@@ -3,6 +3,7 @@ package builds
 import (
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"strings"
 )
 
 type Build interface {
@@ -66,12 +67,13 @@ func (b *BaseBuild) Build() error {
 func (b *BaseBuild) Values() map[string]interface{} {
 	res := make(map[string]interface{})
 	res["Config"] = b.Config
+	res["Namespace"] = b.Namespace()
+	res["namespace"] = strings.ToLower(b.Namespace())
 	res["Aggregates"] = b.Config.Aggregates
 	if b.Aggregate != nil {
 		res["Aggregate"] = b.Aggregate
 		res["AggregateName"] = b.AggregateName()
 		res["aggregateName"] = b.aggregateName()
-		res["Namespace"] = b.Namespace()
 	}
 	return res
 }

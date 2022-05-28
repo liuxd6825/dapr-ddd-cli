@@ -21,7 +21,7 @@ func NewBuildEntityObject(base builds.BaseBuild, Entity *config.Entity, outFile 
 		outFile:   outFile,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/model/entity.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/model/aggregate/entity.go.tpl"
 	res.OutFile = outFile
 	return res
 }

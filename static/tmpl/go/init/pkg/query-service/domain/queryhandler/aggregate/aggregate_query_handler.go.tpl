@@ -1,4 +1,5 @@
 package queryhandler
+
 {{$AggregateName := .AggregateName}}
 {{$EventPackage := .EventPackage}}
 import (
@@ -12,16 +13,13 @@ import (
 
 type {{.AggregateName}}QueryHandler struct {
 	{{.aggregateName}}Service queryservice.{{.AggregateName}}QueryService
-{{- range $entityName, $entity := .Entities}}
-	{{$entity.FirstLowerName}}Service queryservice.{{$entity.Name}}QueryService
-{{- end }}
 	restapp.BaseQueryHandler
 }
 
 func New{{.AggregateName}}Subscribes() restapp.RegisterSubscribe {
 	subscribes := &[]ddd.Subscribe{
 	{{- range $eventName, $event := .Events}}
-		{PubsubName: "pubsub", Topic: {{$EventPackage}}.{{$event.EventType}}Type.String(), Route: "/event/command-service/users/user-create-event"},
+		{PubsubName: "pubsub", Topic: {{$EventPackage}}.{{$event.EventType}}Type.String(), Route: "/event/command-service/{{$event.Route}}"},
 	{{- end }}
 	}
 	return restapp.NewRegisterSubscribe(subscribes, New{{.AggregateName}}QueryHandler())
@@ -37,13 +35,15 @@ func New{{.AggregateName}}QueryHandler() ddd.QueryEventHandler {
 }
 {{- $FactoryPackage := .FactoryPackage}}
 {{- range $eventName, $event := .Events}}
+{{- if $event.IsAggregate }}
 func (h *{{$AggregateName}}QueryHandler) On{{$eventName}}(ctx context.Context, event *{{$EventPackage}}.{{$eventName}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-		view := {{$FactoryPackage}}.NewAddressViewByUserCreateEventV1(event)
+		view := {{$FactoryPackage}}.New{{$AggregateName}}ViewBy{{$eventName}}(event)
 		return h.addrService.Create(ctx, view)
 	})
 }
-{{- end}}
+{{- end }}
+{{- end }}
 
 
 func (h *{{.AggregateName}}QueryHandler) GetStructName() string {

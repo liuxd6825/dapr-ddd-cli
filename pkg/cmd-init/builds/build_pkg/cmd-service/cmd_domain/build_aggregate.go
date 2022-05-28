@@ -5,6 +5,7 @@ import (
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
 	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"strings"
 )
 
 type BuildAggregate struct {
@@ -18,7 +19,7 @@ func NewBuildAggregate(base builds.BaseBuild, aggregate *config.Aggregate, outFi
 		aggregate: aggregate,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/model/aggregate.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/model/aggregate/aggregate.go.tpl"
 	res.OutFile = outFile
 	return res
 }
@@ -47,5 +48,5 @@ func (b *BuildAggregate) ClassName() string {
 }
 
 func (b *BuildAggregate) AggregateType() string {
-	return utils.FirstUpper(fmt.Sprintf("%s.%s", b.Namespace(), b.ClassName()))
+	return fmt.Sprintf("%s.%s", strings.ToLower(b.Config.Configuration.ServiceName), b.ClassName())
 }
