@@ -82,7 +82,7 @@ func (b *BaseBuild) Values() map[string]interface{} {
 		res["AggregateFieldPackage"] = fmt.Sprintf("%s_field", aggregateName)
 		res["AggregateModelPackage"] = fmt.Sprintf("%s_model", aggregateName)
 		res["AggregateFactoryPackage"] = fmt.Sprintf("%s_factory", aggregateName)
-
+		res["AggregateServicePackage"] = fmt.Sprintf("%s_service", aggregateName)
 	}
 	return res
 }

@@ -72,27 +72,27 @@ func (b *BuildInfrastructureLayer) Build() error {
 func (b *BuildInfrastructureLayer) initRepositoryEntities() {
 	b.buildRepositoryImplEntities = []*BuildRepositoryImplEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/repository_impl/mongodb/%s_view_repository.go", b.outDir, item.Name)
+		outFile := fmt.Sprintf("%s/domain/repository/mongodb/%s_repository/%s_viewrepository_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildRepositoryImplEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildRepositoryImplEntities = append(b.buildRepositoryImplEntities, build)
 	}
 }
 
 func (b *BuildInfrastructureLayer) initRepositoryAggregate() {
-	outFile := fmt.Sprintf("%s/repository_impl/mongodb/%s_view_repository.go", b.outDir, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/domain/repository/mongodb/%s_repository/%s_viewrepository_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildRepositoryImplAggregate = NewBuildRepositoryImplAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildInfrastructureLayer) initQueryServiceEntities() {
 	b.buildQueryServiceImplEntities = []*BuildQueryServiceImplEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/queryservice_impl/%s_query_service.go", b.outDir, item.Name)
+		outFile := fmt.Sprintf("%s/domain/service/%s_service/%s_queryservice_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildQueryServiceImplEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildQueryServiceImplEntities = append(b.buildQueryServiceImplEntities, build)
 	}
 }
 
 func (b *BuildInfrastructureLayer) initQueryServiceAggregate() {
-	outFile := fmt.Sprintf("%s/queryservice_impl/%s_query_service.go", b.outDir, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/domain/service/%s_service/%s_queryservice_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildQueryServiceImplAggregate = NewBuildQueryServiceImplAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }

@@ -22,6 +22,7 @@ type BuildDomainLayer struct {
 	buildValueObjects                []*BuildValueObject
 	buildEntityObjects               []*BuildEntityObject
 	buildRegisterAggregateType       *BuildRegisterAggregateType
+	buildEnumObjects                 []*BuildEnumObject
 }
 
 func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildDomainLayer {
@@ -44,6 +45,7 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 	res.initBuildValueObjects()
 	res.initBuildEntityObjects()
 	res.initBuildRegisterAggregateTypes()
+	res.initEnumObjects()
 
 	return res
 }
@@ -114,9 +116,21 @@ func (b *BuildDomainLayer) Build() error {
 		return res
 	}
 	list = append(list, buildEvents()...)
+
+	// eventType
 	list = append(list, b.buildRegisterAllEventType)
 	list = append(list, buildRegisterAggregateEventTypes()...)
 	list = append(list, b.buildRegisterAggregateType)
+
+	// enumObject
+	buildEnumObjectsTypes := func() []builds.Build {
+		var res []builds.Build
+		for _, item := range b.buildEnumObjects {
+			res = append(res, item)
+		}
+		return res
+	}
+	list = append(list, buildEnumObjectsTypes()...)
 
 	return b.DoBuild(list...)
 }
@@ -211,4 +225,16 @@ func (b *BuildDomainLayer) initBuildEntityObjects() {
 		buildEntityObject := NewBuildEntityObject(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildEntityObjects = append(b.buildEntityObjects, buildEntityObject)
 	}
+}
+
+func (b *BuildDomainLayer) initEnumObjects() {
+	b.buildEnumObjects = []*BuildEnumObject{}
+	if b.aggregate.EnumObjects != nil {
+		for _, item := range b.aggregate.EnumObjects {
+			outFile := fmt.Sprintf("%s/model/%s_model/%s_enum.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
+			buildEnumObject := NewBuildEnumObject(b.BaseBuild, item, utils.ToLower(outFile))
+			b.buildEnumObjects = append(b.buildEnumObjects, buildEnumObject)
+		}
+	}
+
 }

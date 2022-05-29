@@ -1,5 +1,5 @@
 aggregates:
-  User:
+  UserInfo:
     # ----------------------------------
     properties:
       Id:
@@ -10,8 +10,6 @@ aggregates:
         type: string
       Email:
         type: string
-      IsDelete:
-        type: bool
       Address:
         type: Address
       Contacts:
@@ -144,7 +142,7 @@ aggregates:
         eventType: ContactCreateEvent
         action: create
         version: V1
-        to: Contact
+        to: ContactItem
         properties:
           data:
             type: UserFields
@@ -153,7 +151,7 @@ aggregates:
         eventType: ContactUpdateEvent
         version: V1
         action: update
-        to: Contact
+        to: ContactItem
         properties:
           data:
             type: UserFields
@@ -162,7 +160,7 @@ aggregates:
         eventType: ContactDeleteEvent
         version: V1
         action: delete
-        to: Contact
+        to: ContactItem
         properties:
           UserId:
             type: stirng
@@ -170,7 +168,7 @@ aggregates:
             type: string
     # ----------------------------------
     entities:
-      Contact:
+      ContactItem:
         id:
           name: UserId
         properties:
@@ -195,14 +193,16 @@ aggregates:
     # ----------------------------------
     enumObjects:
       ContactType:
-        baseType: string
         values:
           Phone:
-            description: 电话
+            value: 1
+            title: 电话
           QQ:
-            description: QQ号
+            value: 2
+            title: QQ号
           WeChat:
-            description: 微信号
+            value: 3
+            title: 微信号
     # ----------------------------------
     query:
       projections:

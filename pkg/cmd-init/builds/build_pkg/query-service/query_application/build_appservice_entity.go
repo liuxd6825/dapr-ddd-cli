@@ -16,7 +16,7 @@ func NewBuildRestControllerEntity(base builds.BaseBuild, entity *config.Entity, 
 		entity:    entity,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/application/internales/query_appservice/app_service.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/application/internales/service/app_service_entity.go.tpl"
 	res.OutFile = outFile
 	return res
 }

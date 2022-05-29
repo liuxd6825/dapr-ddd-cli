@@ -4,28 +4,28 @@ import (
 	"context"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"{{.Namespace}}/pkg/query-service/application/internales/query_appservice"
+	app_service "{{.Namespace}}/pkg/query-service/application/internales/service/{{.aggregate_name}}_appservice"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 type {{.Name}}Controller struct {
-	queryAppService *query_appservice.{{.Name}}AppQueryService
+	appService *app_service.{{.Name}}QueryAppService
 }
 
 func New{{.Name}}Controller() *{{.Name}}Controller {
 	return &{{.Name}}Controller{
-		queryAppService: query_appservice.New{{.Name}}AppQueryService(),
+		appService: app_service.New{{.Name}}QueryAppService(),
 	}
 }
 
 func (c *{{.Name}}Controller) BeforeActivation(b mvc.BeforeActivation) {
-	b.Handle("GET", "/tenants/{tenantId}/users/{id}", "GetById")
-	b.Handle("GET", "/tenants/{tenantId}/users", "GetPagingData")
+	b.Handle("GET", "/tenants/{tenantId}/{{.ResourceName}}/{id}", "GetById")
+	b.Handle("GET", "/tenants/{tenantId}/{{.ResourceName}}", "GetPagingData")
 }
 
 func (c *{{.Name}}Controller) GetById(ctx iris.Context, tenantId, id string) {
 	_, _, _ = restapp.DoQueryOne(ctx, func(ctx context.Context) (interface{}, bool, error) {
-		return m.queryAppService.FindById(ctx, tenantId, id)
+		return c.appService.FindById(ctx, tenantId, id)
 	})
 }
 
@@ -35,6 +35,6 @@ func (c *{{.Name}}Controller) GetPagingData(ctx iris.Context, tenantId string) {
 		if err != nil {
 			return nil, false, err
 		}
-		return m.queryAppService.FindPagingData(ctx, query)
+		return c.appService.FindPagingData(ctx, query)
 	})
 }

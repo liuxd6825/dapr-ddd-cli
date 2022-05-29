@@ -17,7 +17,7 @@ func NewBuildQueryHandler(base builds.BaseBuild, aggregate *config.Aggregate, ou
 		BaseBuild: base,
 		aggregate: aggregate,
 	}
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/queryhandler/aggregate/aggregate_query_handler.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/handler/aggregate/aggregate_query_handler.go.tpl"
 	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res
@@ -34,5 +34,6 @@ func (b *BuildQueryHandlerAggregate) Values() map[string]interface{} {
 	res["Package"] = fmt.Sprintf("%s_queryhandler", utils.SnakeString(b.Aggregate.Name))
 	res["ServiceName"] = b.Config.Configuration.ServiceName
 	res["Namespace"] = b.Namespace()
+	res["Name"] = b.Aggregate.FirstUpperName()
 	return res
 }

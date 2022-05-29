@@ -27,6 +27,7 @@ func NewBuildUserInterfaceLayer(cfg *config.Config, aggregate *config.Aggregate,
 	}
 
 	res.initBuildRestControllerAggregate()
+	res.initQueryServiceEntities()
 	return res
 }
 
@@ -50,14 +51,14 @@ func (b *BuildUserInterfaceLayer) Build() error {
 }
 
 func (b *BuildUserInterfaceLayer) initBuildRestControllerAggregate() {
-	outFile := fmt.Sprintf("%s/rest/controller/%s_controller.go", b.outDir, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/rest/controller/%s_controller/%s_controller.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildRestControllerAggregate = NewBuildRestControllerAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildUserInterfaceLayer) initQueryServiceEntities() {
 	b.buildRestControllerEntities = []*BuildRestControllerEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/rest/controller/%s_controller.go", b.outDir, item.Name)
+		outFile := fmt.Sprintf("%s/rest/controller/%s_controller/%s_controller.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildRestControllerEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildRestControllerEntities = append(b.buildRestControllerEntities, build)
 	}

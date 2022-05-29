@@ -7,18 +7,19 @@ import (
 )
 
 type Event struct {
-	Name         string     // 事件名称
-	AggregateId  string     `yaml:"aggregateId"` // 聚合id属性名称
-	EventType    string     `yaml:"eventType"`   // 事件类型
-	Action       string     `yaml:"action"`      // 活动类型: create, update, delete
-	Version      string     `yaml:"version"`     // 版本号， 默认：V1
-	To           string     `yaml:"to"`          // 事件所应用到对象类型
-	Description  string     `yaml:"description"` // 事件说明
-	Properties   Properties `yaml:"properties"`  // 属性
-	DataProperty *Property  // 关联的数据属性
-	DataFields   *Fields    // 关联的数据字段
-	Aggregate    *Aggregate // 聚合
-	Route        string     // dapr消息监听的web地址
+	Name                string      // 事件名称
+	AggregateId         string      `yaml:"aggregateId"` // 聚合id属性名称
+	EventType           string      `yaml:"eventType"`   // 事件类型
+	Action              string      `yaml:"action"`      // 活动类型: create, update, delete
+	Version             string      `yaml:"version"`     // 版本号， 默认：V1
+	To                  string      `yaml:"to"`          // 事件所应用到对象类型
+	Description         string      `yaml:"description"` // 事件说明
+	Properties          Properties  `yaml:"properties"`  // 属性
+	DataProperty        *Property   // 关联的数据属性
+	DataFields          *Fields     // 关联的数据字段
+	DataFieldProperties *Properties // 关联的数据字段
+	Aggregate           *Aggregate  // 聚合
+	Route               string      // dapr消息监听的web地址
 }
 
 type Events map[string]*Event
@@ -46,6 +47,30 @@ func (e *Events) GetEventTypes() *[]string {
 	return &res
 }
 
+func (e *Events) GetAggregateEvents() []*Event {
+	var events []*Event
+	if e != nil {
+		for _, event := range *e {
+			if event.To == "" || strings.ToLower(event.To) == strings.ToLower(event.Aggregate.Name) {
+				events = append(events, event)
+			}
+		}
+	}
+	return events
+}
+
+func (e *Events) GetEntityEvents(entityName string) []*Event {
+	var events []*Event
+	if e != nil {
+		for _, event := range *e {
+			if strings.ToLower(event.To) == strings.ToLower(entityName) {
+				events = append(events, event)
+			}
+		}
+	}
+	return events
+}
+
 func (e *Event) init(a *Aggregate, name string) {
 	if len(e.Version) == 0 {
 		e.Version = "V1"
@@ -66,8 +91,18 @@ func (e *Event) init(a *Aggregate, name string) {
 			fields := a.FieldsObjects[e.DataProperty.Type]
 			if fields != nil {
 				e.DataFields = fields
+				e.DataFieldProperties = &fields.Properties
 			}
 		}
+	}
+	if e.DataProperty == nil {
+		e.DataProperty = &Property{}
+	}
+	if e.DataFields == nil {
+		e.DataFields = &Fields{}
+	}
+	if e.DataFieldProperties == nil {
+		e.DataFieldProperties = &Properties{}
 	}
 }
 

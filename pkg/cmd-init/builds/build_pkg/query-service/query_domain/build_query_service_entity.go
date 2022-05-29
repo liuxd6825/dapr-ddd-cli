@@ -16,7 +16,7 @@ func NewBuildQueryServiceEntity(base builds.BaseBuild, entity *config.Entity, ou
 		Entity:    entity,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/queryservice/query_service_entity.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/service/query_service_entity.go.tpl"
 	res.OutFile = outFile
 	return res
 }
