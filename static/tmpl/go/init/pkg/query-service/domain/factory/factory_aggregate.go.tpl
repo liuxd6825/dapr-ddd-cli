@@ -4,13 +4,13 @@
 package {{$aggregate_name}}_factory
 
 import (
-	"{{.Namespace}}/pkg/query-service/domain/projection"
-	domain_event "{{.Namespace}}/pkg/command-service/domain/event/{{$aggregate_name}}_event"
+	view "{{.Namespace}}/pkg/query-service/domain/projection/{{$aggregate_name}}_view"
+	domain_event "{{.Namespace}}/pkg/cmd-service/domain/event/{{$aggregate_name}}_event"
 )
 {{- range $eventName, $event := .Events }}
 
-func New{{$name}}ViewBy{{$event.Name}}(event *domain_event.{{$event.Name}}) *projection.{{$name}}View {
-	view := projection.{{$name}}View{
+func New{{$name}}ViewBy{{$event.Name}}(event *domain_event.{{$event.Name}}) *view.{{$name}}View {
+	v := view.{{$name}}View{
     {{- range $propertyName, $property := $event.DataFieldProperties }}
         {{$propertyName}} : event.Data.{{$propertyName}},
     {{- end }}
@@ -20,6 +20,6 @@ func New{{$name}}ViewBy{{$event.Name}}(event *domain_event.{{$event.Name}}) *pro
         {{- end}}
     {{- end }}
 	}
-	return &view
+	return &v
 }
 {{- end }}
