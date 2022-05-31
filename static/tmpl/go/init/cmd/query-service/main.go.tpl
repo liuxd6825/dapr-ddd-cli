@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"{{.Namespace}}/pkg/cmd-service/domain/event"
-	"{{.Namespace}}/pkg/cmd-service/domain/handler"
+	"{{.Namespace}}/pkg/query-service/domain/handler"
 	"{{.Namespace}}/pkg/query-service/userinterface/rest/controller"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )

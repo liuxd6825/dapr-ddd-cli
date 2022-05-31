@@ -34,6 +34,16 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 }
 {{- $factoryPackage := .AggregateFactoryPackage}}
 {{- range $eventName, $event := .Events}}
+
+
+//
+// On{{$event.Name}}
+// @Description: {{$event.Name}}事件处理器
+// @receiver h
+// @param ctx 上下文
+// @param event {{$event.Name}} {{$event.Description}}
+// @return error 错误
+//
 func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *{{$EventPackage}}.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
 		v := domain_factory.New{{$entityName}}ViewBy{{$event.Name}}(event)
@@ -49,7 +59,6 @@ func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, eve
 	})
 }
 {{- end }}
-
 
 func (h *{{$entityName}}QueryHandler) GetStructName() string {
 	return "{{.ServiceName}}.{{$entityName}}QueryHandler"

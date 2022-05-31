@@ -26,6 +26,8 @@ type BuildDomainLayer struct {
 
 	buildFactoryAggregate *BuildFactoryAggregate
 	buildFactoryEntities  []*BuildFactoryEntity
+
+	buildQueryHandlerRegisterSubscribe *BuildQueryHandlerRegisterSubscribe
 }
 
 func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildDomainLayer {
@@ -54,6 +56,8 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 
 	res.initFactoryEntities()
 	res.initFactoryAggregate()
+
+	res.initQueryHandlerRegisterSubscribe()
 
 	return res
 }
@@ -127,6 +131,8 @@ func (b *BuildDomainLayer) Build() error {
 	}
 	list = append(list, b.buildFactoryAggregate)
 	list = append(list, buildFactoryEntities()...)
+
+	list = append(list, b.buildQueryHandlerRegisterSubscribe)
 
 	return b.DoBuild(list...)
 }
@@ -212,4 +218,9 @@ func (b *BuildDomainLayer) initFactoryEntities() {
 func (b *BuildDomainLayer) initFactoryAggregate() {
 	outFile := fmt.Sprintf("%s/factory/%s_factory/%s_factory.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
 	b.buildFactoryAggregate = NewBuildFactoryAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+}
+
+func (b *BuildDomainLayer) initQueryHandlerRegisterSubscribe() {
+	outFile := fmt.Sprintf("%s/handler/register_subscribe.go", b.outDir)
+	b.buildQueryHandlerRegisterSubscribe = NewBuildQueryHandlerRegisterSubscribe(b.BaseBuild, outFile)
 }

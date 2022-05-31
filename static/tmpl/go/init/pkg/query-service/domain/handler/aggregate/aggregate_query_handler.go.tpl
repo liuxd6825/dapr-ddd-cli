@@ -36,23 +36,32 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 {{- $FactoryPackage := .AggregateFactoryPackage}}
 {{- range $event := .Events}}
 {{- if $event.IsAggregate }}
+
+//
+// On{{$event.Name}}
+// @Description: {{$event.Name}}事件处理器
+// @receiver h
+// @param ctx 上下文
+// @param event {{$event.Name}} {{$event.Description}}
+// @return error 错误
+//
 func (h *{{$AggregateName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *{{$EventPackage}}.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-		v := domain_factory.New{{$AggregateName}}ViewBy{{$event.Name}}(event)
 		{{- if $event.IsCreate }}
+		v := domain_factory.New{{$AggregateName}}ViewBy{{$event.Name}}(event)
 		return h.domainService.Create(ctx, v)
 		{{- end}}
         {{- if $event.IsUpdate }}
+        v := domain_factory.New{{$AggregateName}}ViewBy{{$event.Name}}(event)
         return h.domainService.Update(ctx, v)
         {{- end}}
         {{- if $event.IsDelete }}
-        return h.domainService.DeleteById(ctx, v.TenantId, v.Id)
+        return h.domainService.DeleteById(ctx, event.GetTenantId(), event.Data.Id)
         {{- end}}
 	})
 }
 {{- end }}
 {{- end }}
-
 
 func (h *{{.Name}}QueryHandler) GetStructName() string {
 	return "{{.ServiceName}}.{{.Name}}QueryHandler"
