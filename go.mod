@@ -1,4 +1,4 @@
-module github.com/dapr/dapr-ddd-cli
+module github.com/liuxd6825/dapr-ddd-cli
 
 go 1.18
 

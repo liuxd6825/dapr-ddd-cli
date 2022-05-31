@@ -9,8 +9,8 @@ import (
 	view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
 	domain_factory "{{.Namespace}}/pkg/query-service/domain/factory/{{.AggregateFactoryPackage}}"
 	domain_service "{{.Namespace}}/pkg/query-service/domain/service/{{.aggregate_name}}_service"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd"
-	"github.com/dapr/dapr-go-ddd-sdk/restapp"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 type {{.Name}}QueryHandler struct {

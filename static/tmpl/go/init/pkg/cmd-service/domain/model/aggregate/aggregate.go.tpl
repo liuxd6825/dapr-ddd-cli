@@ -5,11 +5,11 @@ package {{.Package}}
 
 import (
     "context"
-    _ "time"
+    "time"
     "{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
     "{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
     "{{.Namespace}}/pkg/cmd-service/domain/factory/{{.AggregateFactoryPackage}}"
-    "github.com/dapr/dapr-go-ddd-sdk/ddd"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
 //
@@ -35,7 +35,15 @@ func NewAggregate() ddd.Aggregate {
 {{- range $cmdName, $cmd := .Commands }}
 
 func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *{{$CommandPackage}}.{{$cmd.Name}}, metadata *map[string]string) error {
-    return ddd.Apply(ctx, a, cmd.NewDomainEvent(), ddd.ApplyOptions{}.SetMetadata(metadata))
+    {{- if $cmd.IsCreateAggregate }}
+    return ddd.CreateEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
+    {{- end }}
+    {{- if $cmd.IsUpdateAggregate }}
+    return ddd.ApplyEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
+    {{- end }}
+    {{- if $cmd.IsDeleteAggregate }}
+    return ddd.DeleteEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
+    {{- end }}
 }
 {{- end }}
 
@@ -43,9 +51,9 @@ func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *{{$CommandPacka
 
 func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, event *{{$EventPackage}}.{{$event.Name}}) error {
     {{- if $event.IsCreateOrUpdate }}
-    {{- range $propName, $prop := $event.DataFields.Properties }}
+        {{- range $propName, $prop := $event.DataFields.Properties }}
     a.{{$propName}} = event.Data.{{$propName}}
-	{{- end }}
+	    {{- end }}
 	{{- end }}
     return nil
 }

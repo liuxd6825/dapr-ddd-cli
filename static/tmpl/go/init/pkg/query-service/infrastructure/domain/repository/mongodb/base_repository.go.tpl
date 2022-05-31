@@ -2,10 +2,10 @@ package mongodb
 
 import (
 	"context"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_repository"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_repository/ddd_mongodb"
-	"github.com/dapr/dapr-go-ddd-sdk/restapp"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository/ddd_mongodb"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 func GetMongoDB() *ddd_mongodb.MongoDB {

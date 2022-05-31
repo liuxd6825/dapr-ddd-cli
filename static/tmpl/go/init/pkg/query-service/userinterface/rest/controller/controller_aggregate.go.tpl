@@ -5,7 +5,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	app_service "{{.Namespace}}/pkg/query-service/application/internales/service/{{.aggregate_name}}_service"
-	"github.com/dapr/dapr-go-ddd-sdk/restapp"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 type {{.Name}}Controller struct {

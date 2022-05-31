@@ -1,8 +1,8 @@
 package query_infrastructure
 
 import (
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
-	"github.com/dapr/dapr-ddd-cli/pkg/config"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init/builds"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 )
 
 type BuildRepositoryBase struct {

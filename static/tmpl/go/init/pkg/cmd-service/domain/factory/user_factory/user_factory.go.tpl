@@ -1,9 +1,9 @@
 package {{.aggregate_name}}_factory
 
 import (
-	command "github.com/dapr/dapr-go-ddd-example/pkg/cmd-service/domain/command/{{.aggregate_name}}_command"
-	event "github.com/dapr/dapr-go-ddd-example/pkg/xpublic/user_models/{{.aggregate_name}}_event"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd"
+	command "github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/domain/command/{{.aggregate_name}}_command"
+	event "github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic/user_models/{{.aggregate_name}}_event"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
 {{- range $eventName, $event := .Events }}

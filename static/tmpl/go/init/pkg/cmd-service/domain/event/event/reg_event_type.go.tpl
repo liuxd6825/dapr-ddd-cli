@@ -1,9 +1,10 @@
 package {{.aggregate_name}}_event
 
 import (
-    "github.com/dapr/dapr-go-ddd-sdk/restapp"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 {{- $AggregateName := .AggregateName}}
+
 type {{$AggregateName}}EventType uint32
 
 const (

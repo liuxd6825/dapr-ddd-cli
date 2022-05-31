@@ -7,7 +7,7 @@ import (
 	"{{.Namespace}}/pkg/cmd-service/application/internals/cmd_appservice"
 	"{{.Namespace}}/pkg/cmd-service/application/internals/query_appservice"
 	"{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
-	"github.com/dapr/dapr-go-ddd-sdk/restapp"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 {{- $AggregateName := .AggregateName}}
 {{- $ClassName := .ClassName}}

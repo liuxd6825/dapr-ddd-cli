@@ -3,9 +3,9 @@ package main
 import (
 	"embed"
 	"fmt"
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init"
-	"github.com/dapr/dapr-ddd-cli/pkg/resource"
-	_ "github.com/dapr/dapr-ddd-cli/pkg/resource"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
+	_ "github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"

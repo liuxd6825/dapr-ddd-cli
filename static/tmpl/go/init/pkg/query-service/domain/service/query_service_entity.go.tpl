@@ -4,7 +4,7 @@ import (
 	"context"
 	view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
 	service_impl "{{.Namespace}}/pkg/query-service/infrastructure/domain/service/{{.aggregate_name}}_service"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_repository"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 type {{.Name}}QueryDomainService interface {

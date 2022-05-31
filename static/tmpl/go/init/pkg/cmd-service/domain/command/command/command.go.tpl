@@ -3,8 +3,8 @@ package {{.aggregate_name}}_command
 import (
     events "{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
     fields "{{.Namespace}}/pkg/cmd-service/domain/field/{{.AggregateFieldPackage}}"
-    "github.com/dapr/dapr-go-ddd-sdk/ddd"
-    "github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_errors"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_errors"
 )
 
 //

@@ -1,6 +1,6 @@
 package config
 
-import "github.com/dapr/dapr-ddd-cli/pkg/utils"
+import "github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 
 type Entities map[string]*Entity
 

@@ -1,9 +1,9 @@
 package cmd_application
 
 import (
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
-	"github.com/dapr/dapr-ddd-cli/pkg/config"
-	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init/builds"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 )
 
 type BuildQueryAppServiceEntity struct {

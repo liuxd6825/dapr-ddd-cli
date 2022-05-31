@@ -1,7 +1,7 @@
 package {{.Package}}
 
 import (
-    _ "time"
+    "time"
 )
 
 type {{.Name}} int

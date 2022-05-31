@@ -1,21 +1,22 @@
 package config
 
 import (
-	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 	"strings"
 )
 
 type Commands map[string]*Command
 
 type Command struct {
-	Name        string
-	IsHandler   bool       `yaml:"isHandler"`
-	Action      string     `yaml:"action"`
-	Event       string     `yaml:"event"`
-	AggregateId string     `yaml:"aggregateId"`
-	Properties  Properties `yaml:"properties"`
-	Description string     `yaml:"description"`
-	Aggregate   *Aggregate
+	Name               string
+	IsHandler          bool       `yaml:"isHandler"`
+	Action             string     `yaml:"action"`
+	Event              string     `yaml:"event"`
+	AggregateId        string     `yaml:"aggregateId"`
+	Properties         Properties `yaml:"properties"`
+	Description        string     `yaml:"description"`
+	IsAggregateCommand *bool      `yaml:"isAggregateCommand"`
+	Aggregate          *Aggregate
 }
 
 func (c *Commands) init(a *Aggregate) {
@@ -29,6 +30,10 @@ func (c *Commands) init(a *Aggregate) {
 func (c *Command) init(a *Aggregate, name string) {
 	c.Aggregate = a
 	c.Name = name
+	if c.IsAggregateCommand == nil {
+		f := strings.Contains(name, a.Name)
+		c.IsAggregateCommand = &f
+	}
 	c.Properties.Init(a)
 }
 
@@ -62,6 +67,27 @@ func (c *Command) IsDelete() bool {
 
 func (c *Command) IsCreateOrUpdate() bool {
 	if c.IsUpdate() || c.IsUpdate() {
+		return true
+	}
+	return false
+}
+
+func (c *Command) IsCreateAggregate() bool {
+	if *c.IsAggregateCommand && c.IsCreate() {
+		return true
+	}
+	return false
+}
+
+func (c *Command) IsUpdateAggregate() bool {
+	if *c.IsAggregateCommand && c.IsUpdate() {
+		return true
+	}
+	return false
+}
+
+func (c *Command) IsDeleteAggregate() bool {
+	if *c.IsAggregateCommand && c.IsDelete() {
 		return true
 	}
 	return false

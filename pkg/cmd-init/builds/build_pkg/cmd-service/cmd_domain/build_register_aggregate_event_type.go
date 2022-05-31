@@ -1,8 +1,8 @@
 package cmd_domain
 
 import (
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
-	"github.com/dapr/dapr-ddd-cli/pkg/config"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init/builds"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 )
 
 type BuildRegisterAggregateEventType struct {
@@ -24,7 +24,6 @@ func NewBuildRegisterAggregateEventType(base builds.BaseBuild, aggregate *config
 func (b *BuildRegisterAggregateEventType) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Events"] = b.aggregate.Events
-
 	res["EventTypes"] = b.aggregate.Events.GetEventTypes()
 	return res
 }

@@ -2,27 +2,27 @@ package cmd_domain
 
 import (
 	"fmt"
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
-	"github.com/dapr/dapr-ddd-cli/pkg/config"
-	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init/builds"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 )
 
 type BuildDomainLayer struct {
 	builds.BaseBuild
-	aggregate                        *config.Aggregate
-	outDir                           string
-	buildFields                      []*BuildField
-	buildCommands                    []*BuildCommand
-	buildRegisterAllEventType        *BuildRegisterAllEventType
-	buildRegisterAggregateEventTypes []*BuildRegisterAggregateEventType
-	buildEvents                      []*BuildEvent
-	buildAggregate                   *BuildAggregate
-	buildDomainService               *BuildDomainService
-	buildBaseDomainService           *builds.BuildAnyFile
-	buildValueObjects                []*BuildValueObject
-	buildEntityObjects               []*BuildEntityObject
-	buildRegisterAggregateType       *BuildRegisterAggregateType
-	buildEnumObjects                 []*BuildEnumObject
+	aggregate                       *config.Aggregate
+	outDir                          string
+	buildFields                     []*BuildField
+	buildCommands                   []*BuildCommand
+	buildRegisterAllEventType       *BuildRegisterAllEventType
+	buildRegisterAggregateEventType *BuildRegisterAggregateEventType
+	buildEvents                     []*BuildEvent
+	buildAggregate                  *BuildAggregate
+	buildDomainService              *BuildDomainService
+	buildBaseDomainService          *builds.BuildAnyFile
+	buildValueObjects               []*BuildValueObject
+	buildEntityObjects              []*BuildEntityObject
+	buildRegisterAggregateType      *BuildRegisterAggregateType
+	buildEnumObjects                []*BuildEnumObject
 }
 
 func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildDomainLayer {
@@ -100,26 +100,9 @@ func (b *BuildDomainLayer) Build() error {
 	}
 	list = append(list, buildCommands()...)
 
-	// events
-	buildEvents := func() []builds.Build {
-		var res []builds.Build
-		for _, b := range b.buildEvents {
-			res = append(res, b)
-		}
-		return res
-	}
-	buildRegisterAggregateEventTypes := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildRegisterAggregateEventTypes {
-			res = append(res, item)
-		}
-		return res
-	}
-	list = append(list, buildEvents()...)
-
 	// eventType
 	list = append(list, b.buildRegisterAllEventType)
-	list = append(list, buildRegisterAggregateEventTypes()...)
+	list = append(list, b.buildRegisterAggregateEventType)
 	list = append(list, b.buildRegisterAggregateType)
 
 	// enumObject
@@ -167,13 +150,8 @@ func (b *BuildDomainLayer) initEvents() {
 }
 
 func (b *BuildDomainLayer) initRegisterAggregateEventTypes() {
-	regs := []*BuildRegisterAggregateEventType{}
-	for _, agg := range b.Config.Aggregates {
-		outFile := fmt.Sprintf("%s/event/%s_event/event_type.go", b.outDir, agg.FileName())
-		reg := NewBuildRegisterAggregateEventType(b.BaseBuild, agg, utils.ToLower(outFile))
-		regs = append(regs, reg)
-	}
-	b.buildRegisterAggregateEventTypes = regs
+	outFile := fmt.Sprintf("%s/event/%s_event/event_type.go", b.outDir, b.aggregate.FileName())
+	b.buildRegisterAggregateEventType = NewBuildRegisterAggregateEventType(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initRegisterAllEventType() {

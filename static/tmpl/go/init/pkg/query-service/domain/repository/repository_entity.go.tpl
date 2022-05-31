@@ -3,7 +3,7 @@ package {{.aggregate_name}}_repository
 import (
 	"context"
 	view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_repository"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 type {{.Name}}ViewRepository interface {

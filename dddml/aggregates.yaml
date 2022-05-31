@@ -59,6 +59,7 @@ aggregates:
         aggregateId: Data.Id
         action: create
         event: UserCreateEventV1
+        isAggregateCommand: true
         properties:
           Data:
             type: UserFields
@@ -69,6 +70,7 @@ aggregates:
         aggregateId: Data.Id
         action: update
         event: UserUpdateEventV1
+        isAggregateCommand: true
         properties:
           Data:
             type: UserFields
@@ -79,6 +81,7 @@ aggregates:
         aggregateId: data.id
         event: UserDeleteEventV1
         action: delete
+        isAggregateCommand: true
         properties:
           Data:
             type: UserDeleteFields

@@ -5,7 +5,7 @@ import (
 	"{{.Namespace}}/pkg/query-service/infrastructure/domain/repository/mongodb"
  	view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
 	repository "{{.Namespace}}/pkg/query-service/domain/repository/{{.aggregate_name}}_repository"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_repository"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 type {{.Name}}ViewRepositoryImpl struct {

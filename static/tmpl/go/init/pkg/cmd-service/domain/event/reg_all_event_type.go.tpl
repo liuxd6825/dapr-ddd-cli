@@ -4,7 +4,7 @@ import (
 {{- range $name, $agg := .Aggregates}}
     "{{$namespace}}/pkg/cmd-service/domain/event/{{$agg.SnakeName}}_event"
 {{- end}}
-    "github.com/dapr/dapr-go-ddd-sdk/restapp"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 //

@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"github.com/dapr/dapr-ddd-cli/pkg/resource"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
 	"os"
 	"strings"
 	"text/template"

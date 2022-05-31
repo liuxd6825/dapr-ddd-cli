@@ -1,7 +1,7 @@
 package cmd_domain
 
 import (
-	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init/builds"
 )
 
 type BuildRegisterAllEventType struct {

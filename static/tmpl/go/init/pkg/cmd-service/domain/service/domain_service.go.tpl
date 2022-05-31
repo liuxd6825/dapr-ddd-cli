@@ -7,7 +7,7 @@ import (
     "{{.Namespace}}/pkg/cmd-service/domain/service"
     "{{.Namespace}}/pkg/cmd-service/domain/command/{{$commandPackage}}"
     "{{.Namespace}}/pkg/cmd-service/domain/model/{{$modelPackage}}"
-    "github.com/dapr/dapr-go-ddd-sdk/ddd"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
 type {{.ClassName}} struct {

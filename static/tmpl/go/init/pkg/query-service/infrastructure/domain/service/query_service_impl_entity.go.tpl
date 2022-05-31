@@ -6,7 +6,7 @@ import (
 	domain_service "{{.Namespace}}/pkg/query-service/domain/service/{{.aggregate_name}}_service"
 	domain_repository "{{.Namespace}}/pkg/query-service/domain/repository/{{.aggregate_name}}_repository"
 	repository_impl "{{.Namespace}}/pkg/query-service/infrastructure/domain/repository/mongodb/{{.aggregate_name}}_repository"
-	"github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_repository"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 type {{.Name}}QueryDomainServiceImpl struct {

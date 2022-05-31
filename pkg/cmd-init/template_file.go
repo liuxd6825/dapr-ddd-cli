@@ -2,7 +2,7 @@ package cmd_init
 
 import (
 	"fmt"
-	"github.com/dapr/dapr-ddd-cli/pkg/resource"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
 	"io/fs"
 	"os"
 	"strings"
@@ -83,7 +83,7 @@ func (f *TemplateFile) createFile() error {
 	if err != nil {
 		return err
 	}
-	
+
 	funcs := map[string]any{
 		"ToLower": ToLower,
 		"ToUpper": ToUpper,

@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"github.com/dapr/dapr-ddd-cli/pkg/utils"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 	"strings"
 )
 
