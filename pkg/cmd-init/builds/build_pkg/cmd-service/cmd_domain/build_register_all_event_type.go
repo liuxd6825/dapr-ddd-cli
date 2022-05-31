@@ -12,7 +12,7 @@ func NewBuildRegisterAllEventType(base builds.BaseBuild, outFile string) *BuildR
 	res := &BuildRegisterAllEventType{
 		BaseBuild: base,
 	}
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/reg_all_event_type.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/register_event_type.go.tpl"
 	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res

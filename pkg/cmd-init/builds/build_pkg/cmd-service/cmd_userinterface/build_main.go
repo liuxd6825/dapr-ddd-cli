@@ -9,9 +9,10 @@ import (
 
 type BuildRestControllerLayer struct {
 	builds.BaseBuild
-	aggregate           *config.Aggregate
-	outDir              string
-	buildRestController *BuildRestController
+	aggregate               *config.Aggregate
+	outDir                  string
+	buildRestController     *BuildRestController
+	buildRegisterController *BuildRegisterController
 }
 
 func NewBuildRestControllerLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildRestControllerLayer {
@@ -30,11 +31,16 @@ func NewBuildRestControllerLayer(cfg *config.Config, aggregate *config.Aggregate
 func (b *BuildRestControllerLayer) init() {
 	outFile := fmt.Sprintf("%s/rest/controller/%s_controller.go", b.outDir, b.aggregate.FileName())
 	b.buildRestController = NewBuildRestController(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+
+	outFile = fmt.Sprintf("%s/rest/controller/register_controller.go", b.outDir)
+	b.buildRegisterController = NewBuildRegisterController(b.BaseBuild, utils.ToLower(outFile))
 }
 
 func (b *BuildRestControllerLayer) Build() error {
 	var list []builds.Build
 
 	list = append(list, b.buildRestController)
+	list = append(list, b.buildRegisterController)
+
 	return b.DoBuild(list...)
 }

@@ -17,7 +17,7 @@ type {{.Name}}QueryHandler struct {
 	restapp.BaseQueryHandler
 }
 
-func New{{.Name}}Subscribes() restapp.RegisterSubscribe {
+func New{{.Name}}Subscribe() restapp.RegisterSubscribe {
 	subscribes := &[]ddd.Subscribe{
 	{{- range $eventName, $event := .Events}}
 	{{- if $event.IsAggregate }}

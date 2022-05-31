@@ -175,3 +175,7 @@ func (e *Event) IsEntity(entityName string) bool {
 func (e *Event) HasDataProperty() bool {
 	return e.hasDataProperty
 }
+
+func (e *Event) SnakeName() string {
+	return utils.SnakeString(e.Name)
+}

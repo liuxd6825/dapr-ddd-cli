@@ -18,7 +18,7 @@ type {{.Name}}QueryHandler struct {
 	restapp.BaseQueryHandler
 }
 
-func New{{.Name}}Subscribes() restapp.RegisterSubscribe {
+func New{{.Name}}Subscribe() restapp.RegisterSubscribe {
 	subscribes := &[]ddd.Subscribe{
 	{{- range $eventName, $event := .Events}}
 		{PubsubName: "pubsub", Topic: {{$EventPackage}}.{{$event.EventType}}Type.String(), Route: "/event/command-service/{{$event.Route}}"},

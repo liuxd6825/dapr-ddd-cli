@@ -8,11 +8,11 @@ import (
 )
 
 //
-// GetRegisterEventTypes
+// GetRegisterEventType
 // @Description: 获取所有注册事件类型
 // @return *[]restapp.RegisterEventType
 //
-func GetRegisterEventTypes() *[]restapp.RegisterEventType {
+func GetRegisterEventType() *[]restapp.RegisterEventType {
     var list []restapp.RegisterEventType
 {{- range $name, $agg := .Aggregates}}
     list = append(list, {{$agg.SnakeName}}_event.GetRegisterEventTypes()...)

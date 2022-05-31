@@ -25,7 +25,7 @@ func (b *BuildMakefile) Build() error {
 	values := map[string]interface{}{}
 	values["ServiceName"] = b.Config.Configuration.ServiceName
 	values["Description"] = b.Config.Configuration.Description
-	values["Namespace"] = b.Config.Configuration.Namespace.Go
+	values["Namespace"] = b.Config.Configuration.GetNamespace()
 	values["Metadata"] = b.Config.Configuration.Metadata
 	values["GoMetadata"] = b.Config.Configuration.Go
 	values["JavaMetadata"] = b.Config.Configuration.Java

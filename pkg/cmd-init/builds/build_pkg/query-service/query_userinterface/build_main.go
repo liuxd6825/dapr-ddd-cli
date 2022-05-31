@@ -14,6 +14,7 @@ type BuildUserInterfaceLayer struct {
 
 	buildRestControllerAggregate *BuildRestControllerAggregate
 	buildRestControllerEntities  []*BuildRestControllerEntity
+	buildRegisterController      *BuildRegisterController
 }
 
 func NewBuildUserInterfaceLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildUserInterfaceLayer {
@@ -25,9 +26,7 @@ func NewBuildUserInterfaceLayer(cfg *config.Config, aggregate *config.Aggregate,
 		aggregate: aggregate,
 		outDir:    outDir,
 	}
-
-	res.initBuildRestControllerAggregate()
-	res.initQueryServiceEntities()
+	res.init()
 	return res
 }
 
@@ -45,20 +44,23 @@ func (b *BuildUserInterfaceLayer) Build() error {
 		}
 		return res
 	}
-
 	list = append(list, buildQueryServiceImplEntities()...)
+
+	// registerController
+	list = append(list, b.buildRegisterController)
 	return b.DoBuild(list...)
 }
 
-func (b *BuildUserInterfaceLayer) initBuildRestControllerAggregate() {
+func (b *BuildUserInterfaceLayer) init() {
 	outFile := fmt.Sprintf("%s/rest/controller/%s_controller/%s_controller.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildRestControllerAggregate = NewBuildRestControllerAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
-}
 
-func (b *BuildUserInterfaceLayer) initQueryServiceEntities() {
+	outFile = fmt.Sprintf("%s/rest/controller/register_controller.go", b.outDir)
+	b.buildRegisterController = NewBuildRegisterController(b.BaseBuild, outFile)
+
 	b.buildRestControllerEntities = []*BuildRestControllerEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/rest/controller/%s_controller/%s_controller.go", b.outDir, b.aggregate.FileName(), item.FileName())
+		outFile = fmt.Sprintf("%s/rest/controller/%s_controller/%s_controller.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildRestControllerEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildRestControllerEntities = append(b.buildRestControllerEntities, build)
 	}

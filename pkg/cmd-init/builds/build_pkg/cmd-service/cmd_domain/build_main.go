@@ -100,6 +100,16 @@ func (b *BuildDomainLayer) Build() error {
 	}
 	list = append(list, buildCommands()...)
 
+	// event
+	buildEvents := func() []builds.Build {
+		var res []builds.Build
+		for _, b := range b.buildEvents {
+			res = append(res, b)
+		}
+		return res
+	}
+	list = append(list, buildEvents()...)
+
 	// eventType
 	list = append(list, b.buildRegisterAllEventType)
 	list = append(list, b.buildRegisterAggregateEventType)
@@ -143,7 +153,7 @@ func (b *BuildDomainLayer) initCommands() {
 
 func (b *BuildDomainLayer) initEvents() {
 	for name, event := range b.aggregate.Events {
-		outFile := fmt.Sprintf("%s/event/%s_event/%s.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(name))
+		outFile := fmt.Sprintf("%s/event/%s_event/%s.go", b.outDir, b.aggregate.FileName(), event.SnakeName())
 		item := NewBuildEvent(b.BaseBuild, name, event, utils.ToLower(outFile))
 		b.buildEvents = append(b.buildEvents, item)
 	}
@@ -155,7 +165,7 @@ func (b *BuildDomainLayer) initRegisterAggregateEventTypes() {
 }
 
 func (b *BuildDomainLayer) initRegisterAllEventType() {
-	outFile := fmt.Sprintf("%s/event/reg_all_event_type.go", b.outDir)
+	outFile := fmt.Sprintf("%s/event/register_event_type.go", b.outDir)
 	b.buildRegisterAllEventType = NewBuildRegisterAllEventType(b.BaseBuild, utils.ToLower(outFile))
 }
 

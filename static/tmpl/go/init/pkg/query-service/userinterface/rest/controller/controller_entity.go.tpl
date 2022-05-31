@@ -1,4 +1,4 @@
-package controller
+package {{.aggregate_name}}_controller
 
 import (
 	"context"
