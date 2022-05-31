@@ -102,3 +102,7 @@ func (a *Aggregate) FileName() string {
 func (a *Aggregate) SnakeName() string {
 	return utils.SnakeString(a.Name)
 }
+
+func (a *Aggregate) MidlineName() string {
+	return utils.MidlineString(a.Name)
+}

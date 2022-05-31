@@ -18,7 +18,7 @@ type {{$AggregateName}}Controller struct {
 func New{{$AggregateName}}Controller() *{{$AggregateName}}Controller {
     return &{{$AggregateName}}Controller{
         appService: services.New{{.AggregateName}}CommandAppService(),
-        queryAppId:     services.Get{{.AggregateName}}QueryAppService().AppId(),
+        queryAppId: services.Get{{.AggregateName}}QueryAppService().AppId(),
     }
 }
 
@@ -26,7 +26,7 @@ func New{{$AggregateName}}Controller() *{{$AggregateName}}Controller {
 func (c *{{$ClassName}}) BeforeActivation(b mvc.BeforeActivation) {
     b.Handle("GET", "/tenants/{tenantId}/{{$resource}}/aggregate/{id}", "GetAggregateById")
     {{- range $cmdName, $cmd := .Commands }}
-    b.Handle("{{$cmd.HttpType}}", "/tenants/{tenantId}/{{$cmd.HttpPath}}", "{{$cmd.Name}}")
+    b.Handle("{{$cmd.HttpType}}", "/tenants/{tenantId}/{{$cmd.HttpPath}}", "{{$cmd.ControllerMethod}}")
     {{- end}}
 }
 
@@ -38,14 +38,15 @@ func (c *{{$ClassName}}) GetAggregateById(ctx iris.Context, tenantId string, id 
 
 {{- range $cmdName, $cmd := .Commands}}
 
-func (c *{{$ClassName}}) {{$cmd.Name}}(ctx iris.Context) {
+func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ctx iris.Context) {
 	cmd := &commands.{{$cmdName}}{}
 	_ = restapp.DoCmd(ctx, cmd, func(ctx context.Context) error {
 		return c.appService.{{$cmd.ServiceFuncName}}(ctx, cmd)
 	})
 }
+
 {{- if $cmd.IsAggregateCreateOrUpdate}}
-func (c *{{$ClassName}}) {{$cmd.Name}}AndGet(ctx iris.Context) {
+func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ctx iris.Context) {
 	cmd := &commands.{{$cmdName}}{}
 	_, _, _ = restapp.DoCmdAndQueryOne(ctx, c.queryAppId, cmd, func(ctx context.Context) error {
 		return c.appService.{{$cmd.ServiceFuncName}}(ctx, cmd)

@@ -1,7 +1,7 @@
 envType: dev
 dev:
   app:
-    id: {{.ServiceName}}-query-service
+    id: {{.QueryServiceName}}
     httpPort: 9020
     rootUrl: /api/v1.0
   dapr:
@@ -21,7 +21,7 @@ dev:
     maxPoolSize: 20
 test :
   app:
-    id: {{.ServiceName}}-queryservice
+    id: {{.QueryServiceName}}
     httpPort: 8080
     rootUrl: /api/v1.0
   dapr:
@@ -33,13 +33,13 @@ test :
   mongo:
     host: 192.168.64.8:27018, 192.168.64.8:27019, 192.168.64.8:27020
     replicaSet: mongors
-    dbname: {{.ServiceName}}-query-test
+    dbname: {{.QueryServiceName}}
     user: fundflow
     pwd: 123456
     maxPoolSize: 20
 prod:
   app:
-    id: {{.ServiceName}}-queryservice
+    id: {{.QueryServiceName}}
     httpPort: 8080
     rootUrl: /api/v1.0
   dapr:
@@ -51,7 +51,7 @@ prod:
   mongo:
     host: 192.168.64.8:27018, 192.168.64.8:27019, 192.168.64.8:27020
     replicaSet: mongors
-    dbname: {{.ServiceName}}-query-prod
+    dbname: {{.QueryServiceName}}
     user: fundflow
     pwd: 123456
     maxPoolSize: 20

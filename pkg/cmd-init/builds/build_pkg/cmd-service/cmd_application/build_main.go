@@ -33,21 +33,21 @@ func NewBuildApplicationLayer(cfg *config.Config, aggregate *config.Aggregate, o
 func (b *BuildApplicationLayer) init() {
 	aggregateName := b.aggregate.SnakeName()
 
-	outFile := fmt.Sprintf("%s/internales/service/%s_service/%s_command_appservice.go", b.outDir, aggregateName, aggregateName)
+	outFile := fmt.Sprintf("%s/internals/service/%s_service/%s_command_appservice.go", b.outDir, aggregateName, aggregateName)
 	b.buildCmdApplicationService = NewBuildCmdApplicationService(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 
-	outFile = fmt.Sprintf("%s/internales/service/%s_service/%s_query_appservice.go", b.outDir, aggregateName, aggregateName)
+	outFile = fmt.Sprintf("%s/internals/service/%s_service/%s_query_appservice.go", b.outDir, aggregateName, aggregateName)
 	b.buildQueryAppServiceAggregate = NewBuildQueryAppServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 
 	b.buildQueryAppServiceEntities = []*BuildQueryAppServiceEntity{}
 	for _, entity := range b.aggregate.Entities {
-		outFile = fmt.Sprintf("%s/internales/service/%s_service/%s_query_appservice.go", b.outDir, aggregateName, entity.SnakeName())
+		outFile = fmt.Sprintf("%s/internals/service/%s_service/%s_query_appservice.go", b.outDir, aggregateName, entity.SnakeName())
 		build := NewBuildQueryAppServiceEntity(b.BaseBuild, entity, outFile)
 		b.buildQueryAppServiceEntities = append(b.buildQueryAppServiceEntities, build)
 	}
 
 	tempFile := "static/tmpl/go/init/pkg/cmd-service/application/internals/service/base_query_appservice.go.tpl"
-	outFile = fmt.Sprintf("%s/internales/service/base_query_appservice.go", b.outDir)
+	outFile = fmt.Sprintf("%s/internals/service/base_query_appservice.go", b.outDir)
 	b.buildBaseQueryApplicationService = builds.NewBuildAnyFile(b.BaseBuild, map[string]interface{}{}, tempFile, utils.ToLower(outFile))
 }
 

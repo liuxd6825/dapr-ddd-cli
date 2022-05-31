@@ -24,12 +24,14 @@ func NewBuildConfigLayer(cfg *config.Config, outDir string) *BuildConfigLayer {
 func (b *BuildConfigLayer) Build() error {
 	var list []builds.Build
 	values := map[string]interface{}{}
-	outDir := b.outDir + "/config"
+	values["CommandServiceName"] = b.Config.Configuration.CommandServiceName()
+	values["QueryServiceName"] = b.Config.Configuration.QueryServiceName()
+	outDir := b.outDir
 
 	list = append(list, b.NewFileBuild("/config/cmd-config.yaml.tpl", outDir+"/cmd-config.yaml", values))
 	list = append(list, b.NewFileBuild("/config/query-config.yaml.tpl", outDir+"/query-config.yaml", values))
 
-	daprDir := b.outDir + "/config/dapr"
+	daprDir := b.outDir + "/dapr"
 	list = append(list, b.NewFileBuild("/config/dapr/config.yaml.tpl", daprDir+"/config.yaml", values))
 	list = append(list, b.NewFileBuild("/config/dapr/components/applogger-mongo.yaml.tpl", daprDir+"/components/applogger-mongo.yaml", values))
 	list = append(list, b.NewFileBuild("/config/dapr/components/eventstorage-mongo.yaml.tpl", daprDir+"/components/eventstorage-mongo.yaml", values))

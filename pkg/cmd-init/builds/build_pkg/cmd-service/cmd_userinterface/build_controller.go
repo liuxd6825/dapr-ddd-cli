@@ -26,20 +26,9 @@ func NewBuildRestController(base builds.BaseBuild, aggregate *config.Aggregate, 
 func (b *BuildRestController) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["ClassName"] = b.ClassName()
-	res["AggregateType"] = b.AggregateType()
-	res["Properties"] = b.aggregate.Properties
 	res["Events"] = b.aggregate.Events
 	res["Commands"] = b.aggregate.Commands
-	res["Description"] = b.aggregate.Description
-	res["EnumObjects"] = b.aggregate.EnumObjects
-	res["Id"] = b.aggregate.Id
-	res["FieldsObjects"] = b.aggregate.FieldsObjects
-	res["Aggregate"] = b.aggregate
-	res["CommandPackage"] = fmt.Sprintf("%s_command", utils.ToLower(b.aggregate.Name))
-	res["EventPackage"] = fmt.Sprintf("%s_event", utils.ToLower(b.aggregate.Name))
-	res["Package"] = fmt.Sprintf("%s_model", utils.ToLower(b.aggregate.Name))
-	res["Version"] = b.aggregate.Version
-	res["AppService"] = fmt.Sprintf("%sAppService", b.aggregate.LowerName())
+	res["Resource"] = utils.MidlineString(b.aggregate.Name)
 
 	return res
 }

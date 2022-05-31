@@ -1,5 +1,7 @@
 package config
 
+import "fmt"
+
 type Configuration struct {
 	BoundedContextName        string                     `yaml:"boundedContextName"`
 	DefaultModule             string                     `yaml:"defaultModule"`
@@ -42,4 +44,12 @@ func (c *Configuration) GetNamespace() string {
 		return c.Namespace.CSharp
 	}
 	return "{{.Namespace}}"
+}
+
+func (c *Configuration) QueryServiceName() string {
+	return fmt.Sprintf("%s-query-service", c.ServiceName)
+}
+
+func (c *Configuration) CommandServiceName() string {
+	return fmt.Sprintf("%s-command-service", c.ServiceName)
 }

@@ -122,9 +122,13 @@ func (c *Command) HttpPath() string {
 	if strings.HasSuffix(methodName, "Command") {
 		methodName = methodName[0 : len(methodName)-7]
 	}
-	return fmt.Sprintf("%s:%s", c.Aggregate.SnakeName(), utils.SnakeString(methodName))
+	return fmt.Sprintf("%s:%s", c.Aggregate.MidlineName(), utils.MidlineString(methodName))
 }
 
 func (c *Command) ControllerMethod() string {
-	return strings.ReplaceAll(c.Name, "Command", "")
+	methodName := c.Name
+	if strings.HasSuffix(methodName, "Command") {
+		methodName = methodName[0 : len(methodName)-7]
+	}
+	return methodName
 }

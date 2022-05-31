@@ -3,7 +3,7 @@ package {{.aggregate_name}}_service
 import (
 	"context"
     view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
-    base "{{.Namespace}}/pkg/cmd-service/application/internales/service"
+    base "{{.Namespace}}/pkg/cmd-service/application/internals/service"
 )
 
 type {{.Name}}QueryAppService interface {
@@ -27,7 +27,7 @@ func Get{{.Name}}QueryAppService() {{.Name}}QueryAppService {
 
 func new{{.Name}}QueryAppService() {{.Name}}QueryAppService {
 	res := &{{.name}}QueryAppService{}
-    res.SetAppId("{{.ServiceName}}-query-service")
+    res.SetAppId("{{.QueryServiceName}}")
     res.SetResourceName("{{.ResourceName}}")
     res.SetApiVersion("v1.0")
 	return res
