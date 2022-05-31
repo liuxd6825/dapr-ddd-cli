@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/domain/event"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/query-service/domain/queryhandler"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/query-service/userinterface/rest/controller"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
+	"github.com/dapr/dapr-go-ddd-example/pkg/cmd-service/domain/event"
+	"github.com/dapr/dapr-go-ddd-example/pkg/query-service/domain/queryhandler"
+	"github.com/dapr/dapr-go-ddd-example/pkg/query-service/userinterface/rest/controller"
+	"github.com/dapr/dapr-go-ddd-sdk/restapp"
 )
 
 func main() {

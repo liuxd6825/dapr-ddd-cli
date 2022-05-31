@@ -1,7 +1,7 @@
 envType: dev
 dev:
   app:
-    id: {{.ServiceName}}-cmdservice
+    id: {{.ServiceName}}-command-service
     httpPort: 9010
     rootUrl: /api/v1.0
   dapr:

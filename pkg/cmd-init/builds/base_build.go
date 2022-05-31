@@ -71,6 +71,7 @@ func (b *BaseBuild) Values() map[string]interface{} {
 	res["Namespace"] = b.Namespace()
 	res["namespace"] = strings.ToLower(b.Namespace())
 	res["Aggregates"] = b.Config.Aggregates
+	res["ServiceName"] = b.Config.Configuration.ServiceName
 	if b.Aggregate != nil {
 		aggregateName := utils.SnakeString(b.Aggregate.Name)
 		res["Aggregate"] = b.Aggregate

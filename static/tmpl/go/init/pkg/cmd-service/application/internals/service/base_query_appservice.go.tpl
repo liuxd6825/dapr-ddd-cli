@@ -1,10 +1,10 @@
-package queryappservice
+package service
 
 import (
 	"context"
 	"fmt"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_errors"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
+	"github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_errors"
+	"github.com/dapr/dapr-go-ddd-sdk/daprclient"
 )
 
 type GetOptions interface {
@@ -79,7 +79,7 @@ func (s *BaseQueryAppService[T]) GetData(ctx context.Context, tenantId, methodNa
 	apiVersion := *options.GetApiVersion()
 	resourceName := *options.GetResourceName()
 	methodNameUrl := fmt.Sprintf("/api/%s/tenants/%s/%s/%s", apiVersion, tenantId, resourceName, methodName)
-	_, err = restapp.GetDaprClient().InvokeService(ctx, s.appId, methodNameUrl, "get", nil, resData)
+	_, err = daprclient.GetDaprDDDClient().InvokeService(ctx, s.appId, methodNameUrl, "get", nil, resData)
 	if err == nil {
 		isFound = true
 	}
@@ -95,6 +95,7 @@ func (s *BaseQueryAppService[T]) newOptions(opts ...GetOptions) GetOptions {
 	return options
 }
 
+
 func (s *BaseQueryAppService[T]) AppId() string {
 	return s.appId
 }
@@ -105,4 +106,16 @@ func (s *BaseQueryAppService[T]) ResourceName() string {
 
 func (s *BaseQueryAppService[T]) ApiVersion() string {
 	return s.apiVersion
+}
+
+func (s *BaseQueryAppService[T]) SetAppId(value string) {
+	s.appId = value
+}
+
+func (s *BaseQueryAppService[T]) SetResourceName(value string) {
+	s.resourceName = value
+}
+
+func (s *BaseQueryAppService[T]) SetApiVersion(value string) {
+	s.apiVersion = value
 }

@@ -3,6 +3,7 @@ package query_domain
 import (
 	"github.com/dapr/dapr-ddd-cli/pkg/cmd-init/builds"
 	"github.com/dapr/dapr-ddd-cli/pkg/config"
+	"github.com/dapr/dapr-ddd-cli/pkg/utils"
 )
 
 type BuildRepositoryEntity struct {
@@ -25,5 +26,6 @@ func NewBuildRepositoryEntity(base builds.BaseBuild, entity *config.Entity, outF
 func (b *BuildRepositoryEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Name"] = b.Entity.FirstUpperName()
+	res["name"] = utils.SnakeString(b.Entity.Name)
 	return res
 }

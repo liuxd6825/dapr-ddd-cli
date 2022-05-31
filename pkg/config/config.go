@@ -14,7 +14,7 @@ type Config struct {
 	TypeDefinitions TypeDefinitions `yaml:"typeDefinitions"`
 	Configuration   *Configuration  `yaml:"configuration"`
 	//  当前语言类型
-	langType LangType
+	lanType LangType
 }
 
 const (
@@ -79,7 +79,7 @@ func NewConfigWithDir(dirName string, lang string) (*Config, error) {
 		config.Aggregates.init(config)
 	}
 	if config.Configuration != nil {
-		config.Configuration.Init(config.langType)
+		config.Configuration.Init(config.lanType)
 	}
 
 	return config, nil
@@ -129,13 +129,13 @@ func (c *Config) setLangType(lang string) error {
 	l := strings.ToLower(lang)
 	switch l {
 	case "go":
-		c.langType = Go
+		c.lanType = Go
 	case "java":
-		c.langType = Java
+		c.lanType = Java
 	case "c#":
-		c.langType = CSharp
+		c.lanType = CSharp
 	case "csharp":
-		c.langType = CSharp
+		c.lanType = CSharp
 	default:
 		return NewLangTypeError(lang)
 	}
@@ -170,13 +170,20 @@ func (c *Config) GetDefaultViewProperties() *Properties {
 	return nil
 }
 
+func (c *Config) GetDefaultFieldProperties() *Properties {
+	if c != nil && c.Configuration != nil && c.Configuration.DefaultReservedProperties != nil {
+		return &c.Configuration.DefaultReservedProperties.FieldProperties
+	}
+	return nil
+}
+
 func (c *Config) GetType(value string) string {
 	if c == nil {
 		return value
 	}
 	tds := c.TypeDefinitions
 	if t, ok := tds[value]; ok {
-		switch c.langType {
+		switch c.lanType {
 		case Go:
 			return t.GoType
 		case Java:
@@ -188,4 +195,8 @@ func (c *Config) GetType(value string) string {
 		}
 	}
 	return value
+}
+
+func (c *Config) GetLanType() LangType {
+	return c.lanType
 }

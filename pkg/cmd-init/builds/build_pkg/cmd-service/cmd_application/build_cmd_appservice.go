@@ -18,7 +18,7 @@ func NewBuildCmdApplicationService(base builds.BaseBuild, aggregate *config.Aggr
 		aggregate: aggregate,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/application/internals/cmdappservice/cmd_appservice.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/application/internals/service/cmd_appservice.go.tpl"
 	res.OutFile = outFile
 	return res
 }

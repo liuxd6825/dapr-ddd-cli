@@ -17,6 +17,8 @@ type BuildInfrastructureLayer struct {
 
 	buildQueryServiceImplAggregate *BuildQueryServiceImplAggregate
 	buildQueryServiceImplEntities  []*BuildQueryServiceImplEntity
+
+	buildRepositoryBase *BuildRepositoryBase
 }
 
 func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildInfrastructureLayer {
@@ -34,6 +36,8 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 
 	res.initQueryServiceAggregate()
 	res.initQueryServiceEntities()
+
+	res.initBuildRepositoryBase()
 	return res
 }
 
@@ -66,6 +70,8 @@ func (b *BuildInfrastructureLayer) Build() error {
 	}
 	list = append(list, buildQueryServiceImplEntities()...)
 
+	list = append(list, b.buildRepositoryBase)
+
 	return b.DoBuild(list...)
 }
 
@@ -95,4 +101,9 @@ func (b *BuildInfrastructureLayer) initQueryServiceEntities() {
 func (b *BuildInfrastructureLayer) initQueryServiceAggregate() {
 	outFile := fmt.Sprintf("%s/domain/service/%s_service/%s_queryservice_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildQueryServiceImplAggregate = NewBuildQueryServiceImplAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+}
+
+func (b *BuildInfrastructureLayer) initBuildRepositoryBase() {
+	outFile := fmt.Sprintf("%s/domain/repository/mongodb/base_repository.go", b.outDir)
+	b.buildRepositoryBase = NewBuildRepositoryBase(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }

@@ -22,6 +22,5 @@ func NewBuildRegisterAggregateType(base builds.BaseBuild, outFile string) *Build
 
 func (b *BuildRegisterAggregateType) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
-	res["Namespace"] = b.Namespace()
 	return res
 }

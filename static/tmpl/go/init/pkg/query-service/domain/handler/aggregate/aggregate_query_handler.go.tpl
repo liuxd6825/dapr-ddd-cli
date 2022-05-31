@@ -5,10 +5,11 @@ package {{.aggregate_name}}_handler
 import (
 	"context"
 	"{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
+	view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
 	domain_factory "{{.Namespace}}/pkg/query-service/domain/factory/{{.AggregateFactoryPackage}}"
 	domain_service "{{.Namespace}}/pkg/query-service/domain/service/{{.aggregate_name}}_service"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
+	"github.com/dapr/dapr-go-ddd-sdk/ddd"
+	"github.com/dapr/dapr-go-ddd-sdk/restapp"
 )
 
 type {{.Name}}QueryHandler struct {
@@ -37,15 +38,15 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 {{- if $event.IsAggregate }}
 func (h *{{$AggregateName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *{{$EventPackage}}.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-		view := domain_factory.New{{$AggregateName}}ViewBy{{$event.Name}}(event)
+		v := domain_factory.New{{$AggregateName}}ViewBy{{$event.Name}}(event)
 		{{- if $event.IsCreate }}
-		return h.domainService.Create(ctx, view)
+		return h.domainService.Create(ctx, v)
 		{{- end}}
         {{- if $event.IsUpdate }}
-        return h.domainService.Update(ctx, view)
+        return h.domainService.Update(ctx, v)
         {{- end}}
         {{- if $event.IsDelete }}
-        return h.domainService.DeleteById(ctx, view.TenantId, view.Id)
+        return h.domainService.DeleteById(ctx, v.TenantId, v.Id)
         {{- end}}
 	})
 }

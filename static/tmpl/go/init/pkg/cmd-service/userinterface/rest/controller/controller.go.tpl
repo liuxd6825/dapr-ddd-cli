@@ -4,10 +4,10 @@ import (
 	"context"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"{{.Namespace}}/pkg/cmd-service/application/internals/cmdappservice"
-	"{{.Namespace}}/pkg/cmd-service/application/internals/queryappservice"
+	"{{.Namespace}}/pkg/cmd-service/application/internals/cmd_appservice"
+	"{{.Namespace}}/pkg/cmd-service/application/internals/query_appservice"
 	"{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
+	"github.com/dapr/dapr-go-ddd-sdk/restapp"
 )
 {{- $AggregateName := .AggregateName}}
 {{- $ClassName := .ClassName}}

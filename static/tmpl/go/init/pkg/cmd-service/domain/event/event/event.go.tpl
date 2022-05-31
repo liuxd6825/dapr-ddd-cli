@@ -1,15 +1,20 @@
-package {{.Package}}
+package {{.aggregate_name}}_event
 
 import (
-    "{{.Namespace}}/pkg/cmd-service/domain/fields/{{.AggregateFieldPackage}}"
+    field "{{.Namespace}}/pkg/cmd-service/domain/field/{{.aggregate_name}}_field"
 )
 
 type {{.ClassName}} struct {
-    CommandId string    `json:"commandId"`
-    EventId   string    `json:"eventId"`
-{{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.DataType}} `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}//{{$property.Description}}{{ end }}
+    CommandId string               `json:"commandId"`
+    EventId   string               `json:"eventId"`
+{{- if .Event.HasDataProperty }}
+    Data      field.{{.FieldName}}  `json:"data"`
 {{- end}}
+{{- if not .Event.HasDataProperty }}
+{{- range $name, $property := .Properties}}
+    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+{{- end}}
+{{- end }}
 }
 
 func New{{.ClassName}}() *{{.ClassName}} {
@@ -25,7 +30,7 @@ func (e *{{.ClassName}}) GetEventType() string {
 }
 
 func (e *{{.ClassName}}) GetEventVersion() string {
-    return "1.0"
+    return "{{.Version}}"
 }
 
 func (e *{{.ClassName}}) GetCommandId() string {

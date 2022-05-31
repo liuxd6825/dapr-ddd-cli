@@ -30,7 +30,7 @@ func (b *BuildValueObject) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["name"] = utils.FirstLower(b.valueObject.Name)
 	res["Name"] = utils.FirstUpper(b.valueObject.Name)
-	res["Package"] = fmt.Sprintf("%s_model", utils.ToLower(b.valueObject.Aggregate.Name))
+	res["Package"] = fmt.Sprintf("%s_model", b.valueObject.Aggregate.SnakeName())
 	res["ClassName"] = fmt.Sprintf("%s", b.valueObject.Name)
 	res["Properties"] = b.valueObject.Properties
 	res["Description"] = b.valueObject.Description

@@ -14,9 +14,38 @@ configuration:
   # 上下文中每个实体都需要的保留属性
   defaultReservedProperties:
     aggregate:
+      Id:
+        type: string
+      TenantId:
+        type: string
       IsDeleted:
         type: bool
+    field:
+      Id:
+        type: string
+      TenantId:
+        type: string
     entity:
+      TenantId:
+        type: string
+      CreatedId:
+        type: string
+      CreatedName:
+        type: string
+      CreatedTime:
+        type: dateTime
+      UpdatedId:
+        type: string
+      UpdatedName:
+        type: string
+      UpdatedTime:
+        type: dateTime
+      DeletedId:
+        type: string
+      DeletedName:
+        type: string
+      DeletedTime:
+        type: dateTime
       IsDeleted:
         type: bool
     view:
@@ -47,9 +76,8 @@ configuration:
     HttpServicesAuthorizationEnalbled: false
     SpringSecurityEnalbeld: true
   c#:
-    namespace: "com.liuxu6825.dapr-ddd-demo"
   java:
-    namespace: "com.liuxu6825.dapr-ddd-demo"
   go:
-    namespace: "gitee.com/liuxu6825/dapr-ddd-demo"
+      DaprSrcPath: "/Users/lxd/go/src/github.com/dapr"
+
 

@@ -1,10 +1,10 @@
-package model
+package  {{.aggregate_name}}_model
 {{$namespace:=.Namespace}}
 import (
 {{- range $name, $agg := .Aggregates}}
     "{{$namespace}}/pkg/cmd-service/domain/{{$agg.LowerName}}_model"
 {{- end}}
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
+	"github.com/dapr/dapr-go-ddd-sdk/ddd"
 )
 
 func init() {

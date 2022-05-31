@@ -51,14 +51,14 @@ func (b *BuildApplicationLayer) Build() error {
 }
 
 func (b *BuildApplicationLayer) initAppServiceAggregate() {
-	outFile := fmt.Sprintf("%s/internales/servcie/%s_service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	outFile := fmt.Sprintf("%s/internales/service/%s_service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildAppServiceAggregate = NewBuildAppServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildApplicationLayer) initAppServiceEntities() {
 	b.buildAppServiceEntities = []*BuildAppServiceEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/internales/servcie/%s_service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), item.FileName())
+		outFile := fmt.Sprintf("%s/internales/service/%s_service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildRestControllerEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildAppServiceEntities = append(b.buildAppServiceEntities, build)
 	}

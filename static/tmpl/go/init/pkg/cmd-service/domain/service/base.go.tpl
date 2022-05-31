@@ -7,10 +7,10 @@ import (
 
 var validate = validator.New()
 
-type BaseDomainService struct {
+type BaseCommandDomainService struct {
 }
 
-func (s *BaseDomainService) ValidateCommand(cmd interface{}) error {
+func (s *BaseCommandDomainService) ValidateCommand(cmd interface{}) error {
     if cmd == nil {
         return errors.New("command is nil")
 	}

@@ -1,5 +1,9 @@
 package {{.Package}}
 
+import (
+    _ "time"
+)
+
 type {{.Name}} int
 {{- $Name:=.Name}}
 

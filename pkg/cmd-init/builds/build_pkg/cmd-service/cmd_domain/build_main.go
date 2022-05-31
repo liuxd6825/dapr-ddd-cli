@@ -205,7 +205,7 @@ func (b *BuildDomainLayer) initDomainService() {
 	outFile := fmt.Sprintf("%s/service/base.go", b.outDir)
 	b.buildBaseDomainService = builds.NewBuildAnyFile(b.BaseBuild, values, tmplFile, utils.ToLower(outFile))
 
-	outFile = fmt.Sprintf("%s/service/%s_domain_service.go", b.outDir, b.aggregate.FileName())
+	outFile = fmt.Sprintf("%s/service/%s_service/%s_domain_service.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildDomainService = NewBuildDomainService(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 

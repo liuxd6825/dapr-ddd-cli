@@ -30,7 +30,7 @@ func (b *BuildEnumObject) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["name"] = utils.FirstLower(b.enumObject.Name)
 	res["Name"] = utils.FirstUpper(b.enumObject.Name)
-	res["Package"] = fmt.Sprintf("%s_model", utils.ToLower(b.enumObject.Aggregate.Name))
+	res["Package"] = fmt.Sprintf("%s_model", b.enumObject.Aggregate.SnakeName())
 	res["ClassName"] = fmt.Sprintf("%s", b.enumObject.Name)
 	res["Values"] = b.enumObject.EnumValues
 	res["Description"] = b.enumObject.Description

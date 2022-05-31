@@ -33,12 +33,14 @@ func (b *BuildEvent) Values() map[string]interface{} {
 	res["Name"] = b.name
 	res["Version"] = b.Version()
 	res["Properties"] = b.event.Properties
-	res["Package"] = fmt.Sprintf("%s_event", b.Aggregate.LowerName())
-	res["FieldsPackage"] = fmt.Sprintf("%s_field", b.Aggregate.LowerName())
+	res["Package"] = fmt.Sprintf("%s_event", b.Aggregate.SnakeName())
+	res["FieldPackage"] = fmt.Sprintf("%s_field", b.Aggregate.SnakeName())
 	res["Aggregate"] = b.Aggregate
 	res["AggregateName"] = b.Aggregate.Name
 	res["ServiceName"] = b.Config.Configuration.ServiceName
 	res["EventType"] = b.event.EventType
+	res["FieldName"] = b.FieldName()
+	res["Event"] = b.event
 	return res
 }
 
@@ -57,4 +59,11 @@ func (b *BuildEvent) ClassName() string {
 
 func (b *BuildEvent) Version() string {
 	return strings.ToLower(b.event.Version)
+}
+
+func (b *BuildEvent) FieldName() string {
+	if b.event.IsAggregate() {
+		return b.Aggregate.Name + "Fields"
+	}
+	return b.event.To + "Fields"
 }

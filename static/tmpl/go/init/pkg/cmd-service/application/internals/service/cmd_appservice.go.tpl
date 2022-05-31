@@ -1,25 +1,24 @@
-package cmdappservice
+package {{.aggregate_name}}_service
 
 import (
 	"context"
-	"{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
-	"{{.Namespace}}/pkg/cmd-service/domain/model"
-	domain_service "{{.Namespace}}/pkg/cmd-service/domain/service"
+	command "{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
+	model "{{.Namespace}}/pkg/cmd-service/domain/model/{{.aggregate_name}}_model"
+	domain_service "{{.Namespace}}/pkg/cmd-service/domain/service/{{.aggregate_name}}_service"
 )
 
 type {{.ClassName}} struct {
-	{{.Aggregate.FirstLowerName}}DomainService *domain_service.{{.Aggregate.Name}}DomainService
+	domainService *domain_service.{{.Aggregate.Name}}CommandDomainService
 }
 
-
 //
-// New{{.ClassName}}()
+// New{{.ClassName}}
 // @Description:  {{.Description}}
 // @return *{{.ClassName}}
 //
 func New{{.ClassName}}() *{{.ClassName}} {
 	return &{{.ClassName}}{
-		{{.Aggregate.FirstLowerName}}DomainService: &domain_service.{{.Aggregate.Name}}DomainService{},
+		domainService: &domain_service.{{.Aggregate.Name}}CommandDomainService{},
 	}
 }
 
@@ -34,14 +33,14 @@ func New{{.ClassName}}() *{{.ClassName}} {
 // @param cmd {{$cmd.Description}}
 // @return error
 //
-func (s *{{$ClassName}}) {{$cmd.ServiceFuncName}}(ctx context.Context, cmd *{{$CommandPackage}}.{{$cmdName}}) error {
+func (s *{{$ClassName}}) {{$cmd.ServiceFuncName}}(ctx context.Context, cmd *command.{{$cmdName}}) error {
 	if err := cmd.Validate(); err != nil {
 		return err
 	}
 	if cmd.GetIsValidOnly() {
 		return nil
 	}
-	_, err := s.{{.Aggregate.FirstLowerName}}DomainService.{{$cmd.ServiceFuncName}}(ctx, cmd)
+	_, err := s.domainService.{{$cmd.ServiceFuncName}}(ctx, cmd)
 	return err
 }
 {{- end }}
@@ -56,5 +55,5 @@ func (s *{{$ClassName}}) {{$cmd.ServiceFuncName}}(ctx context.Context, cmd *{{$C
 // @return error
 //
 func (s *{{.ClassName}}) GetAggregateById(ctx context.Context, tenantId string, id string) (*model.{{.Aggregate.Name}}Aggregate, bool, error) {
-	return s.{{.Aggregate.FirstLowerName}}DomainService.GetAggregateById(ctx, tenantId, id)
+	return s.domainService.GetAggregateById(ctx, tenantId, id)
 }

@@ -40,6 +40,7 @@ func (b *BuildRepositoryImplAggregate) Values() map[string]interface{} {
 	res["Package"] = "repository_impl"
 	res["ResourceName"] = fmt.Sprintf("%ss", utils.ToLower(b.aggregate.Name))
 	res["Name"] = b.aggregate.Name
+	res["name"] = utils.SnakeString(b.aggregate.Name)
 	return res
 }
 

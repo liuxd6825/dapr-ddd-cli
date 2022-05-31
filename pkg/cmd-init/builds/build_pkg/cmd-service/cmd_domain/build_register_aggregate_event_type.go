@@ -24,7 +24,7 @@ func NewBuildRegisterAggregateEventType(base builds.BaseBuild, aggregate *config
 func (b *BuildRegisterAggregateEventType) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Events"] = b.aggregate.Events
-	res["ServiceName"] = b.Config.Configuration.ServiceName
+
 	res["EventTypes"] = b.aggregate.Events.GetEventTypes()
 	return res
 }

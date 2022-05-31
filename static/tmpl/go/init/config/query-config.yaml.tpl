@@ -1,7 +1,7 @@
 envType: dev
 dev:
   app:
-    id: {{.ServiceName}}-queryservice
+    id: {{.ServiceName}}-query-service
     httpPort: 9020
     rootUrl: /api/v1.0
   dapr:

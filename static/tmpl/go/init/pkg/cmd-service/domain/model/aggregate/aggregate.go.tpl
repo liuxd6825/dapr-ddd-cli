@@ -5,10 +5,11 @@ package {{.Package}}
 
 import (
     "context"
+    _ "time"
     "{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
     "{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
     "{{.Namespace}}/pkg/cmd-service/domain/factory/{{.AggregateFactoryPackage}}"
-    "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
+    "github.com/dapr/dapr-go-ddd-sdk/ddd"
 )
 
 //
@@ -17,7 +18,7 @@ import (
 //
 type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsArray}}map[string]*{{end}}{{$property.DataType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{$property.UpperName}} {{if $property.IsArray}}map[string]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
 {{- end}}
 }
 

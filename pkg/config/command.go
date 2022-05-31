@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/dapr/dapr-ddd-cli/pkg/utils"
 	"strings"
 )
 
@@ -64,4 +65,8 @@ func (c *Command) IsCreateOrUpdate() bool {
 		return true
 	}
 	return false
+}
+
+func (c *Command) SnakeName() string {
+	return utils.SnakeString(c.Name)
 }

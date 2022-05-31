@@ -1,21 +1,23 @@
-package user_factory
+package {{.aggregate_name}}_factory
 
 import (
-	user_commands2 "github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/domain/command/user_commands"
-	user_events2 "github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic/user_models/user_events"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
+	command "github.com/dapr/dapr-go-ddd-example/pkg/cmd-service/domain/command/{{.aggregate_name}}_command"
+	event "github.com/dapr/dapr-go-ddd-example/pkg/xpublic/user_models/{{.aggregate_name}}_event"
+	"github.com/dapr/dapr-go-ddd-sdk/ddd"
 )
 
-func NewAddressCreateEvent(cmd *user_commands2.AddressCreateCommand) *user_events2.AddressCreateEventV1 {
-	return &user_events2.AddressCreateEventV1{
+{{- range $eventName, $event := .Events }}
+func New{{$eventName}}(cmd *command.AddressCreateCommand) *event.AddressCreateEventV1 {
+	return &event.{{$eventName}}{
 		TenantId:  cmd.Data.TenantId,
 		CommandId: cmd.CommandId,
 		EventId:   cmd.CommandId,
 		Data:      cmd.Data,
 	}
 }
+{{- end }}
 
-func NewAddressUpdateEvent(cmd *user_commands2.AddressUpdateCommand) *user_events2.AddressUpdateEventV1 {
+func NewAddressUpdateEvent(cmd *user_commands2.AddressUpdateCommand) *event.AddressUpdateEventV1 {
 	return &user_events2.AddressUpdateEventV1{
 		TenantId:  cmd.Data.TenantId,
 		CommandId: cmd.CommandId,

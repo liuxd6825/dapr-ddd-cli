@@ -2,9 +2,9 @@ package event
 {{$namespace := .Namespace}}
 import (
 {{- range $name, $agg := .Aggregates}}
-    "{{$namespace}}/pkg/cmd-service/domain/event/{{$agg.LowerName}}_event"
+    "{{$namespace}}/pkg/cmd-service/domain/event/{{$agg.SnakeName}}_event"
 {{- end}}
-    "github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
+    "github.com/dapr/dapr-go-ddd-sdk/restapp"
 )
 
 //
@@ -13,9 +13,9 @@ import (
 // @return *[]restapp.RegisterEventType
 //
 func GetRegisterEventTypes() *[]restapp.RegisterEventType {
-    list := []restapp.RegisterEventType{}
+    var list []restapp.RegisterEventType
 {{- range $name, $agg := .Aggregates}}
-    list = append(list, {{$agg.LowerName}}_events.GetRegisterEventTypes()...)
+    list = append(list, {{$agg.SnakeName}}_event.GetRegisterEventTypes()...)
 {{- end}}
     return &list
 }

@@ -27,11 +27,14 @@ func NewBuildField(base builds.BaseBuild, name string, field *config.Fields, out
 
 func (b *BuildField) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
+	defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultFieldProperties(), &b.fields.Properties)
+	res["DefaultProperties"] = defaultProperties
 	res["name"] = utils.FirstLower(b.fields.Name)
 	res["Name"] = utils.FirstUpper(b.fields.Name)
 	res["ClassName"] = utils.FirstUpper(b.fields.Name)
 	res["Properties"] = b.fields.Properties
 	res["Description"] = b.fields.Description
 	res["Fields"] = b.fields
+
 	return res
 }

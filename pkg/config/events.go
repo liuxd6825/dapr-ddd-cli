@@ -7,14 +7,15 @@ import (
 )
 
 type Event struct {
-	Name                string      // 事件名称
-	AggregateId         string      `yaml:"aggregateId"` // 聚合id属性名称
-	EventType           string      `yaml:"eventType"`   // 事件类型
-	Action              string      `yaml:"action"`      // 活动类型: create, update, delete
-	Version             string      `yaml:"version"`     // 版本号， 默认：V1
-	To                  string      `yaml:"to"`          // 事件所应用到对象类型
-	Description         string      `yaml:"description"` // 事件说明
-	Properties          Properties  `yaml:"properties"`  // 属性
+	Name                string     // 事件名称
+	AggregateId         string     `yaml:"aggregateId"` // 聚合id属性名称
+	EventType           string     `yaml:"eventType"`   // 事件类型
+	Action              string     `yaml:"action"`      // 活动类型: create, update, delete
+	Version             string     `yaml:"version"`     // 版本号， 默认：V1
+	To                  string     `yaml:"to"`          // 事件所应用到对象类型
+	Description         string     `yaml:"description"` // 事件说明
+	Properties          Properties `yaml:"properties"`  // 属性
+	hasDataProperty     bool
 	DataProperty        *Property   // 关联的数据属性
 	DataFields          *Fields     // 关联的数据字段
 	DataFieldProperties *Properties // 关联的数据字段
@@ -79,7 +80,7 @@ func (e *Event) init(a *Aggregate, name string) {
 	e.Aggregate = a
 	e.Name = name
 	e.Route = fmt.Sprintf("%s/%s/ver:%s", utils.SnakeString(e.Aggregate.Name), utils.SnakeString(e.Name), utils.SnakeString(e.Version))
-
+	e.hasDataProperty = false
 	e.Properties.Init(a)
 	data := e.Properties["data"]
 	if data == nil {
@@ -87,6 +88,7 @@ func (e *Event) init(a *Aggregate, name string) {
 	}
 	if data != nil {
 		e.DataProperty = data
+		e.hasDataProperty = true
 		if a.FieldsObjects != nil && e.DataProperty.Type != "" {
 			fields := a.FieldsObjects[e.DataProperty.Type]
 			if fields != nil {
@@ -168,4 +170,8 @@ func (e *Event) IsEntity(entityName string) bool {
 	}
 	res := strings.ToLower(e.To) == strings.ToLower(entityName)
 	return res
+}
+
+func (e *Event) HasDataProperty() bool {
+	return e.hasDataProperty
 }

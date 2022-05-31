@@ -47,13 +47,15 @@ func (p *Properties) AddTenantId(a *Aggregate) {
 func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Properties {
 	res := &Properties{}
 	res.Adds(properties)
-	m := *res
-	for k, _ := range *delProperties {
-		if _, ok := m[k]; ok {
-			delete(*res, k)
+	if delProperties != nil {
+		m := *res
+		for k, _ := range *delProperties {
+			if _, ok := m[k]; ok {
+				delete(*res, k)
+			}
 		}
+		res.Init(agg)
 	}
-	res.Init(agg)
 	return res
 }
 
@@ -66,6 +68,8 @@ type Property struct {
 	Description   string `yaml:"description"`
 	IsAggregateId bool   `yaml:"isAggregateId"`
 	IsArray       bool   `yaml:"isArray"`
+	Json          string `yaml:"json"`
+	Bson          string `yaml:"bson"`
 	Aggregate     *Aggregate
 }
 
@@ -95,7 +99,13 @@ func (p *Property) init(a *Aggregate, name string) {
 	p.Aggregate = a
 }
 
-func (p *Property) DataType() string {
+//
+// LanType
+// @Description: 当前语言下的类型
+// @receiver p
+// @return string
+//
+func (p *Property) LanType() string {
 	if p == nil {
 		return ""
 	}
@@ -122,10 +132,16 @@ func (p *Property) LowerName() string {
 }
 
 func (p *Property) JsonName() string {
-	return utils.FirstLower(p.Name)
+	if p.Json == "" {
+		return utils.FirstLower(p.Name)
+	}
+	return p.Json
 }
 
 func (p *Property) BsonName() string {
+	if p.Bson != "" {
+		return p.Bson
+	}
 	v := utils.FirstLower(p.Name)
 	if v == "id" {
 		v = "_id"

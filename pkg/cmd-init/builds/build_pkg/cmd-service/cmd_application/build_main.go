@@ -12,7 +12,8 @@ type BuildApplicationLayer struct {
 	aggregate                        *config.Aggregate
 	outDir                           string
 	buildCmdApplicationService       *BuildCmdApplicationService
-	buildQueryApplicationService     *BuildQueryApplicationService
+	buildQueryAppServiceEntities     []*BuildQueryAppServiceEntity
+	buildQueryAppServiceAggregate    *BuildQueryAppServiceAggregate
 	buildBaseQueryApplicationService *builds.BuildAnyFile
 }
 
@@ -30,21 +31,31 @@ func NewBuildApplicationLayer(cfg *config.Config, aggregate *config.Aggregate, o
 }
 
 func (b *BuildApplicationLayer) init() {
-	outFile := fmt.Sprintf("%s/internales/cmdappservice/%s_cmd_appservice.go", b.outDir, b.aggregate.Name)
+	aggregateName := b.aggregate.SnakeName()
+
+	outFile := fmt.Sprintf("%s/internales/service/%s_service/%s_command_appservice.go", b.outDir, aggregateName, aggregateName)
 	b.buildCmdApplicationService = NewBuildCmdApplicationService(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 
-	outFile = fmt.Sprintf("%s/internales/queryappservice/%s_query_service.go", b.outDir, b.aggregate.Name)
-	b.buildQueryApplicationService = NewBuildQueryApplicationService(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	outFile = fmt.Sprintf("%s/internales/service/%s_service/%s_query_appservice.go", b.outDir, aggregateName, aggregateName)
+	b.buildQueryAppServiceAggregate = NewBuildQueryAppServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 
-	tempFile := "static/tmpl/go/init/pkg/cmd-service/application/internals/queryappservice/base_query_appservice.go.tpl"
-	outFile = fmt.Sprintf("%s/internales/queryappservice/base_query_appservice.go", b.outDir)
+	b.buildQueryAppServiceEntities = []*BuildQueryAppServiceEntity{}
+	for _, entity := range b.aggregate.Entities {
+		outFile = fmt.Sprintf("%s/internales/service/%s_service/%s_query_appservice.go", b.outDir, aggregateName, entity.SnakeName())
+		build := NewBuildQueryAppServiceEntity(b.BaseBuild, entity, outFile)
+		b.buildQueryAppServiceEntities = append(b.buildQueryAppServiceEntities, build)
+	}
+
+	tempFile := "static/tmpl/go/init/pkg/cmd-service/application/internals/service/base_query_appservice.go.tpl"
+	outFile = fmt.Sprintf("%s/internales/service/base_query_appservice.go", b.outDir)
 	b.buildBaseQueryApplicationService = builds.NewBuildAnyFile(b.BaseBuild, map[string]interface{}{}, tempFile, utils.ToLower(outFile))
 }
 
 func (b *BuildApplicationLayer) Build() error {
 	var list []builds.Build
 	list = append(list, b.buildCmdApplicationService)
-	list = append(list, b.buildQueryApplicationService)
+	list = append(list, b.buildQueryAppServiceAggregate)
 	list = append(list, b.buildBaseQueryApplicationService)
+
 	return b.DoBuild(list...)
 }

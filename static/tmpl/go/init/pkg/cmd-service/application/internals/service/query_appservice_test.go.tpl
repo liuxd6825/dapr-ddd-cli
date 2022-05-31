@@ -1,4 +1,4 @@
-package queryappservice
+package {{.aggregate_name}}_service
 
 import (
 	"context"

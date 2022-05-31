@@ -31,7 +31,7 @@ func (b *BuildCommand) Values() map[string]interface{} {
 	res["Name"] = b.command.Name
 	res["IsHandler"] = b.command.IsHandler
 	res["AggregateId"] = b.command.AggregateId
-	res["Package"] = fmt.Sprintf("%s_command", utils.ToLower(b.AggregateName()))
+	res["Package"] = fmt.Sprintf("%s_command", b.command.SnakeName())
 	res["Action"] = b.command.Action
 	res["IsCreate"] = b.command.IsCreate()
 	res["IsUpdate"] = b.command.IsUpdate()

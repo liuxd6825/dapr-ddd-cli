@@ -36,9 +36,9 @@ func (b *BuildAggregate) Values() map[string]interface{} {
 	res["Id"] = b.aggregate.Id
 	res["FieldsObjects"] = b.aggregate.FieldsObjects
 	res["Aggregate"] = b.aggregate
-	res["CommandPackage"] = fmt.Sprintf("%s_command", utils.ToLower(b.aggregate.Name))
-	res["EventPackage"] = fmt.Sprintf("%s_event", utils.ToLower(b.aggregate.Name))
-	res["Package"] = fmt.Sprintf("%s_model", utils.ToLower(b.aggregate.Name))
+	res["CommandPackage"] = fmt.Sprintf("%s_command", b.aggregate.SnakeName())
+	res["EventPackage"] = fmt.Sprintf("%s_event", b.aggregate.SnakeName())
+	res["Package"] = fmt.Sprintf("%s_model", b.aggregate.SnakeName())
 	res["Version"] = b.aggregate.Version
 	return res
 }

@@ -31,6 +31,7 @@ func (b *BuildRepositoryImplEntity) Values() map[string]interface{} {
 	res["Description"] = b.entity.Description
 	res["Package"] = "repository_impl"
 	res["Name"] = b.entity.Name
+	res["name"] = utils.SnakeString(b.entity.Name)
 	return res
 }
 

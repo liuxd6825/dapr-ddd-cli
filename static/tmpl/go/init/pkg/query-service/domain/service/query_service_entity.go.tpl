@@ -2,18 +2,19 @@ package {{.aggregate_name}}_queryservice
 
 import (
 	"context"
-	"{{.Namespace}}/pkg/query-service/domain/projection"
+	view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
 	service_impl "{{.Namespace}}/pkg/query-service/infrastructure/domain/service/{{.aggregate_name}}_service"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
+	"github.com/dapr/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 type {{.Name}}QueryDomainService interface {
-	FindById(ctx context.Context, tenantId, id string) (*projection.{{.Name}}View, bool, error)
-	Create(ctx context.Context, user *projection.{{.Name}}View) error
-	Update(ctx context.Context, user *projection.{{.Name}}View) error
+	Create(ctx context.Context, user *view.{{.Name}}View) error
+	Update(ctx context.Context, user *view.{{.Name}}View) error
 	DeleteById(ctx context.Context, tenantId string, id string) error
-	FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string,{{.aggregateName}}Id string) (*projection.{{.Name}}View, bool, error)
-	FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*projection.{{.Name}}View], bool, error)
+	DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) error
+	FindById(ctx context.Context, tenantId, id string) (*view.{{.Name}}View, bool, error)
+	FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string,{{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error)
+	FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)
 }
 
 

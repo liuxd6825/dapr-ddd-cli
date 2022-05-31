@@ -25,11 +25,11 @@ func NewBuildDomainService(base builds.BaseBuild, aggregate *config.Aggregate, o
 
 func (b *BuildDomainService) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
-	res["ClassName"] = fmt.Sprintf("%sDomainService", utils.FirstUpper(b.AggregateName()))
+	res["ClassName"] = fmt.Sprintf("%sCommandDomainService", utils.FirstUpper(b.AggregateName()))
 	res["Commands"] = b.aggregate.Commands
 	res["AggregateName"] = b.Aggregate.Name
-	res["Package"] = fmt.Sprintf("%s_model", utils.ToLower(b.AggregateName()))
-	res["CommandPackage"] = fmt.Sprintf("%s_command", utils.ToLower(b.aggregate.Name))
-	res["ModelPackage"] = fmt.Sprintf("%s_model", utils.ToLower(b.aggregate.Name))
+	res["Package"] = fmt.Sprintf("%s_service", b.aggregate.SnakeName())
+	res["CommandPackage"] = fmt.Sprintf("%s_command", b.aggregate.SnakeName())
+	res["ModelPackage"] = fmt.Sprintf("%s_model", b.aggregate.SnakeName())
 	return res
 }

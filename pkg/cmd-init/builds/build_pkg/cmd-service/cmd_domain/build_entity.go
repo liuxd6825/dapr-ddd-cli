@@ -30,7 +30,7 @@ func (b *BuildEntityObject) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["name"] = utils.FirstLower(b.entity.Name)
 	res["Name"] = utils.FirstUpper(b.entity.Name)
-	res["Package"] = fmt.Sprintf("%s_model", utils.ToLower(b.entity.Aggregate.Name))
+	res["Package"] = fmt.Sprintf("%s_model", b.entity.Aggregate.SnakeName())
 	res["ClassName"] = fmt.Sprintf("%s", b.entity.Name)
 	res["Properties"] = b.entity.Properties
 	res["Description"] = b.entity.Description

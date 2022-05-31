@@ -48,3 +48,7 @@ func (e *Entity) FirstUpperName() string {
 func (e *Entity) FileName() string {
 	return utils.SnakeString(e.Name)
 }
+
+func (e *Entity) SnakeName() string {
+	return utils.SnakeString(e.Name)
+}

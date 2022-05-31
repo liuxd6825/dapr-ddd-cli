@@ -24,6 +24,7 @@ type DefaultReservedProperties struct {
 	EntityProperties    Properties `yaml:"entity"`
 	ValueProperties     Properties `yaml:"value"`
 	ViewProperties      Properties `yaml:"view"`
+	FieldProperties     Properties `yaml:"field"`
 }
 
 func (c *Configuration) Init(langType LangType) {

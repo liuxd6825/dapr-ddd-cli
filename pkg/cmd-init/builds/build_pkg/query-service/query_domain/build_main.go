@@ -158,13 +158,9 @@ func (b *BuildDomainLayer) initEntityQueryHandlerEntities() {
 	b.buildQueryHandlerAggregate = NewBuildQueryHandler(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
-func (b *BuildDomainLayer) initProjectionEntities() {
-	b.buildProjectionEntities = []*BuildProjectionEntity{}
-	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/projection/%s_view.go", b.outDir, item.FileName())
-		buildEntityObject := NewBuildProjectionEntity(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildProjectionEntities = append(b.buildProjectionEntities, buildEntityObject)
-	}
+func (b *BuildDomainLayer) initRepositoryAggregate() {
+	outFile := fmt.Sprintf("%s/repository/%s_repository/%s_viewrepository.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
+	b.buildRepositoryAggregate = NewBuildRepositoryAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildDomainLayer) initRepositoryEntities() {
@@ -176,14 +172,18 @@ func (b *BuildDomainLayer) initRepositoryEntities() {
 	}
 }
 
-func (b *BuildDomainLayer) initRepositoryAggregate() {
-	outFile := fmt.Sprintf("%s/repository/%s_repository/%s_viewrepository.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
-	b.buildRepositoryAggregate = NewBuildRepositoryAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+func (b *BuildDomainLayer) initProjectionAggregate() {
+	outFile := fmt.Sprintf("%s/projection/%s_view/%s_view.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
+	b.buildProjectionAggregate = NewBuildProjectionAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
-func (b *BuildDomainLayer) initProjectionAggregate() {
-	outFile := fmt.Sprintf("%s/projection/%s_view.go", b.outDir, b.Aggregate.FileName())
-	b.buildProjectionAggregate = NewBuildProjectionAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+func (b *BuildDomainLayer) initProjectionEntities() {
+	b.buildProjectionEntities = []*BuildProjectionEntity{}
+	for _, item := range b.aggregate.Entities {
+		outFile := fmt.Sprintf("%s/projection/%s_view/%s_view.go", b.outDir, b.Aggregate.FileName(), item.FileName())
+		buildEntityObject := NewBuildProjectionEntity(b.BaseBuild, item, utils.ToLower(outFile))
+		b.buildProjectionEntities = append(b.buildProjectionEntities, buildEntityObject)
+	}
 }
 
 func (b *BuildDomainLayer) initQueryHandlerEntities() {
