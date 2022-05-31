@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/domain/event"
-	"github.com/liuxd6825/dapr-go-ddd-example/pkg/query-service/domain/queryhandler"
 	"github.com/liuxd6825/dapr-go-ddd-example/pkg/query-service/userinterface/rest/controller"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
@@ -18,7 +17,7 @@ func main() {
 		return
 	}
 
-	if err := restapp.RunWithConfig(*envType, *config, subscribes, controllers, events, restapp.Actors); err != nil {
+	if _, err := restapp.RunWithConfig(*envType, *config, subscribes, controllers, events, restapp.Actors); err != nil {
 		panic(err)
 	}
 }

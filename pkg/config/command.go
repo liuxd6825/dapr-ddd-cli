@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 	"strings"
 )
@@ -93,6 +94,37 @@ func (c *Command) IsDeleteAggregate() bool {
 	return false
 }
 
+func (c *Command) IsAggregateCreateOrUpdate() bool {
+	return c.IsCreateAggregate() || c.IsCreateOrUpdate()
+}
+
 func (c *Command) SnakeName() string {
 	return utils.SnakeString(c.Name)
+}
+
+func (c *Command) HttpType() string {
+	if c.IsCreate() {
+		return "POST"
+	} else if c.IsUpdate() {
+		return "PATCH"
+	} else if c.IsDelete() {
+		return "DELETE"
+	}
+	return "POST"
+}
+
+func (c *Command) HttpPath() string {
+	if c.IsCreateAggregate() || c.IsUpdateAggregate() || c.IsDeleteAggregate() {
+		return c.Aggregate.SnakeName()
+	}
+
+	methodName := c.Name
+	if strings.HasSuffix(methodName, "Command") {
+		methodName = methodName[0 : len(methodName)-7]
+	}
+	return fmt.Sprintf("%s:%s", c.Aggregate.SnakeName(), utils.SnakeString(methodName))
+}
+
+func (c *Command) ControllerMethod() string {
+	return strings.ReplaceAll(c.Name, "Command", "")
 }

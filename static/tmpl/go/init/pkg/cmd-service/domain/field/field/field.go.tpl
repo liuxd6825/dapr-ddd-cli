@@ -1,7 +1,7 @@
 package {{.aggregate_name}}_field
 
 import (
-    _ "time"
+    "time"
 )
 
 //

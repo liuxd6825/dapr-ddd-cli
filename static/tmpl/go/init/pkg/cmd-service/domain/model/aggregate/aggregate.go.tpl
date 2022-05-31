@@ -8,7 +8,6 @@ import (
     "time"
     "{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
     "{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
-    "{{.Namespace}}/pkg/cmd-service/domain/factory/{{.AggregateFactoryPackage}}"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 

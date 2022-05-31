@@ -28,7 +28,7 @@ func NewBuildRestControllerLayer(cfg *config.Config, aggregate *config.Aggregate
 }
 
 func (b *BuildRestControllerLayer) init() {
-	outFile := fmt.Sprintf("%s/rest/controller/%s_controller.go", b.outDir, b.aggregate.Name)
+	outFile := fmt.Sprintf("%s/rest/controller/%s_controller.go", b.outDir, b.aggregate.FileName())
 	b.buildRestController = NewBuildRestController(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
