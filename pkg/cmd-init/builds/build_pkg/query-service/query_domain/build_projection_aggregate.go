@@ -20,7 +20,7 @@ func NewBuildProjectionAggregate(base builds.BaseBuild, aggregate *config.Aggreg
 		aggregate: aggregate,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/projection/aggregate_view.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/view/aggregate_view.go.tpl"
 	res.OutFile = outFile
 	return res
 }

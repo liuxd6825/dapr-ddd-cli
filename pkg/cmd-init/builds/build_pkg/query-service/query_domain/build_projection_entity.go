@@ -20,7 +20,7 @@ func NewBuildProjectionEntity(base builds.BaseBuild, entity *config.Entity, outF
 		entity:    entity,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/projection/entity_view.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/view/entity_view.go.tpl"
 	res.OutFile = outFile
 	return res
 }

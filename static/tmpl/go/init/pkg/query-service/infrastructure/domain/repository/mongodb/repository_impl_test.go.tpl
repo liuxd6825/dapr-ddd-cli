@@ -1,4 +1,4 @@
-package {{.aggregate_name}}_repository
+package mongodb
 
 import (
 	"context"

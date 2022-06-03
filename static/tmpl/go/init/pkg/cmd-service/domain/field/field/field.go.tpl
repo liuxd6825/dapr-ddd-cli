@@ -1,7 +1,9 @@
-package {{.aggregate_name}}_field
+package field
 
 import (
+    {{- if .Properties.HasTimeType }}
     "time"
+    {{- end }}
 )
 
 //

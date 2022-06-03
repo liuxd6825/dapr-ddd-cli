@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/go-playground/validator/v10 v10.10.1
-	github.com/kataras/iris/v12 v12.2.0-alpha7
+	github.com/kataras/iris/v12 v12.2.0-alpha9
 	github.com/liuxd6825/dapr-go-ddd-sdk v0.0.0
 	golang.org/x/exp v0.0.0-20220325121720-054d8573a5d8
 )
@@ -93,3 +93,5 @@ replace github.com/liuxd6825/go-sdk => {{.GoMetadata.DaprSrcPath}}/go-sdk
 replace github.com/liuxd6825/dapr => {{.GoMetadata.DaprSrcPath}}/dapr
 
 replace github.com/liuxd6825/dapr-go-ddd-sdk => {{.GoMetadata.DaprSrcPath}}/dapr-go-ddd-sdk
+
+replace github.com/liuxd6825/components-contrib => {{.GoMetadata.DaprSrcPath}}/components-contrib

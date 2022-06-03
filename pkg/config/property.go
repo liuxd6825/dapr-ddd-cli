@@ -29,7 +29,7 @@ func (p *Properties) Adds(sources *Properties) {
 }
 
 func (p *Properties) AddTenantId(a *Aggregate) {
-	if p != nil {
+	if p == nil {
 		return
 	}
 	m := *p
@@ -42,6 +42,23 @@ func (p *Properties) AddTenantId(a *Aggregate) {
 			Description: "租户Id",
 		}
 	}
+}
+
+func (p *Properties) HasType(typeName string) bool {
+	if p == nil {
+		return false
+	}
+	m := *p
+	for _, item := range m {
+		if strings.EqualFold(item.Type, typeName) {
+			return true
+		}
+	}
+	return false
+}
+
+func (p *Properties) HasTimeType() bool {
+	return p.HasType("dateTime")
 }
 
 func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Properties {
@@ -90,6 +107,8 @@ func (p *Property) Copy() *Property {
 		Description:   p.Description,
 		IsAggregateId: p.IsAggregateId,
 		IsArray:       p.IsArray,
+		Json:          p.Json,
+		Bson:          p.Bson,
 		Aggregate:     p.Aggregate,
 	}
 	return t

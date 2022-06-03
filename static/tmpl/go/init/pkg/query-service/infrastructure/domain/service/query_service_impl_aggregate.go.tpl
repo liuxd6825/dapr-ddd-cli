@@ -1,26 +1,22 @@
-package {{.aggregate_name}}_service
+package service_impl
 
 import (
 	"context"
-    view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
-	domain_service "{{.Namespace}}/pkg/query-service/domain/service/{{.aggregate_name}}_service"
-	domain_repository "{{.Namespace}}/pkg/query-service/domain/repository/{{.aggregate_name}}_repository"
-	repository_impl "{{.Namespace}}/pkg/query-service/infrastructure/domain/repository/mongodb/{{.aggregate_name}}_repository"
+    view "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
+	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/service"
+	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/repository"
+	"{{.Namespace}}/pkg/query-service/infrastructure/domain/{{.aggregate_name}}/repository/mongodb"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 type {{.Name}}QueryDomainServiceImpl struct {
-	repos domain_repository.{{.Name}}ViewRepository
+	repos repository.{{.Name}}ViewRepository
 }
 
-func New{{.Name}}QueryDomainService() domain_service.{{.Name}}QueryDomainService {
+func New{{.Name}}QueryDomainService() service.{{.Name}}QueryDomainService {
 	return &{{.Name}}QueryDomainServiceImpl{
-		repos: repository_impl.New{{.Name}}ViewRepository(),
+		repos: mongodb.New{{.Name}}ViewRepository(),
 	}
-}
-
-func (u *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, tenantId, userId string) (*view.{{.Name}}View, bool, error) {
-	return u.repos.FindById(ctx, tenantId, userId)
 }
 
 func (u *{{.Name}}QueryDomainServiceImpl) Create(ctx context.Context, view *view.{{.Name}}View) error {
@@ -35,6 +31,18 @@ func (u *{{.Name}}QueryDomainServiceImpl) Update(ctx context.Context, view *view
 
 func (u *{{.Name}}QueryDomainServiceImpl) DeleteById(ctx context.Context, tenantId string, id string) error {
 	return u.repos.DeleteById(ctx, tenantId, id)
+}
+
+func (u *{{.Name}}QueryDomainServiceImpl) DeleteAll(ctx context.Context, tenantId string) error {
+	return u.repos.DeleteAll(ctx, tenantId)
+}
+
+func (u *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, tenantId, id string) (*view.{{.Name}}View, bool, error) {
+	return u.repos.FindById(ctx, tenantId, id)
+}
+
+func (u *{{.Name}}QueryDomainServiceImpl) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
+	return u.repos.FindAll(ctx, tenantId)
 }
 
 func (u *{{.Name}}QueryDomainServiceImpl) FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {

@@ -1,7 +1,9 @@
-package {{.Package}}
+package model
 
 import (
+    {{- if .Properties.HasTimeType }}
     "time"
+    {{- end}}
 )
 
 //

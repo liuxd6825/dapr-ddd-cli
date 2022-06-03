@@ -2,8 +2,8 @@ package {{.aggregate_name}}_service
 
 import (
 	"context"
-    view "{{.Namespace}}/pkg/query-service/domain/projection/{{.aggregate_name}}_view"
-    base "{{.Namespace}}/pkg/cmd-service/application/internals/service"
+    "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
+    base "{{.Namespace}}/pkg/cmd-service/infrastructure/application/service"
 )
 
 type {{.Name}}QueryAppService interface {

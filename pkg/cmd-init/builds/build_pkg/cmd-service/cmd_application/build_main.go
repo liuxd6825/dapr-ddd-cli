@@ -9,12 +9,11 @@ import (
 
 type BuildApplicationLayer struct {
 	builds.BaseBuild
-	aggregate                        *config.Aggregate
-	outDir                           string
-	buildCmdApplicationService       *BuildCmdApplicationService
-	buildQueryAppServiceEntities     []*BuildQueryAppServiceEntity
-	buildQueryAppServiceAggregate    *BuildQueryAppServiceAggregate
-	buildBaseQueryApplicationService *builds.BuildAnyFile
+	aggregate                     *config.Aggregate
+	outDir                        string
+	buildCmdApplicationService    *BuildCmdApplicationService
+	buildQueryAppServiceEntities  []*BuildQueryAppServiceEntity
+	buildQueryAppServiceAggregate *BuildQueryAppServiceAggregate
 }
 
 func NewBuildApplicationLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildApplicationLayer {
@@ -46,16 +45,21 @@ func (b *BuildApplicationLayer) init() {
 		b.buildQueryAppServiceEntities = append(b.buildQueryAppServiceEntities, build)
 	}
 
-	tempFile := "static/tmpl/go/init/pkg/cmd-service/application/internals/service/base_query_appservice.go.tpl"
-	outFile = fmt.Sprintf("%s/internals/service/base_query_appservice.go", b.outDir)
-	b.buildBaseQueryApplicationService = builds.NewBuildAnyFile(b.BaseBuild, map[string]interface{}{}, tempFile, utils.ToLower(outFile))
 }
 
 func (b *BuildApplicationLayer) Build() error {
 	var list []builds.Build
 	list = append(list, b.buildCmdApplicationService)
 	list = append(list, b.buildQueryAppServiceAggregate)
-	list = append(list, b.buildBaseQueryApplicationService)
+
+	entities := func() []builds.Build {
+		var res []builds.Build
+		for _, item := range b.buildQueryAppServiceEntities {
+			res = append(res, item)
+		}
+		return res
+	}
+	list = append(list, entities()...)
 
 	return b.DoBuild(list...)
 }

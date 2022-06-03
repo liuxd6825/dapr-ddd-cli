@@ -36,7 +36,7 @@ func (b *BuildCommand) Values() map[string]interface{} {
 	res["IsCreate"] = b.command.IsCreate()
 	res["IsUpdate"] = b.command.IsUpdate()
 	res["IsDelete"] = b.command.IsDelete()
-	res["EventName"] = b.command.Event
+	res["EventName"] = b.command.EventName
 	return res
 }
 

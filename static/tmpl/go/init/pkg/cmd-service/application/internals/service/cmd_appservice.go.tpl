@@ -2,13 +2,13 @@ package {{.aggregate_name}}_service
 
 import (
 	"context"
-	command "{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
-	model "{{.Namespace}}/pkg/cmd-service/domain/model/{{.aggregate_name}}_model"
-	domain_service "{{.Namespace}}/pkg/cmd-service/domain/service/{{.aggregate_name}}_service"
+	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
+	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/model"
+	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/service"
 )
 
 type {{.ClassName}} struct {
-	domainService *domain_service.{{.Aggregate.Name}}CommandDomainService
+	domainService *service.{{.Aggregate.Name}}CommandDomainService
 }
 
 //
@@ -18,7 +18,7 @@ type {{.ClassName}} struct {
 //
 func New{{.ClassName}}() *{{.ClassName}} {
 	return &{{.ClassName}}{
-		domainService: &domain_service.{{.Aggregate.Name}}CommandDomainService{},
+		domainService: &service.{{.Aggregate.Name}}CommandDomainService{},
 	}
 }
 

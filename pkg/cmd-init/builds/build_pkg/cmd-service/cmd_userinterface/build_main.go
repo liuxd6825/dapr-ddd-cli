@@ -9,10 +9,10 @@ import (
 
 type BuildRestControllerLayer struct {
 	builds.BaseBuild
-	aggregate               *config.Aggregate
-	outDir                  string
-	buildRestController     *BuildRestController
-	buildRegisterController *BuildRegisterController
+	aggregate             *config.Aggregate
+	outDir                string
+	buildRestAggregateApi *BuildRestAggregateApi
+	buildRestEntityApis   *[]BuildRestEntityApi
 }
 
 func NewBuildRestControllerLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildRestControllerLayer {
@@ -29,18 +29,36 @@ func NewBuildRestControllerLayer(cfg *config.Config, aggregate *config.Aggregate
 }
 
 func (b *BuildRestControllerLayer) init() {
-	outFile := fmt.Sprintf("%s/rest/controller/%s_controller.go", b.outDir, b.aggregate.FileName())
-	b.buildRestController = NewBuildRestController(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	var dirs []string
+	dirs = append(dirs, fmt.Sprintf("%s/rest/%s/dto", b.outDir, b.aggregate.FileName()))
+	dirs = append(dirs, fmt.Sprintf("%s/rest/%s/assembler", b.outDir, b.aggregate.FileName()))
+	b.Mkdir(dirs...)
 
-	outFile = fmt.Sprintf("%s/rest/controller/register_controller.go", b.outDir)
-	b.buildRegisterController = NewBuildRegisterController(b.BaseBuild, utils.ToLower(outFile))
+	outFile := fmt.Sprintf("%s/rest/%s/facade/%s_api.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	b.buildRestAggregateApi = NewBuildRestAggregateApi(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+
+	var buildEntityApis []BuildRestEntityApi
+	for _, entity := range b.aggregate.Entities {
+		outFile := fmt.Sprintf("%s/rest/%s/facade/%s_api.go", b.outDir, b.aggregate.FileName(), entity.FileName())
+		entityApi := NewBuildRestEntityApi(b.BaseBuild, b.aggregate, entity, utils.ToLower(outFile))
+		buildEntityApis = append(buildEntityApis, *entityApi)
+	}
+	b.buildRestEntityApis = &buildEntityApis
 }
 
 func (b *BuildRestControllerLayer) Build() error {
 	var list []builds.Build
+	list = append(list, b.buildRestAggregateApi)
 
-	list = append(list, b.buildRestController)
-	list = append(list, b.buildRegisterController)
+	// valueObject
+	buildEntityApis := func() []builds.Build {
+		var res []builds.Build
+		for _, item := range *b.buildRestEntityApis {
+			res = append(res, &item)
+		}
+		return res
+	}
+	list = append(list, buildEntityApis()...)
 
 	return b.DoBuild(list...)
 }

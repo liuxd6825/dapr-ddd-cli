@@ -1,8 +1,8 @@
-package {{.aggregate_name}}_command
+package command
 
 import (
-    events "{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
-    fields "{{.Namespace}}/pkg/cmd-service/domain/field/{{.AggregateFieldPackage}}"
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_errors"
 )
@@ -14,7 +14,7 @@ import (
 type {{.ClassName}} struct {
     ddd.BaseCommand
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsData }} fields.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
 {{- end}}
 }
 
@@ -23,7 +23,7 @@ type {{.ClassName}} struct {
 // @Description: 创建领域事件
 //
 func (c *{{.ClassName}}) NewDomainEvent() ddd.DomainEvent {
-    return &events.{{.EventName}}{
+    return &event.{{.EventName}}{
         EventId:   c.CommandId,
         CommandId: c.CommandId,
         Data:      c.Data,

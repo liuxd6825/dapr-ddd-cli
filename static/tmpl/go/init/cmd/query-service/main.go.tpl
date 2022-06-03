@@ -2,9 +2,7 @@ package main
 
 import (
 	"flag"
-	"{{.Namespace}}/pkg/cmd-service/domain/event"
-	"{{.Namespace}}/pkg/query-service/domain/handler"
-	"{{.Namespace}}/pkg/query-service/userinterface/rest/controller"
+	"{{.Namespace}}/pkg/query-service/infrastructure/register"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
@@ -25,15 +23,15 @@ func main() {
 
 // 注册消息监听器
 func subscribes() *[]restapp.RegisterSubscribe {
-	return handler.GetRegisterSubscribe()
+	return register.GetRegisterSubscribe()
 }
 
 // 注册Http控制器
 func controllers() *[]restapp.Controller {
-	return controller.GetRegisterController()
+	return register.GetRegisterController()
 }
 
 // 注册领域事件
 func events() *[]restapp.RegisterEventType {
-	return event.GetRegisterEventType()
+	return register.GetRegisterEventType()
 }

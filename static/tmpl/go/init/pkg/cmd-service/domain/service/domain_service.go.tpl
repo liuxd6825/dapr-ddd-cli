@@ -1,17 +1,18 @@
-package {{.Package}}
+package service
 {{- $commandPackage := .CommandPackage }}
 {{- $modelPackage := .ModelPackage }}
 
 import (
     "context"
-    "{{.Namespace}}/pkg/cmd-service/domain/service"
-    "{{.Namespace}}/pkg/cmd-service/domain/command/{{$commandPackage}}"
-    "{{.Namespace}}/pkg/cmd-service/domain/model/{{$modelPackage}}"
+    base_service "{{.Namespace}}/pkg/cmd-service/infrastructure/domain/service"
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/model"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
 type {{.ClassName}} struct {
-    service.BaseCommandDomainService
+    base_service.BaseCommandDomainService
 }
 
 //
@@ -36,7 +37,7 @@ func New{{.ClassName}}() *{{.ClassName}} {
 // @return *model.{{$ClassName}}
 // @return error
 //
-func (s *{{$ClassName}}) {{$command.ServiceFuncName}}(ctx context.Context, cmd *{{$commandPackage}}.{{$commandName}}) (*{{$modelPackage}}.{{$AggregateName}}Aggregate, error) {
+func (s *{{$ClassName}}) {{$command.ServiceFuncName}}(ctx context.Context, cmd *command.{{$commandName}}) (*model.{{$AggregateName}}Aggregate, error) {
     if err := s.ValidateCommand(cmd); err != nil {
         return nil, err
     }
@@ -65,7 +66,7 @@ func (s *{{$ClassName}}) {{$command.ServiceFuncName}}(ctx context.Context, cmd *
 // @return bool 是否找到聚合根对象
 // @return error 错误对象
 //
-func (s *{{.ClassName}}) GetAggregateById(ctx context.Context, tenantId string, id string) (*{{$modelPackage}}.{{.AggregateName}}Aggregate, bool, error) {
+func (s *{{.ClassName}}) GetAggregateById(ctx context.Context, tenantId string, id string) (*model.{{.AggregateName}}Aggregate, bool, error) {
     agg := s.NewAggregate()
     _, ok, err := ddd.LoadAggregate(ctx, tenantId, id, agg)
     return agg, ok, err
@@ -77,6 +78,6 @@ func (s *{{.ClassName}}) GetAggregateById(ctx context.Context, tenantId string, 
 // @receiver s
 // @return *{{.ModelPackage}}.{{.ClassName}} 聚合对象
 //
-func (s *{{.ClassName}}) NewAggregate() *{{$modelPackage}}.{{.AggregateName}}Aggregate {
-	return {{$modelPackage}}.New{{.AggregateName}}Aggregate()
+func (s *{{.ClassName}}) NewAggregate() *model.{{.AggregateName}}Aggregate {
+	return model.New{{.AggregateName}}Aggregate()
 }

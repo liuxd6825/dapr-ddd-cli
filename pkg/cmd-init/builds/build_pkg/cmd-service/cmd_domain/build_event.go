@@ -40,7 +40,7 @@ func (b *BuildEvent) Values() map[string]interface{} {
 	res["ServiceName"] = b.Config.Configuration.ServiceName
 	res["EventType"] = b.event.EventType
 	res["FieldName"] = b.FieldName()
-	res["Event"] = b.event
+	res["EventName"] = b.event
 	return res
 }
 
@@ -62,8 +62,15 @@ func (b *BuildEvent) Version() string {
 }
 
 func (b *BuildEvent) FieldName() string {
-	if b.event.IsAggregate() {
-		return b.Aggregate.Name + "Fields"
+	if b.event.HasDataProperty() {
+		return b.event.DataProperty.Type
 	}
-	return b.event.To + "Fields"
+	name := "Fields"
+	if b.event.Action == "delete" {
+		name = "DeleteFields"
+	}
+	if b.event.IsAggregate() {
+		return b.Aggregate.Name + name
+	}
+	return b.event.To + name
 }

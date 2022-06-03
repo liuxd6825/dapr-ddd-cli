@@ -1,13 +1,15 @@
 {{- $ClassName := .ClassName }}
 {{- $EventPackage := .EventPackage}}
 {{- $CommandPackage := .CommandPackage}}
-package {{.Package}}
+package model
 
 import (
     "context"
+    {{- if .Properties.HasTimeType }}
     "time"
-    "{{.Namespace}}/pkg/cmd-service/domain/command/{{.AggregateCommandPackage}}"
-    "{{.Namespace}}/pkg/cmd-service/domain/event/{{.AggregateEventPackage}}"
+    {{- end}}
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
@@ -33,7 +35,7 @@ func NewAggregate() ddd.Aggregate {
 
 {{- range $cmdName, $cmd := .Commands }}
 
-func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *{{$CommandPackage}}.{{$cmd.Name}}, metadata *map[string]string) error {
+func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.Name}}, metadata *map[string]string) error {
     {{- if $cmd.IsCreateAggregate }}
     return ddd.CreateEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
     {{- end }}
@@ -48,10 +50,10 @@ func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *{{$CommandPacka
 
 {{- range $eventName, $event := .Events }}
 
-func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, event *{{$EventPackage}}.{{$event.Name}}) error {
+func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) error {
     {{- if $event.IsCreateOrUpdate }}
         {{- range $propName, $prop := $event.DataFields.Properties }}
-    a.{{$propName}} = event.Data.{{$propName}}
+    a.{{$propName}} = e.Data.{{$propName}}
 	    {{- end }}
 	{{- end }}
     return nil

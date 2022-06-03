@@ -13,7 +13,7 @@ aggregates:
       Address:
         type: Address
       Contacts:
-        type:  ContactItem
+        type:  Contact
         isArray: true
 
     # ----------------------------------
@@ -145,7 +145,7 @@ aggregates:
         eventType: ContactCreateEvent
         action: create
         version: V1
-        to: ContactItem
+        to: Contact
         properties:
           Data:
             type: UserFields
@@ -154,7 +154,7 @@ aggregates:
         eventType: ContactUpdateEvent
         version: V1
         action: update
-        to: ContactItem
+        to: Contact
         properties:
           Data:
             type: ContactFields
@@ -163,13 +163,13 @@ aggregates:
         eventType: ContactDeleteEvent
         version: V1
         action: delete
-        to: ContactItem
+        to: Contact
         properties:
           Data:
             type: ContactDeleteFields
     # ----------------------------------
     entities:
-      ContactItem:
+      Contact:
         id:
           name: UserId
         properties:

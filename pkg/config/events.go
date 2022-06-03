@@ -117,21 +117,21 @@ func (e *Event) FirstLowerName() string {
 }
 
 func (e *Event) IsCreate() bool {
-	if e.Action == "" && strings.HasSuffix(strings.ToLower(e.Name), "createevent") {
+	if e.Action == "" && strings.Contains(e.Name, "CreateEvent") {
 		return true
 	}
 	return strings.ToLower(e.Action) == "create"
 }
 
 func (e *Event) IsUpdate() bool {
-	if e.Action == "" && strings.HasSuffix(strings.ToLower(e.Name), "updateevent") {
+	if e.Action == "" && strings.Contains(e.Name, "UpdateEvent") {
 		return true
 	}
 	return strings.ToLower(e.Action) == "update"
 }
 
 func (e *Event) IsDelete() bool {
-	if e.Action == "" && strings.HasSuffix(strings.ToLower(e.Name), "deleteevent") {
+	if e.Action == "" && strings.Contains(e.Name, "DeleteEvent") {
 		return true
 	}
 	return strings.ToLower(e.Action) == "delete"
@@ -178,4 +178,60 @@ func (e *Event) HasDataProperty() bool {
 
 func (e *Event) SnakeName() string {
 	return utils.SnakeString(e.Name)
+}
+
+func (e *Event) IsAggregateDeleteByIdEvent() bool {
+	if e != nil && e.IsAggregate() && strings.HasPrefix(e.Name, e.Aggregate.Name+"DeleteEvent") {
+		return true
+	}
+	return false
+}
+
+func (e *Event) IsAggregateCreateEvent() bool {
+	if e != nil && e.IsAggregate() && strings.HasPrefix(e.Name, e.Aggregate.Name+"CreateEvent") {
+		return true
+	}
+	return false
+}
+
+func (e *Event) IsAggregateUpdateEvent() bool {
+	if e != nil && e.IsAggregate() && strings.HasPrefix(e.Name, e.Aggregate.Name+"UpdateEvent") {
+		return true
+	}
+	return false
+}
+
+func (e *Event) IsAggregateCustomEvent() bool {
+	if e != nil && e.IsAggregate() && !e.IsAggregateDeleteByIdEvent() && !e.IsAggregateCreateEvent() && !e.IsAggregateUpdateEvent() {
+		return true
+	}
+	return false
+}
+
+func (e *Event) IsEntityDeleteByIdEvent() bool {
+	if e != nil && !e.IsAggregate() && strings.HasPrefix(e.Name, e.To+"DeleteEvent") {
+		return true
+	}
+	return false
+}
+
+func (e *Event) IsEntityCreateEvent() bool {
+	if e != nil && !e.IsAggregate() && strings.HasPrefix(e.Name, e.To+"CreateEvent") {
+		return true
+	}
+	return false
+}
+
+func (e *Event) IsEntityUpdateEvent() bool {
+	if e != nil && !e.IsAggregate() && strings.HasPrefix(e.Name, e.To+"UpdateEvent") {
+		return true
+	}
+	return false
+}
+
+func (e *Event) IsEntityCustomEvent() bool {
+	if e != nil && e.IsAggregate() && !e.IsEntityDeleteByIdEvent() && !e.IsEntityCreateEvent() && !e.IsEntityUpdateEvent() {
+		return true
+	}
+	return false
 }

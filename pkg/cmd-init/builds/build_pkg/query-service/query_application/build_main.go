@@ -14,6 +14,9 @@ type BuildApplicationLayer struct {
 
 	buildAppServiceAggregate *BuildAppServiceAggregate
 	buildAppServiceEntities  []*BuildAppServiceEntity
+
+	buildQueryHandlerAggregate *BuildQueryHandlerAggregate
+	buildQueryHandlerEntities  []*BuildQueryHandlerEntity
 }
 
 func NewBuildApplicationLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildApplicationLayer {
@@ -28,6 +31,10 @@ func NewBuildApplicationLayer(cfg *config.Config, aggregate *config.Aggregate, o
 
 	res.initAppServiceAggregate()
 	res.initAppServiceEntities()
+
+	res.initQueryHandlerAggregate()
+	res.initQueryHandlerEntities()
+
 	return res
 }
 
@@ -47,19 +54,44 @@ func (b *BuildApplicationLayer) Build() error {
 	}
 	list = append(list, buildAppServiceEntities()...)
 
+	// query_handler
+	buildQueryHandlerEntities := func() []builds.Build {
+		var res []builds.Build
+		for _, item := range b.buildQueryHandlerEntities {
+			res = append(res, item)
+		}
+		return res
+	}
+	list = append(list, b.buildQueryHandlerAggregate)
+	list = append(list, buildQueryHandlerEntities()...)
+
 	return b.DoBuild(list...)
 }
 
 func (b *BuildApplicationLayer) initAppServiceAggregate() {
-	outFile := fmt.Sprintf("%s/internales/service/%s_service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	outFile := fmt.Sprintf("%s/internals/service/%s_service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildAppServiceAggregate = NewBuildAppServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildApplicationLayer) initAppServiceEntities() {
 	b.buildAppServiceEntities = []*BuildAppServiceEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/internales/service/%s_service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), item.FileName())
+		outFile := fmt.Sprintf("%s/internals/service/%s_service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildRestControllerEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildAppServiceEntities = append(b.buildAppServiceEntities, build)
 	}
+}
+
+func (b *BuildApplicationLayer) initQueryHandlerEntities() {
+	b.buildQueryHandlerEntities = []*BuildQueryHandlerEntity{}
+	for _, item := range b.aggregate.Entities {
+		outFile := fmt.Sprintf("%s/internals/handler/%s_handler/%s_query_handler.go", b.outDir, b.Aggregate.FileName(), item.FileName())
+		buildEntityObject := NewBuildQueryHandlerEntity(b.BaseBuild, b.aggregate, item, utils.ToLower(outFile))
+		b.buildQueryHandlerEntities = append(b.buildQueryHandlerEntities, buildEntityObject)
+	}
+}
+
+func (b *BuildApplicationLayer) initQueryHandlerAggregate() {
+	outFile := fmt.Sprintf("%s/internals/handler/%s_handler/%s_query_handler.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
+	b.buildQueryHandlerAggregate = NewBuildQueryHandler(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }

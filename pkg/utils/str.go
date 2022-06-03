@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"github.com/jinzhu/inflection"
 	"strings"
 )
 
@@ -139,4 +140,24 @@ func CamelString(s string) string {
 		data = append(data, d)
 	}
 	return string(data[:])
+}
+
+//
+// Plural
+// @Description: 将单词的单数形式转换为复数形式
+// @param str 单数
+// @return string 复数
+//
+func Plural(str string) string {
+	return inflection.Plural(MidlineString(str))
+}
+
+//
+// Singular
+// @Description: 复数转单数
+// @param str 复数
+// @return string 单数
+//
+func Singular(str string) string {
+	return inflection.Singular(MidlineString(str))
 }

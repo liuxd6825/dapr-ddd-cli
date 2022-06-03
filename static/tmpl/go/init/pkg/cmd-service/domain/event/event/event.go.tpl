@@ -1,7 +1,7 @@
-package {{.aggregate_name}}_event
+package event
 
 import (
-    field "{{.Namespace}}/pkg/cmd-service/domain/field/{{.aggregate_name}}_field"
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
 )
 
 type {{.ClassName}} struct {

@@ -106,3 +106,7 @@ func (a *Aggregate) SnakeName() string {
 func (a *Aggregate) MidlineName() string {
 	return utils.MidlineString(a.Name)
 }
+
+func (a *Aggregate) PluralName() string {
+	return utils.Plural(a.Name)
+}

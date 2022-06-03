@@ -1,8 +1,5 @@
-package {{.Package}}
+package model
 
-import (
-    "time"
-)
 
 type {{.Name}} int
 {{- $Name:=.Name}}

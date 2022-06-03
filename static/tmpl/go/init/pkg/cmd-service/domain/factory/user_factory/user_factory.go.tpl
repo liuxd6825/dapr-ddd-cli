@@ -1,8 +1,8 @@
 package {{.aggregate_name}}_factory
 
 import (
-	command "github.com/liuxd6825/dapr-go-ddd-example/pkg/cmd-service/domain/command/{{.aggregate_name}}_command"
-	event "github.com/liuxd6825/dapr-go-ddd-example/pkg/xpublic/user_models/{{.aggregate_name}}_event"
+	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
+	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
@@ -18,7 +18,7 @@ func New{{$eventName}}(cmd *command.AddressCreateCommand) *event.AddressCreateEv
 {{- end }}
 
 func NewAddressUpdateEvent(cmd *user_commands2.AddressUpdateCommand) *event.AddressUpdateEventV1 {
-	return &user_events2.AddressUpdateEventV1{
+	return &event.AddressUpdateEventV1{
 		TenantId:  cmd.Data.TenantId,
 		CommandId: cmd.CommandId,
 		EventId:   cmd.CommandId,
@@ -26,8 +26,8 @@ func NewAddressUpdateEvent(cmd *user_commands2.AddressUpdateCommand) *event.Addr
 	}
 }
 
-func NewAddressDeleteEvent(cmd *user_commands2.AddressDeleteCommand) *user_events2.AddressDeleteEventV1 {
-	return &user_events2.AddressDeleteEventV1{
+func NewAddressDeleteEvent(cmd *user_commands2.AddressDeleteCommand) *event.AddressDeleteEventV1 {
+	return &event.AddressDeleteEventV1{
 		TenantId:  cmd.TenantId,
 		CommandId: cmd.CommandId,
 		EventId:   cmd.CommandId,
@@ -36,8 +36,8 @@ func NewAddressDeleteEvent(cmd *user_commands2.AddressDeleteCommand) *user_event
 	}
 }
 
-func NewCreateEvent(cmd *user_commands2.UserCreateCommand) *user_events2.UserCreateEventV1 {
-	return &user_events2.UserCreateEventV1{
+func NewCreateEvent(cmd *user_commands2.UserCreateCommand) *event.UserCreateEventV1 {
+	return &event.UserCreateEventV1{
 		TenantId:  cmd.Data.TenantId,
 		CommandId: cmd.CommandId,
 		EventId:   cmd.CommandId,
@@ -45,8 +45,8 @@ func NewCreateEvent(cmd *user_commands2.UserCreateCommand) *user_events2.UserCre
 	}
 }
 
-func NewUpdateEvent(cmd *user_commands2.UserUpdateCommand) *user_events2.UserUpdateEventV1 {
-	return &user_events2.UserUpdateEventV1{
+func NewUpdateEvent(cmd *user_commands2.UserUpdateCommand) *event.UserUpdateEventV1 {
+	return &event.UserUpdateEventV1{
 		TenantId:  cmd.Data.TenantId,
 		CommandId: cmd.CommandId,
 		EventId:   cmd.CommandId,
@@ -54,8 +54,8 @@ func NewUpdateEvent(cmd *user_commands2.UserUpdateCommand) *user_events2.UserUpd
 	}
 }
 
-func NewDeleteEvent(cmd *user_commands2.UserDeleteCommand) *user_events2.UserDeleteEventV1 {
-	return &user_events2.UserDeleteEventV1{
+func NewDeleteEvent(cmd *user_commands2.UserDeleteCommand) *event.UserDeleteEventV1 {
+	return &event.UserDeleteEventV1{
 		CommandId: cmd.CommandId,
 		EventId:   cmd.CommandId,
 		Id:        cmd.Id,
@@ -65,12 +65,12 @@ func NewDeleteEvent(cmd *user_commands2.UserDeleteCommand) *user_events2.UserDel
 
 func NewEvent(eventType string) ddd.DomainEvent {
 	switch eventType {
-	case user_events2.UserCreateEventType.String():
-		return &user_events2.UserCreateEventV1{}
-	case user_events2.UserUpdateEventType.String():
-		return &user_events2.UserUpdateEventV1{}
-	case user_events2.UserDeleteEventType.String():
-		return &user_events2.UserDeleteEventV1{}
+	case event.UserCreateEventType.String():
+		return &event.UserCreateEventV1{}
+	case event.UserUpdateEventType.String():
+		return &event.UserUpdateEventV1{}
+	case event.UserDeleteEventType.String():
+		return &event.UserDeleteEventV1{}
 	}
 	return nil
 }

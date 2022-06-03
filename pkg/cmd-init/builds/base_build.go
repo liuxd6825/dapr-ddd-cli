@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
+	"os"
 	"strings"
 )
 
@@ -80,6 +81,7 @@ func (b *BaseBuild) Values() map[string]interface{} {
 		res["Aggregate"] = b.Aggregate
 		res["AggregateName"] = b.AggregateName()
 		res["aggregateName"] = b.aggregateName()
+		res["aggregateMidlineName"] = b.Aggregate.MidlineName()
 		res["aggregate_name"] = aggregateName
 		res["AggregateCommandPackage"] = fmt.Sprintf("%s_command", aggregateName)
 		res["AggregateEventPackage"] = fmt.Sprintf("%s_event", aggregateName)
@@ -110,4 +112,10 @@ func (b *BaseBuild) DoBuild(builds ...Build) error {
 
 func (b *BaseBuild) GetOutFile() string {
 	return b.OutFile
+}
+
+func (b *BaseBuild) Mkdir(dirs ...string) {
+	for _, dirName := range dirs {
+		_ = os.MkdirAll(dirName, os.ModePerm)
+	}
 }
