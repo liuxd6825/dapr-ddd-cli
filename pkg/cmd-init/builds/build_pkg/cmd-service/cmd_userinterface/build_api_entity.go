@@ -6,14 +6,14 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 )
 
-type BuildRestEntityApi struct {
+type BuildRestApiEntity struct {
 	builds.BaseBuild
 	aggregate *config.Aggregate
 	entity    *config.Entity
 }
 
-func NewBuildRestEntityApi(base builds.BaseBuild, aggregate *config.Aggregate, entity *config.Entity, outFile string) *BuildRestEntityApi {
-	res := &BuildRestEntityApi{
+func NewBuildRestApiEntity(base builds.BaseBuild, aggregate *config.Aggregate, entity *config.Entity, outFile string) *BuildRestApiEntity {
+	res := &BuildRestApiEntity{
 		BaseBuild: base,
 		aggregate: aggregate,
 		entity:    entity,
@@ -24,7 +24,7 @@ func NewBuildRestEntityApi(base builds.BaseBuild, aggregate *config.Aggregate, e
 	return res
 }
 
-func (b *BuildRestEntityApi) Values() map[string]interface{} {
+func (b *BuildRestApiEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["ClassName"] = b.ClassName()
 	res["Commands"] = b.entity.GetCommands()
@@ -34,6 +34,6 @@ func (b *BuildRestEntityApi) Values() map[string]interface{} {
 	return res
 }
 
-func (b *BuildRestEntityApi) ClassName() string {
+func (b *BuildRestApiEntity) ClassName() string {
 	return utils.FirstUpper(b.entity.Name + "CommandApi")
 }

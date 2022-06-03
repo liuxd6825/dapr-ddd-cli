@@ -3,7 +3,7 @@ dev:
   app:
     id: {{.QueryServiceName}}
     httpPort: 9020
-    rootUrl: /api/v1.0
+    rootUrl: /api/{{.ApiVersion}}
   dapr:
     host: localhost
     httpPort: 9021

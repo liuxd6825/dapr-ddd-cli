@@ -6,13 +6,13 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 )
 
-type BuildRestAggregateApi struct {
+type BuildRestApiAggregate struct {
 	builds.BaseBuild
 	aggregate *config.Aggregate
 }
 
-func NewBuildRestAggregateApi(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildRestAggregateApi {
-	res := &BuildRestAggregateApi{
+func NewBuildRestApiAggregate(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildRestApiAggregate {
+	res := &BuildRestApiAggregate{
 		BaseBuild: base,
 		aggregate: aggregate,
 	}
@@ -22,7 +22,7 @@ func NewBuildRestAggregateApi(base builds.BaseBuild, aggregate *config.Aggregate
 	return res
 }
 
-func (b *BuildRestAggregateApi) Values() map[string]interface{} {
+func (b *BuildRestApiAggregate) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["ClassName"] = b.ClassName()
 	res["Events"] = b.aggregate.Events
@@ -31,6 +31,6 @@ func (b *BuildRestAggregateApi) Values() map[string]interface{} {
 	return res
 }
 
-func (b *BuildRestAggregateApi) ClassName() string {
+func (b *BuildRestApiAggregate) ClassName() string {
 	return utils.FirstUpper(b.AggregateName() + "CommandApi")
 }

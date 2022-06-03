@@ -30,9 +30,9 @@ func (c *{{.Name}}QueryApi) GetById(ctx iris.Context, tenantId, id string) {
 	})
 }
 
-func (c *{{.Name}}QueryApi) GetAll(ctx iris.Context, tenantId, id string) {
+func (c *{{.Name}}QueryApi) GetAll(ctx iris.Context, tenantId string) {
 	_, _, _ = restapp.DoQuery(ctx, func(ctx context.Context) (interface{}, bool, error) {
-		return c.appService.FindAll(ctx, tenantId, id)
+		return c.appService.FindAll(ctx, tenantId)
 	})
 }
 

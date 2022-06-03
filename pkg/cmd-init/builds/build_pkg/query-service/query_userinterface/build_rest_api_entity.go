@@ -7,14 +7,14 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 )
 
-type BuildRestControllerEntity struct {
+type BuildRestApiEntity struct {
 	builds.BaseBuild
 	entity    *config.Entity
 	aggregate *config.Aggregate
 }
 
-func NewBuildRestControllerEntity(base builds.BaseBuild, aggregate *config.Aggregate, entity *config.Entity, outFile string) *BuildRestControllerEntity {
-	res := &BuildRestControllerEntity{
+func NewBuildRestApiEntity(base builds.BaseBuild, aggregate *config.Aggregate, entity *config.Entity, outFile string) *BuildRestApiEntity {
+	res := &BuildRestApiEntity{
 		BaseBuild: base,
 		entity:    entity,
 		aggregate: aggregate,
@@ -25,7 +25,7 @@ func NewBuildRestControllerEntity(base builds.BaseBuild, aggregate *config.Aggre
 	return res
 }
 
-func (b *BuildRestControllerEntity) Values() map[string]interface{} {
+func (b *BuildRestApiEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Name"] = b.entity.Name
 	res["EntityPluralName"] = b.entity.PluralName()

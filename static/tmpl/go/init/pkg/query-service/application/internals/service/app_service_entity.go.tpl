@@ -56,17 +56,29 @@ func (a *{{.Name}}QueryAppService) Update(ctx context.Context, v *view.{{.Name}}
 
 //
 // DeleteById
-// @Description:  按ID查询{{.Name}}View
+// @Description:  按ID删除{{.Name}}View
+// @receiver a
+// @param ctx
+// @param tenantId 租户ID
+// @param id ID
+// @return error
+//
+func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id string) error {
+	return a.domainService.DeleteById(ctx, tenantId, id)
+}
+
+//
+// DeleteAll
+// @Description:  删除所有{{.Name}}View
 // @receiver a
 // @param ctx
 // @param tenantId 租户ID
 // @param id ID
 // @return *view.{{.Name}}View
-// @return bool 是否查询到数据
 // @return error
 //
-func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id string) error {
-	return a.domainService.DeleteById(ctx, tenantId, id)
+func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId) error {
+	return a.domainService.DeleteAll(ctx, tenantId)
 }
 
 //
@@ -101,6 +113,21 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 }
 
 //
+// FindAll
+// @Description: 查询所有
+// @receiver a
+// @param ctx 上下文
+// @param tenantId string 租户ID
+// @return *[]*view.{{.Name}}View
+// @return bool 是否查询到数据
+// @return error 错误
+//
+func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
+	return a.domainService.FindAll(ctx, tenantId)
+}
+
+
+//
 // FindBy{{.AggregateName}}Id
 // @Description: 根据{{.AggregateName}}Id查询
 // @receiver a
@@ -111,7 +138,7 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 // @return bool 是否查询到数据
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error) {
+func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) (*[]*view.{{.Name}}View, bool, error) {
 	return a.domainService.FindBy{{.AggregateName}}Id(ctx, tenantId, {{.aggregateName}}Id)
 }
 

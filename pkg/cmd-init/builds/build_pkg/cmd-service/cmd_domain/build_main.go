@@ -20,8 +20,8 @@ type BuildDomainLayer struct {
 	buildValueObjects  []*BuildValueObject
 	buildEntityObjects []*BuildEntityObject
 
-	buildRegisterAggregateEventType *BuildEventType
-	buildEnumObjects                []*BuildEnumObject
+	buildEventType   *BuildEventType
+	buildEnumObjects []*BuildEnumObject
 }
 
 func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildDomainLayer {
@@ -54,69 +54,40 @@ func (b *BuildDomainLayer) Build() error {
 	list = append(list, b.buildAggregate)
 
 	// valueObject
-	buildValueObjects := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildValueObjects {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildValueObjects {
+		list = append(list, item)
 	}
-	list = append(list, buildValueObjects()...)
 
 	// entityObject
-	buildEntityObjects := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildEntityObjects {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildEntityObjects {
+		list = append(list, item)
 	}
-	list = append(list, buildEntityObjects()...)
 
 	// domainService
 	list = append(list, b.buildDomainService)
 
 	// fields
-	buildFields := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildFields {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildFields {
+		list = append(list, item)
 	}
-	list = append(list, buildFields()...)
 
 	// commands
-	buildCommands := func() []builds.Build {
-		var res []builds.Build
-		for _, b := range b.buildCommands {
-			res = append(res, b)
-		}
-		return res
+	for _, item := range b.buildCommands {
+		list = append(list, item)
 	}
-	list = append(list, buildCommands()...)
 
 	// event
-	buildEvents := func() []builds.Build {
-		var res []builds.Build
-		for _, b := range b.buildEvents {
-			res = append(res, b)
-		}
-		return res
+	for _, item := range b.buildEvents {
+		list = append(list, item)
 	}
-	list = append(list, buildEvents()...)
 
 	// enumObject
-	buildEnumObjectsTypes := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildEnumObjects {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildEnumObjects {
+		list = append(list, item)
 	}
-	list = append(list, buildEnumObjectsTypes()...)
 
-	list = append(list, b.buildRegisterAggregateEventType)
+	// event type
+	list = append(list, b.buildEventType)
 
 	return b.DoBuild(list...)
 }
@@ -196,5 +167,5 @@ func (b *BuildDomainLayer) initEnumObjects() {
 
 func (b *BuildDomainLayer) initEventTypes() {
 	outFile := fmt.Sprintf("%s/%s/event/event_type.go", b.outDir, b.aggregate.FileName())
-	b.buildRegisterAggregateEventType = NewBuildEventType(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	b.buildEventType = NewBuildEventType(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }

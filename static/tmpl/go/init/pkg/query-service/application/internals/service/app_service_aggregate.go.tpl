@@ -78,6 +78,27 @@ func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id 
 }
 
 
+
+//
+// DeleteAll
+// @Description:  删除所有
+// @receiver a
+// @param ctx
+// @param tenantId 租户ID
+// @param id ID
+// @param v *view.{{.Name}}View
+// @return error
+//
+func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId, id string) error {
+    {{- range $entityName, $entity := .Aggregate.Entities}}
+    if err:= a.{{$entity.FirstLowerName}}DomainService.DeleteAll(ctx, tenantId); err!=nil {
+        return err
+    }
+    {{- end }}
+	return a.domainService.DeleteAll(ctx, tenantId)
+}
+
+
 //
 // FindById
 // @Description:  按ID查询{{.Name}}View
@@ -93,6 +114,20 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 	return a.domainService.FindById(ctx, tenantId, id)
 }
 
+
+//
+// FindAll
+// @Description: 查询所有view.{{.Name}}View
+// @receiver a
+// @param ctx
+// @param tenantId 租户ID
+// @return *[]*view.{{.Name}}View
+// @return bool 是否查询到数据
+// @return error 错误
+//
+func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
+	return a.domainService.FindAll(ctx, tenantId)
+}
 
 
 //

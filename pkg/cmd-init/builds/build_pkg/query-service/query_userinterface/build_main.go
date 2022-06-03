@@ -12,8 +12,11 @@ type BuildUserInterfaceLayer struct {
 	aggregate *config.Aggregate
 	outDir    string
 
-	buildRestControllerAggregate *BuildRestApiAggregate
-	buildRestControllerEntities  []*BuildRestControllerEntity
+	buildRestApiAggregate *BuildRestApiAggregate
+	buildRestApiEntities  []*BuildRestApiEntity
+
+	buildDtoAggregate *BuildDtoAggregate
+	buildDtoEntities  *[]*BuildDtoEntity
 }
 
 func NewBuildUserInterfaceLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildUserInterfaceLayer {
@@ -33,34 +36,47 @@ func (b *BuildUserInterfaceLayer) Build() error {
 	var list []builds.Build
 
 	// aggregate
-	list = append(list, b.buildRestControllerAggregate)
+	list = append(list, b.buildRestApiAggregate)
 
 	// entityObject
-	buildQueryServiceImplEntities := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildRestControllerEntities {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildRestApiEntities {
+		list = append(list, item)
 	}
-	list = append(list, buildQueryServiceImplEntities()...)
+
+	// dto
+	list = append(list, b.buildDtoAggregate)
+	for _, item := range *b.buildDtoEntities {
+		list = append(list, item)
+	}
 
 	return b.DoBuild(list...)
 }
 
 func (b *BuildUserInterfaceLayer) init() {
 	outFile := fmt.Sprintf("%s/rest/%s/facade/%s_api.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	b.buildRestControllerAggregate = NewBuildRestApiAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	b.buildRestApiAggregate = NewBuildRestApiAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 
 	var dirs []string
 	dirs = append(dirs, fmt.Sprintf("%s/rest/%s/dto", b.outDir, b.aggregate.FileName()))
 	dirs = append(dirs, fmt.Sprintf("%s/rest/%s/assembler", b.outDir, b.aggregate.FileName()))
 	b.Mkdir(dirs...)
 
-	b.buildRestControllerEntities = []*BuildRestControllerEntity{}
+	b.buildRestApiEntities = []*BuildRestApiEntity{}
 	for _, item := range b.aggregate.Entities {
 		outFile = fmt.Sprintf("%s/rest/%s/facade/%s_api.go", b.outDir, b.aggregate.FileName(), item.FileName())
-		build := NewBuildRestControllerEntity(b.BaseBuild, b.aggregate, item, utils.ToLower(outFile))
-		b.buildRestControllerEntities = append(b.buildRestControllerEntities, build)
+		build := NewBuildRestApiEntity(b.BaseBuild, b.aggregate, item, utils.ToLower(outFile))
+		b.buildRestApiEntities = append(b.buildRestApiEntities, build)
 	}
+
+	outFile = fmt.Sprintf("%s/rest/%s/dto/%s_dto.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	b.buildDtoAggregate = NewBuildDtoAggregate(b.BaseBuild, b.aggregate, outFile)
+
+	var buildDtoEntities []*BuildDtoEntity
+	for _, item := range b.aggregate.Entities {
+		outFile = fmt.Sprintf("%s/rest/%s/dto/%s_dto.go", b.outDir, b.aggregate.FileName(), item.FileName())
+		build := NewBuildDtoEntity(b.BaseBuild, b.aggregate, item, utils.ToLower(outFile))
+		buildDtoEntities = append(buildDtoEntities, build)
+	}
+	b.buildDtoEntities = &buildDtoEntities
+
 }

@@ -76,6 +76,7 @@ func (b *BaseBuild) Values() map[string]interface{} {
 	res["ServiceName"] = serviceName
 	res["CommandServiceName"] = b.Config.Configuration.CommandServiceName()
 	res["QueryServiceName"] = b.Config.Configuration.QueryServiceName()
+	res["ApiVersion"] = b.Config.Configuration.ApiVersion
 	if b.Aggregate != nil {
 		aggregateName := utils.SnakeString(b.Aggregate.Name)
 		res["Aggregate"] = b.Aggregate

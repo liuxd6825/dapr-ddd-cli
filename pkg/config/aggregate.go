@@ -37,7 +37,7 @@ type Aggregate struct {
 func (a *Aggregate) init() {
 	a.initId()
 	if a.Version == "" {
-		a.Version = "1.0"
+		a.Version = "v1.0"
 	}
 	if a.Properties == nil {
 		a.Properties = Properties{}

@@ -24,6 +24,8 @@ type BuildInfrastructureLayer struct {
 
 	buildRepositoryBase    *BuildRepositoryBase
 	buildRegisterSubscribe *BuildRegisterSubscribe
+
+	buildDtoBase *builds.BuildAnyFile
 }
 
 func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildInfrastructureLayer {
@@ -48,6 +50,7 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initRegisterEventType()
 	res.initRegisterAggregateType()
 	res.initRegisterRestController()
+	res.initDtoBase()
 
 	return res
 }
@@ -87,6 +90,7 @@ func (b *BuildInfrastructureLayer) Build() error {
 	list = append(list, b.buildRegisterSubscribe)
 	list = append(list, b.buildRegisterAggregateType)
 	list = append(list, b.buildRegisterAllEventType)
+	list = append(list, b.buildDtoBase)
 
 	return b.DoBuild(list...)
 }
@@ -142,4 +146,11 @@ func (b *BuildInfrastructureLayer) initRegisterAggregateType() {
 func (b *BuildInfrastructureLayer) initRegisterRestController() {
 	outFile := fmt.Sprintf("%s/register/register_rest_controller.go", b.outDir)
 	b.buildRegisterRestController = NewBuildRegisterRestApi(b.BaseBuild, outFile)
+}
+
+func (b *BuildInfrastructureLayer) initDtoBase() {
+	values := b.BaseBuild.Values()
+	outFile := fmt.Sprintf("%s/base/userinterface/rest/dto/base_dto.go", b.outDir)
+	tmplFile := "static/tmpl/go/init/pkg/query-service/infrastructure/base/userinterface/rest/dto/base_dto.go.tpl"
+	b.buildDtoBase = builds.NewBuildAnyFile(b.BaseBuild, values, tmplFile, outFile)
 }

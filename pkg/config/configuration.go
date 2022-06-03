@@ -7,6 +7,7 @@ type Configuration struct {
 	DefaultModule             string                     `yaml:"defaultModule"`
 	ServiceName               string                     `yaml:"serviceName"`
 	Namespace                 Namespace                  `yaml:"namespace"`
+	ApiVersion                string                     `yaml:"apiVersion"`
 	Description               string                     `yaml:"description"`
 	DefaultReservedProperties *DefaultReservedProperties `yaml:"defaultReservedProperties"`
 	Metadata                  Metadata                   `yaml:"metadata"`

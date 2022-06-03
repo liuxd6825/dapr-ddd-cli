@@ -51,15 +51,8 @@ func (b *BuildApplicationLayer) Build() error {
 	var list []builds.Build
 	list = append(list, b.buildCmdApplicationService)
 	list = append(list, b.buildQueryAppServiceAggregate)
-
-	entities := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildQueryAppServiceEntities {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildQueryAppServiceEntities {
+		list = append(list, item)
 	}
-	list = append(list, entities()...)
-
 	return b.DoBuild(list...)
 }

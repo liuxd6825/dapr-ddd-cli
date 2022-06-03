@@ -3,7 +3,7 @@ dev:
   app:
     id: {{.CommandServiceName}} 
     httpPort: 9010
-    rootUrl: /api/v1.0
+    rootUrl: /api/{{.ApiVersion}}
   dapr:
     host: localhost
     httpPort: 9011

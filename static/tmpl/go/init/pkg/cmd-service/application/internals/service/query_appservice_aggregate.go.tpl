@@ -28,8 +28,8 @@ func Get{{.Name}}QueryAppService() {{.Name}}QueryAppService {
 func new{{.Name}}QueryAppService() {{.Name}}QueryAppService {
 	res := &{{.name}}QueryAppService{}
     res.SetAppId("{{.QueryServiceName}}")
-    res.SetResourceName("{{.ResourceName}}")
-    res.SetApiVersion("v1.0")
+    res.SetResourceName("{{.Aggregate.PluralName}}")
+    res.SetApiVersion("{{.ApiVersion}}")
 	return res
 }
 

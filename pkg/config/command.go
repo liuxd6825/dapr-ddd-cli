@@ -20,6 +20,9 @@ type Command struct {
 	event              *Event
 }
 
+func (c *Command) Event() *Event {
+	return c.event
+}
 func (c *Commands) init(a *Aggregate) {
 	if c != nil {
 		for name, cmd := range *c {
@@ -51,6 +54,10 @@ func (c *Command) init(a *Aggregate, name string) {
 	if c.EventName != "" {
 		c.event = c.Aggregate.Events[c.EventName]
 	}
+}
+
+func (c *Command) FileName() string {
+	return utils.SnakeString(c.Name)
 }
 
 func (c *Command) ServiceFuncName() string {

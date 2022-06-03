@@ -5,6 +5,7 @@ configuration:
   defaultModule: "Dddml.Wms"
   # 服务名
   serviceName: "dapr-ddd-demo"
+  apiVersion: v1.0
   # 命名空间
   namespace:
     go: "gitee.com/liuxu6825/dapr-ddd-demo"

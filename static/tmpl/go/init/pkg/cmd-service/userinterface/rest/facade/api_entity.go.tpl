@@ -4,10 +4,12 @@ import (
 	"context"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
     service "{{.Namespace}}/pkg/cmd-service/application/internals/service/{{.aggregate_name}}_service"
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
+	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 )
+
 {{- $AggregateName := .AggregateName}}
 {{- $ClassName := .ClassName}}
 type {{$ClassName}} struct {
