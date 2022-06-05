@@ -28,6 +28,7 @@ func NewBuildRestApiEntity(base builds.BaseBuild, aggregate *config.Aggregate, e
 func (b *BuildRestApiEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Name"] = b.entity.Name
+	res["name"] = b.entity.FirstLowerName()
 	res["EntityPluralName"] = b.entity.PluralName()
 	res["AggregatePluralName"] = b.Aggregate.PluralName()
 	res["ServiceName"] = b.entity.FirstUpperName() + "AppService"

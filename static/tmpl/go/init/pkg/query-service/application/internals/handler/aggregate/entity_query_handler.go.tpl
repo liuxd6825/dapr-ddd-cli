@@ -1,4 +1,4 @@
-package {{.aggregate_name}}_handler
+package handler
 
 {{- $AggregateName := .AggregateName}}
 {{- $EventPackage := .AggregateEventPackage}}
@@ -8,13 +8,13 @@ import (
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/factory"
-	"{{.Namespace}}/pkg/query-service/application/internals/service/{{.aggregate_name}}_service"
+	"{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/service"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 type {{.Name}}QueryHandler struct {
-	service *{{.aggregate_name}}_service.{{.Name}}QueryAppService
+	service *service.{{.Name}}QueryAppService
 	restapp.BaseQueryHandler
 }
 {{$serviceName := .ServiceName}}
@@ -29,7 +29,7 @@ func New{{.Name}}Subscribe() restapp.RegisterSubscribe {
 
 func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 	return &{{.Name}}QueryHandler{
-		service: {{.aggregate_name}}_service.New{{.Name}}QueryAppService(),
+		service: service.New{{.Name}}QueryAppService(),
 	}
 }
 {{- $factoryPackage := .AggregateFactoryPackage}}

@@ -35,5 +35,15 @@ func (b *BuildProjectionEntity) Values() map[string]interface{} {
 	res["DefaultProperties"] = defaultProperties
 	res["Description"] = b.entity.Description
 	res["Aggregate"] = b.Aggregate
+	res["HasTimeType"] = b.HasTimeType()
 	return res
+}
+
+func (b *BuildProjectionEntity) HasTimeType() bool {
+	hasTimeType := b.entity.Properties.HasTimeType()
+	if !hasTimeType {
+		defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultViewProperties(), &b.entity.Properties)
+		hasTimeType = defaultProperties.HasTimeType()
+	}
+	return hasTimeType
 }

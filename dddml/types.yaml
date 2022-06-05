@@ -35,6 +35,11 @@ typeDefinitions:
     cSharpType: int
     javaType: int
     goType: int64
+  uint:
+    sqlType: DECIMAL(18,6)
+    cSharpType: uint
+    javaType: uint
+    goType: uint64
   bool:
     sqlType: TINYINT(1)
     cSharpType: bool

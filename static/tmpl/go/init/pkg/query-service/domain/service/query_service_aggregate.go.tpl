@@ -14,7 +14,7 @@ type {{.Name}}QueryDomainService interface {
 	DeleteAll(ctx context.Context, tenantId string) error
     FindById(ctx context.Context, tenantId, id string) (*view.{{.Name}}View, bool, error)
     FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error)
-	FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)
+	FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)
 }
 
 func New{{.Name}}QueryDomainService() {{.Name}}QueryDomainService {

@@ -4,44 +4,66 @@ import (
 	"context"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	app_service "{{.Namespace}}/pkg/query-service/application/internals/service/{{.aggregate_name}}_service"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
+	"{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/service"
+	"{{.Namespace}}/pkg/query-service/userinterface/rest/{{.aggregate_name}}/assembler"
+
 )
 
+var {{.Name}}Assembler = assembler.{{.Name}}
+
+
 type {{.Name}}QueryApi struct {
-	appService *app_service.{{.Name}}QueryAppService
+	queryService *service.{{.Name}}QueryAppService
 }
+
 
 func New{{.Name}}QueryApi() *{{.Name}}QueryApi {
 	return &{{.Name}}QueryApi{
-		appService: app_service.New{{.Name}}QueryAppService(),
+		queryService: service.New{{.Name}}QueryAppService(),
 	}
 }
 
-func (c *{{.Name}}QueryApi) BeforeActivation(b mvc.BeforeActivation) {
-	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}/{id}", "GetById")
-	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}:all", "GetAll")
-	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}", "GetPagingData")
+
+func (a *{{.Name}}QueryApi) BeforeActivation(b mvc.BeforeActivation) {
+	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}/{id}", "FindById")
+	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}:all", "FindAll")
+	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}", "FindPaging")
 }
 
-func (c *{{.Name}}QueryApi) GetById(ctx iris.Context, tenantId, id string) {
-	_, _, _ = restapp.DoQueryOne(ctx, func(ctx context.Context) (interface{}, bool, error) {
-		return c.appService.FindById(ctx, tenantId, id)
+
+func (a *{{.Name}}QueryApi) FindById(ctx iris.Context, tenantId, id string) {
+	req, err := {{.Name}}Assembler.AssFindByIdRequest(ctx)
+	if err != nil {
+		return
+	}
+	_, _, _ = restapp.DoQueryOne(ctx, func(c context.Context) (interface{}, bool, error) {
+		v, b, e := a.queryService.FindById(c, req.TenantId(), req.Id())
+		return {{.Name}}Assembler.AssOneResponse(ctx, v, b, e)
 	})
 }
 
-func (c *{{.Name}}QueryApi) GetAll(ctx iris.Context, tenantId string) {
-	_, _, _ = restapp.DoQuery(ctx, func(ctx context.Context) (interface{}, bool, error) {
-		return c.appService.FindAll(ctx, tenantId)
+
+func (a *{{.Name}}QueryApi) FindAll(ctx iris.Context, tenantId string) {
+	req, err := {{.Name}}Assembler.AssFindAllRequest(ctx)
+	if err != nil {
+		return
+	}
+	_, _, _ = restapp.DoQuery(ctx, func(c context.Context) (interface{}, bool, error) {
+		fpr, b, e := a.queryService.FindAll(c, req.TenantId())
+		return {{.Name}}Assembler.AssListResponse(ctx, fpr, b, e)
 	})
 }
 
-func (c *{{.Name}}QueryApi) GetPagingData(ctx iris.Context, tenantId string) {
-	_, _, _ = restapp.DoQuery(ctx, func(ctx context.Context) (interface{}, bool, error) {
-		query, err := restapp.NewListQuery(ctx, tenantId)
-		if err != nil {
-			return nil, false, err
-		}
-		return c.appService.FindPagingData(ctx, query)
+
+func (a *{{.Name}}QueryApi) FindPaging(ctx iris.Context, tenantId string) {
+	req, err := {{.Name}}Assembler.AssGetPagingRequest(ctx)
+	if err != nil {
+		return
+	}
+	_, _, _ = restapp.DoQuery(ctx, func(c context.Context) (interface{}, bool, error) {
+		fpr, b, e := a.queryService.FindPaging(c, req)
+		return {{.Name}}Assembler.AssFindPagingResponse(ctx, fpr, b, e)
 	})
 }
+

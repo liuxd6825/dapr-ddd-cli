@@ -1,53 +1,58 @@
 package dto
 
 import (
-    base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/dto"
+    "github.com/kataras/iris/v12"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/assert"
+    "{{.Namespace}}/pkg/query-service/infrastructure/types"
+	base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/dto"
 )
 
 //
-// {{.Name}}GetByIdRequest
-// @Description: {{.Description}} 请求内容
+// {{.Name}}FindByIdRequest
+// @Description:  请求内容
 //
-type {{.Name}}GetByIdRequest struct {
-    base.GetByIdRequest
-    {{.Name}}ViewDto
+type {{.Name}}FindByIdRequest struct {
+	base.FindByIdRequest
 }
 
 //
-// {{.Name}}GetByIdResponse
-// @Description: {{.Description}} 请求内容
+// {{.Name}}FindByIdResponse
+// @Description:  请求内容
 //
-type {{.Name}}GetByIdResponse struct {
-    base.GetByIdResponse
+type {{.Name}}FindByIdResponse struct {
+	base.FindByIdResponse
+	{{.Name}}ViewDto
 }
 
-
 //
-// {{.Name}}GetAllRequest
-// @Description: {{.Description}}
+// {{.Name}}FindAllRequest
+// @Description:
 //
-type {{.Name}}GetAllRequest struct {
-    base.GetAllRequest
+type {{.Name}}FindAllRequest struct {
+	base.FindAllRequest
 }
 
-
 //
-// {{.Name}}GetPagingRequest
-// @Description: {{.Description}}
+// {{.Name}}FindPagingRequest
+// @Description:
 //
-type {{.Name}}GetPagingRequest struct {
-    base.GetPagingRequest
+type {{.Name}}FindPagingRequest struct {
+	base.FindPagingRequest[*{{.Name}}ViewDto]
 }
 
-
 //
-// {{.Name}}GetPagingResponse
-// @Description: {{.Description}}
+// {{.Name}}FindPagingResponse
+// @Description:
 //
-type {{.Name}}GetPagingResponse struct {
-    base.GetPagingResponse[*{{.Name}}ViewDto]
+type {{.Name}}FindPagingResponse struct {
+	base.FindPagingResponse
 }
 
+//
+// {{.Name}}ViewList
+// @Description: {{.Description}}  请求业务数据列表
+//
+type {{.Name}}ViewList *[]*{{.Name}}ViewDto
 
 
 //
@@ -59,5 +64,3 @@ type {{.Name}}ViewDto struct {
     {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
 {{- end}}
 }
-
-

@@ -45,6 +45,6 @@ func (u *{{.Name}}QueryDomainServiceImpl) FindAll(ctx context.Context, tenantId 
 	return u.repos.FindAll(ctx, tenantId)
 }
 
-func (u *{{.Name}}QueryDomainServiceImpl) FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
+func (u *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
 	return u.repos.FindPaging(ctx, query)
 }

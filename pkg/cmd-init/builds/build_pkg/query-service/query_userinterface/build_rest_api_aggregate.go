@@ -24,6 +24,7 @@ func NewBuildRestApiAggregate(base builds.BaseBuild, aggregate *config.Aggregate
 func (b *BuildRestApiAggregate) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Name"] = b.aggregate.Name
+	res["name"] = b.aggregate.FirstLowerName()
 	res["AggregatePluralName"] = b.aggregate.PluralName()
 	res["ServiceName"] = b.aggregate.FirstUpperName() + "AppService"
 	return res

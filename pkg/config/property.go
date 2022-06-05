@@ -50,7 +50,7 @@ func (p *Properties) HasType(typeName string) bool {
 	}
 	m := *p
 	for _, item := range m {
-		if strings.EqualFold(item.Type, typeName) {
+		if strings.ToLower(item.Type) == strings.ToLower(typeName) {
 			return true
 		}
 	}

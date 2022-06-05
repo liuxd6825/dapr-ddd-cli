@@ -2,7 +2,7 @@ package register
 {{$Namespace := .Namespace}}
 import (
     {{range $aggName, $agg := .Aggregates}}
-    "{{$Namespace}}/pkg/query-service/application/internals/handler/{{$agg.FileName}}_handler"
+    {{$agg.FileName}}_handler "{{$Namespace}}/pkg/query-service/application/internals/{{$agg.FileName}}/handler"
     {{- end }}
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )

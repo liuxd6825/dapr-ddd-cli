@@ -21,11 +21,6 @@ configuration:
         type: string
       IsDeleted:
         type: bool
-    field:
-      Id:
-        type: string
-      TenantId:
-        type: string
     entity:
       TenantId:
         type: string
@@ -72,6 +67,12 @@ configuration:
         type: dateTime
       IsDeleted:
         type: bool
+    field:
+      Id:
+        type: string
+      TenantId:
+        type: string
+
   # DDDML规范中没有明确定义的扩展点， 其值类型为Map<String, Object>
   metadata:
     HttpServicesAuthorizationEnalbled: false

@@ -27,13 +27,27 @@ func NewBuildProjectionAggregate(base builds.BaseBuild, aggregate *config.Aggreg
 
 func (b *BuildProjectionAggregate) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
-	defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultAggregateProperties(), &b.aggregate.Properties)
 	res["name"] = utils.FirstLower(b.aggregate.Name)
 	res["Name"] = utils.FirstUpper(b.aggregate.Name)
 	res["ClassName"] = fmt.Sprintf("%sView", utils.FirstUpper(b.aggregate.Name))
 	res["Properties"] = b.aggregate.Properties
-	res["DefaultProperties"] = defaultProperties
+	res["DefaultProperties"] = b.DefaultProperties()
 	res["Description"] = b.aggregate.Description
 	res["Aggregate"] = b.aggregate
+	res["HasTimeType"] = b.HasTimeType()
 	return res
+}
+
+func (b *BuildProjectionAggregate) HasTimeType() bool {
+	hasTimeType := b.aggregate.Properties.HasTimeType()
+	if !hasTimeType {
+		defaultProperties := b.DefaultProperties()
+		hasTimeType = defaultProperties.HasTimeType()
+	}
+	return hasTimeType
+}
+
+func (b *BuildProjectionAggregate) DefaultProperties() *config.Properties {
+	defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultViewProperties(), &b.aggregate.Properties)
+	return defaultProperties
 }

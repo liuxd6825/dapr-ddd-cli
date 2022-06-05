@@ -17,6 +17,9 @@ type BuildUserInterfaceLayer struct {
 
 	buildDtoAggregate *BuildDtoAggregate
 	buildDtoEntities  *[]*BuildDtoEntity
+
+	buildAssemblerAggregate *BuildAssemblerAggregate
+	buildAssemblerEntities  *[]*BuildAssemblerEntity
 }
 
 func NewBuildUserInterfaceLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildUserInterfaceLayer {
@@ -49,6 +52,12 @@ func (b *BuildUserInterfaceLayer) Build() error {
 		list = append(list, item)
 	}
 
+	// assembler
+	list = append(list, b.buildAssemblerAggregate)
+	for _, item := range *b.buildAssemblerEntities {
+		list = append(list, item)
+	}
+
 	return b.DoBuild(list...)
 }
 
@@ -78,5 +87,16 @@ func (b *BuildUserInterfaceLayer) init() {
 		buildDtoEntities = append(buildDtoEntities, build)
 	}
 	b.buildDtoEntities = &buildDtoEntities
+
+	outFile = fmt.Sprintf("%s/rest/%s/assembler/%s_assembler.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	b.buildAssemblerAggregate = NewBuildAssemblerAggregate(b.BaseBuild, b.aggregate, outFile)
+
+	var buildAssemblerEntities []*BuildAssemblerEntity
+	for _, item := range b.aggregate.Entities {
+		outFile = fmt.Sprintf("%s/rest/%s/assembler/%s_assembler.go", b.outDir, b.aggregate.FileName(), item.FileName())
+		build := NewBuildAssemblerEntity(b.BaseBuild, b.aggregate, item, utils.ToLower(outFile))
+		buildAssemblerEntities = append(buildAssemblerEntities, build)
+	}
+	b.buildAssemblerEntities = &buildAssemblerEntities
 
 }

@@ -1,4 +1,4 @@
-package {{.aggregate_name}}_handler
+package handler
 
 {{- $AggregateName := .AggregateName}}
 {{- $EventPackage := .AggregateEventPackage}}
@@ -7,16 +7,22 @@ import (
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/factory"
-	"{{.Namespace}}/pkg/query-service/application/internals/service/{{.aggregate_name}}_service"
+	"{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/service"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 type {{.Name}}QueryHandler struct {
-	service *{{.aggregate_name}}_service.{{.Name}}QueryAppService
+	service *service.{{.Name}}QueryAppService
 	restapp.BaseQueryHandler
 }
-{{$serviceName := .ServiceName}}
+
+{{- $serviceName := .ServiceName}}
+//
+// New{{.Name}}Subscribe()
+// @Description: 创建dapr消息订阅器，用于接受领域事件
+// @return restapp.RegisterSubscribe  消息注册器
+//
 func New{{.Name}}Subscribe() restapp.RegisterSubscribe {
 	subscribes := &[]ddd.Subscribe{
 	{{- range $eventName, $event := .Events}}
@@ -28,9 +34,14 @@ func New{{.Name}}Subscribe() restapp.RegisterSubscribe {
 	return restapp.NewRegisterSubscribe(subscribes, New{{.Name}}QueryHandler())
 }
 
+//
+// New{{.Name}}QueryHandler()
+// @Description: 创建{{.Description}}领域事件处理器
+// @return ddd.QueryEventHandler 领域事件处理器
+//
 func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 	return &{{.Name}}QueryHandler{
-		service: {{.aggregate_name}}_service.New{{.Name}}QueryAppService(),
+		service: service.New{{.Name}}QueryAppService(),
 	}
 }
 {{- $FactoryPackage := .AggregateFactoryPackage}}

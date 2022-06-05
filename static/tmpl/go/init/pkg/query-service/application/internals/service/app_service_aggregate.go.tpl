@@ -1,4 +1,4 @@
-package {{.aggregate_name}}_service
+package service
 {{$AggregateName := .AggregateName}}
 import (
 	"context"
@@ -64,7 +64,7 @@ func (a *{{.Name}}QueryAppService) Update(ctx context.Context, v *view.{{.Name}}
 // @receiver a
 // @param ctx
 // @param tenantId 租户ID
-// @param id ID
+// @param id 视图ID
 // @param v *view.{{.Name}}View
 // @return error
 //
@@ -85,7 +85,7 @@ func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id 
 // @receiver a
 // @param ctx
 // @param tenantId 租户ID
-// @param id ID
+// @param id 视图ID
 // @param v *view.{{.Name}}View
 // @return error
 //
@@ -105,7 +105,7 @@ func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId, id s
 // @receiver a
 // @param ctx
 // @param tenantId 租户ID
-// @param id ID
+// @param id 视图ID
 // @return *view.{{.Name}}View
 // @return bool 是否查询到数据
 // @return error
@@ -131,7 +131,7 @@ func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string)
 
 
 //
-// FindPagingData
+// FindPaging
 // @Description: 分页查询
 // @receiver a
 // @param ctx 上下文
@@ -140,6 +140,6 @@ func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string)
 // @return bool 是否查询到数据
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) FindPagingData(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
-	return a.domainService.FindPagingData(ctx, query)
+func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
+	return a.domainService.FindPaging(ctx, query)
 }

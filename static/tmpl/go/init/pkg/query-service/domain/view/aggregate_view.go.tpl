@@ -1,7 +1,7 @@
 package view
 
 import (
-    {{- if .Properties.HasTimeType }}
+    {{- if .HasTimeType }}
     "time"
     {{- end}}
 )
