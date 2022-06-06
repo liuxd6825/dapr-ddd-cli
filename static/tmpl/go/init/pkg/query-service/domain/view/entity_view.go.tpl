@@ -1,3 +1,4 @@
+{{- $ClassName := .ClassName}}
 package view
 
 import (
@@ -23,13 +24,33 @@ type {{.ClassName}} struct {
 {{- end}}
 }
 
+//
+// New{{.ClassName}}
+// @Description: 创建 {{.Description}} 视图对象
+//
 func New{{.ClassName}}()*{{.ClassName}}{
     return &{{.ClassName}}{}
 }
 
-func (v *{{.ClassName}}) GetTenantId() string {
-	return v.TenantId
+{{- range $name, $property := .DefaultViewProperties}}
+{{- if not $property.IsArray}}
+
+//
+// Get{{$property.UpperName}}
+// @Description: {{$property.Description}}
+//
+func (v *{{$ClassName}}) Get{{$property.Name}}() {{$property.LanType}} {
+    return v.{{$property.UpperName}}
 }
-func (v *{{.ClassName}}) GetId() string {
-	return v.Id
+
+//
+// Set{{$property.UpperName}}
+// @Description: {{$property.Description}}
+//
+func (v *{{$ClassName}}) Set{{$property.Name}}(value {{$property.LanType}})  {
+    v.{{$property.UpperName}} = value
 }
+
+{{- end}}
+{{- end}}
+

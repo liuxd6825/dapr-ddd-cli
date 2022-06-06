@@ -24,6 +24,7 @@ func NewBuildRestControllerEntity(base builds.BaseBuild, entity *config.Entity, 
 func (b *BuildAppServiceEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Name"] = b.entity.Name
+	res["name"] = b.entity.FirstLowerName()
 	res["Properties"] = b.entity.Properties
 	return res
 }

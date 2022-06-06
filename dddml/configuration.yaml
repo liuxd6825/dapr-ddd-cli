@@ -17,61 +17,61 @@ configuration:
     aggregate:
       Id:
         type: string
+        description: "ID"
       TenantId:
         type: string
+        description: "租户ID"
       IsDeleted:
         type: bool
+        description: "是否删除"
     entity:
-      TenantId:
+      Id:
         type: string
-      CreatedId:
-        type: string
-      CreatedName:
-        type: string
-      CreatedTime:
-        type: dateTime
-      UpdatedId:
-        type: string
-      UpdatedName:
-        type: string
-      UpdatedTime:
-        type: dateTime
-      DeletedId:
-        type: string
-      DeletedName:
-        type: string
-      DeletedTime:
-        type: dateTime
+        description: "ID"
       IsDeleted:
         type: bool
+        description: "是否删除"
     view:
       TenantId:
         type: string
+        description: "租户ID"
       CreatedId:
         type: string
+        description: "创建人ID"
       CreatedName:
         type: string
+        description: "创建人名称"
       CreatedTime:
         type: dateTime
+        description: "创建时间"
       UpdatedId:
         type: string
+        description: "更新人ID"
       UpdatedName:
         type: string
+        description: "更新人名称"
       UpdatedTime:
         type: dateTime
+        description: "更新时间"
       DeletedId:
         type: string
+        description: "删除人ID"
       DeletedName:
         type: string
+        description: "删除人名称"
       DeletedTime:
         type: dateTime
+        description: "删除时间"
       IsDeleted:
         type: bool
+        description: "是否删除"
     field:
       Id:
         type: string
+        description: "ID"
       TenantId:
         type: string
+        description: "租户ID"
 
   # DDDML规范中没有明确定义的扩展点， 其值类型为Map<String, Object>
   metadata:

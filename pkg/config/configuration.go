@@ -33,6 +33,7 @@ type DefaultReservedProperties struct {
 func (c *Configuration) Init(langType LangType) {
 	c.LangType = langType
 	c.GoUtil = NewMetadataUtil(c.Go)
+	c.DefaultReservedProperties.init()
 }
 
 func (c *Configuration) GetNamespace() string {
@@ -53,4 +54,12 @@ func (c *Configuration) QueryServiceName() string {
 
 func (c *Configuration) CommandServiceName() string {
 	return fmt.Sprintf("%s-command-service", c.ServiceName)
+}
+
+func (p *DefaultReservedProperties) init() {
+	p.ViewProperties.Init(nil)
+	p.FieldProperties.Init(nil)
+	p.AggregateProperties.Init(nil)
+	p.EntityProperties.Init(nil)
+	p.ValueProperties.Init(nil)
 }

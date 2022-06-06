@@ -74,18 +74,20 @@ func (e *Events) GetEntityEvents(entityName string) []*Event {
 
 func (e *Event) init(a *Aggregate, name string) {
 	if len(e.Version) == 0 {
-		e.Version = "V1"
+		e.Version = "v1"
 	}
-
 	e.Aggregate = a
 	e.Name = name
 	e.Route = fmt.Sprintf("%s/%s/ver:%s", utils.SnakeString(e.Aggregate.Name), utils.SnakeString(e.Name), utils.SnakeString(e.Version))
 	e.hasDataProperty = false
+	e.Version = strings.ToLower(e.Version)
 	e.Properties.Init(a)
+
 	data := e.Properties["data"]
 	if data == nil {
 		data = e.Properties["Data"]
 	}
+
 	if data != nil {
 		e.DataProperty = data
 		e.hasDataProperty = true
@@ -110,6 +112,14 @@ func (e *Event) init(a *Aggregate, name string) {
 
 func (e *Event) ClassName() string {
 	return e.Name
+}
+
+func (e *Event) MethodName() string {
+	methodName := e.Name
+	if strings.HasSuffix(methodName, "Event") {
+		methodName = methodName[0 : len(methodName)-5]
+	}
+	return methodName
 }
 
 func (e *Event) FirstLowerName() string {
@@ -173,6 +183,10 @@ func (e *Event) IsEntity(entityName string) bool {
 }
 
 func (e *Event) HasDataProperty() bool {
+	return e.hasDataProperty
+}
+
+func (e *Event) IsHasDataProperty() bool {
 	return e.hasDataProperty
 }
 

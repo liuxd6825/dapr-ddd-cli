@@ -15,5 +15,5 @@ type {{.Name}}ViewRepository interface {
 	FindById(ctx context.Context, tenantId string, id string) (*view.{{.Name}}View, bool, error)
 	FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error)
 	FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string,{{.aggregateName}}Id string) (*[]*view.{{.Name}}View, bool, error)
-	FindPaging(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)
+	FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)
 }

@@ -27,6 +27,8 @@ type BuildInfrastructureLayer struct {
 
 	buildDtoBase       *builds.BuildAnyFile
 	buildTypesDateTime *BuildTypesDateTime
+
+	buildUtils *BuildUtils
 }
 
 func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildInfrastructureLayer {
@@ -53,6 +55,7 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initRegisterRestController()
 	res.initDtoBase()
 	res.initTypes()
+	res.initUtils()
 
 	return res
 }
@@ -94,6 +97,7 @@ func (b *BuildInfrastructureLayer) Build() error {
 	list = append(list, b.buildRegisterAllEventType)
 	list = append(list, b.buildDtoBase)
 	list = append(list, b.buildTypesDateTime)
+	list = append(list, b.buildUtils)
 
 	return b.DoBuild(list...)
 }
@@ -101,28 +105,28 @@ func (b *BuildInfrastructureLayer) Build() error {
 func (b *BuildInfrastructureLayer) initRepositoryEntities() {
 	b.buildRepositoryImplEntities = []*BuildRepositoryImplEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/domain/%s/repository/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
+		outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildRepositoryImplEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildRepositoryImplEntities = append(b.buildRepositoryImplEntities, build)
 	}
 }
 
 func (b *BuildInfrastructureLayer) initRepositoryAggregate() {
-	outFile := fmt.Sprintf("%s/domain/%s/repository/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildRepositoryImplAggregate = NewBuildRepositoryImplAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildInfrastructureLayer) initQueryServiceEntities() {
 	b.buildQueryServiceImplEntities = []*BuildQueryServiceImplEntity{}
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/domain/%s/service/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
+		outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildQueryServiceImplEntity(b.BaseBuild, item, utils.ToLower(outFile))
 		b.buildQueryServiceImplEntities = append(b.buildQueryServiceImplEntities, build)
 	}
 }
 
 func (b *BuildInfrastructureLayer) initQueryServiceAggregate() {
-	outFile := fmt.Sprintf("%s/domain/%s/service/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	b.buildQueryServiceImplAggregate = NewBuildQueryServiceImplAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
@@ -161,4 +165,9 @@ func (b *BuildInfrastructureLayer) initDtoBase() {
 func (b *BuildInfrastructureLayer) initTypes() {
 	outFile := fmt.Sprintf("%s/types/date_time.go", b.outDir)
 	b.buildTypesDateTime = NewBuildTypesDateTime(b.BaseBuild, outFile)
+}
+
+func (b *BuildInfrastructureLayer) initUtils() {
+	outFile := fmt.Sprintf("%s/utils/utils.go", b.outDir)
+	b.buildUtils = NewBuildUtils(b.BaseBuild, outFile)
 }

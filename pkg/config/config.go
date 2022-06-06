@@ -1,6 +1,8 @@
 package config
 
 import (
+	"errors"
+	"fmt"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"strings"
@@ -61,7 +63,7 @@ func NewConfigWithDir(dirName string, lang string) (*Config, error) {
 		if !fileInfo.IsDir() && strings.HasSuffix(fileName, ".yaml") {
 			config, err := NewConfigWidthFile(dirName + "/" + fileName)
 			if err != nil {
-				return nil, err
+				return nil, errors.New(fmt.Sprintf("field:%s/%s, error: %s", dirName, fileName, err.Error()))
 			}
 			configs = append(configs, config)
 		}

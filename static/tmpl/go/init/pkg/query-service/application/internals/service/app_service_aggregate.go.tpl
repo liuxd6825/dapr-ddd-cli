@@ -1,9 +1,11 @@
 package service
 {{$AggregateName := .AggregateName}}
 import (
+    "sync"
 	"context"
+	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/service"
     "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
-    "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/service"
+    "{{.Namespace}}/pkg/query-service/infrastructure/domain/{{.aggregate_name}}/service_impl"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
@@ -12,22 +14,41 @@ import (
 // @Description: {{.Description}}查询应用服务类
 //
 type {{.Name}}QueryAppService struct {
-	domainService service.{{.Name}}QueryDomainService
+	{{.name}}DomainService service.{{.Name}}QueryDomainService
     {{- range $entityName, $entity := .Aggregate.Entities}}
     {{$entity.FirstLowerName}}DomainService service.{{$entity.Name}}QueryDomainService
     {{- end }}
 }
+
+// 单例应用服务
+var {{.name}}QueryAppService *{{.Name}}QueryAppService
+
+// 并发安全
+var once{{.Name}} sync.Once
+
+//
+// Get{{.Name}}QueryAppService
+// @Description: 获取单例应用服务
+// @return *{{.Name}}QueryAppService
+//
+func Get{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
+    once{{.Name}}.Do(func() {
+        {{.name}}QueryAppService = new{{.Name}}QueryAppService()
+    })
+	return {{.name}}QueryAppService
+}
+
 
 //
 // New{{.Name}}QueryAppService
 // @Description: 创建{{.Name}}查询应用服务
 // @return *{{.Name}}QueryAppService
 //
-func New{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
+func new{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
 	return &{{.Name}}QueryAppService{
-		domainService: service.New{{.Name}}QueryDomainService(),
+		{{.name}}DomainService: service_impl.Get{{.Name}}QueryDomainService(),
         {{- range $entityName, $entity := .Aggregate.Entities}}
-        {{$entity.FirstLowerName}}DomainService : service.New{{$entity.Name}}QueryDomainService(),
+        {{$entity.FirstLowerName}}DomainService : service_impl.Get{{$entity.Name}}QueryDomainService(),
         {{- end }}
 	}
 }
@@ -41,7 +62,7 @@ func New{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
 // @return error
 //
 func (a *{{.Name}}QueryAppService) Create(ctx context.Context, v *view.{{.Name}}View) error {
-	return a.domainService.Create(ctx, v)
+	return a.{{.name}}DomainService.Create(ctx, v)
 }
 
 
@@ -54,7 +75,7 @@ func (a *{{.Name}}QueryAppService) Create(ctx context.Context, v *view.{{.Name}}
 // @return error
 //
 func (a *{{.Name}}QueryAppService) Update(ctx context.Context, v *view.{{.Name}}View) error {
-	return a.domainService.Update(ctx, v)
+	return a.{{.name}}DomainService.Update(ctx, v)
 }
 
 
@@ -74,7 +95,7 @@ func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id 
         return err
     }
     {{- end }}
-	return a.domainService.DeleteById(ctx, tenantId, id)
+	return a.{{.name}}DomainService.DeleteById(ctx, tenantId, id)
 }
 
 
@@ -95,7 +116,7 @@ func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId, id s
         return err
     }
     {{- end }}
-	return a.domainService.DeleteAll(ctx, tenantId)
+	return a.{{.name}}DomainService.DeleteAll(ctx, tenantId)
 }
 
 
@@ -111,7 +132,7 @@ func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId, id s
 // @return error
 //
 func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string, id string) (*view.{{.Name}}View, bool, error) {
-	return a.domainService.FindById(ctx, tenantId, id)
+	return a.{{.name}}DomainService.FindById(ctx, tenantId, id)
 }
 
 
@@ -126,7 +147,7 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
-	return a.domainService.FindAll(ctx, tenantId)
+	return a.{{.name}}DomainService.FindAll(ctx, tenantId)
 }
 
 
@@ -141,5 +162,5 @@ func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string)
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
-	return a.domainService.FindPaging(ctx, query)
+	return a.{{.name}}DomainService.FindPaging(ctx, query)
 }

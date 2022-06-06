@@ -71,8 +71,8 @@ func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Prope
 				delete(*res, k)
 			}
 		}
-		res.Init(agg)
 	}
+	res.Init(agg)
 	return res
 }
 
@@ -113,6 +113,7 @@ func (p *Property) Copy() *Property {
 	}
 	return t
 }
+
 func (p *Property) init(a *Aggregate, name string) {
 	p.Name = name
 	p.Aggregate = a
@@ -161,7 +162,7 @@ func (p *Property) BsonName() string {
 	if p.Bson != "" {
 		return p.Bson
 	}
-	v := utils.FirstLower(p.Name)
+	v := utils.SnakeString(p.Name)
 	if v == "id" {
 		v = "_id"
 	}
@@ -170,4 +171,8 @@ func (p *Property) BsonName() string {
 
 func (p *Property) IsData() bool {
 	return strings.ToLower(p.Name) == "data"
+}
+
+func (p *Property) TypeIsDateTime() bool {
+	return strings.ToLower(p.Type) == "datetime"
 }

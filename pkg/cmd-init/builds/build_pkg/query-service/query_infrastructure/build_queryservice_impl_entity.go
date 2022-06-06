@@ -16,7 +16,7 @@ func NewBuildQueryServiceImplEntity(base builds.BaseBuild, entity *config.Entity
 		entity:    entity,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/domain/service/query_service_impl_entity.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/domain/service_impl/query_service_impl_entity.go.tpl"
 	res.OutFile = outFile
 	return res
 }
@@ -24,5 +24,6 @@ func NewBuildQueryServiceImplEntity(base builds.BaseBuild, entity *config.Entity
 func (b *BuildQueryServiceImplEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Name"] = b.entity.Name
+	res["name"] = b.entity.FirstLowerName()
 	return res
 }

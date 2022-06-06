@@ -19,7 +19,7 @@ type {{.Name}}QueryHandler struct {
 
 {{- $serviceName := .ServiceName}}
 //
-// New{{.Name}}Subscribe()
+// New{{.Name}}Subscribe
 // @Description: 创建dapr消息订阅器，用于接受领域事件
 // @return restapp.RegisterSubscribe  消息注册器
 //
@@ -35,13 +35,13 @@ func New{{.Name}}Subscribe() restapp.RegisterSubscribe {
 }
 
 //
-// New{{.Name}}QueryHandler()
+// New{{.Name}}QueryHandler
 // @Description: 创建{{.Description}}领域事件处理器
 // @return ddd.QueryEventHandler 领域事件处理器
 //
 func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 	return &{{.Name}}QueryHandler{
-		service: service.New{{.Name}}QueryAppService(),
+		service: service.Get{{.Name}}QueryAppService(),
 	}
 }
 {{- $FactoryPackage := .AggregateFactoryPackage}}
@@ -58,17 +58,18 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 //
 func (h *{{$AggregateName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-		{{- if $event.IsCreate }}
-		v := factory.New{{$AggregateName}}ViewBy{{$event.Name}}(event)
+		{{- if $event.IsAggregateCreateEvent }}
+		v := factory.New{{$AggregateName}}ViewBy{{$event.Name}}(ctx, event)
 		return h.service.Create(ctx, v)
-		{{- end}}
-        {{- if $event.IsUpdate }}
-        v := factory.New{{$AggregateName}}ViewBy{{$event.Name}}(event)
+		{{- else if $event.IsAggregateUpdateEvent }}
+        v := factory.New{{$AggregateName}}ViewBy{{$event.Name}}(ctx, event)
         return h.service.Update(ctx, v)
-        {{- end}}
-        {{- if $event.IsDelete }}
+        {{- else if $event.IsAggregateDeleteByIdEvent }}
         return h.service.DeleteById(ctx, event.GetTenantId(), event.Data.Id)
-        {{- end}}
+        {{- else }}
+        v := factory.New{{$AggregateName}}ViewBy{{$event.Name}}(ctx, event)
+        return h.service.{{$event.MethodName}}(ctx, v)
+        {{- end }}
 	})
 }
 {{- end }}

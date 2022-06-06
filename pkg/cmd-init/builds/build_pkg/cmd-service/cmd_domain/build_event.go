@@ -41,6 +41,7 @@ func (b *BuildEvent) Values() map[string]interface{} {
 	res["EventType"] = b.event.EventType
 	res["FieldName"] = b.FieldName()
 	res["EventName"] = b.event
+	res["HasDataProperty"] = b.event.HasDataProperty()
 	return res
 }
 

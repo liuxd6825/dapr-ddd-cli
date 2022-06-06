@@ -57,7 +57,7 @@ func (u *BaseRepository[T]) FindListByMap(ctx context.Context, tenantId string, 
 	return u.super.FindListByMap(ctx, tenantId, filterMap, opts...)
 }
 
-func (u *BaseRepository[T]) FindPaging(ctx context.Context, query *ddd_repository.FindPagingQuery, opts ...*ddd_repository.FindOptions) *ddd_repository.FindPagingResult[T] {
+func (u *BaseRepository[T]) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery, opts ...*ddd_repository.FindOptions) *ddd_repository.FindPagingResult[T] {
 	return u.super.FindPaging(ctx, query, opts...)
 }
 

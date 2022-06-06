@@ -29,7 +29,7 @@ func New{{.Name}}Subscribe() restapp.RegisterSubscribe {
 
 func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 	return &{{.Name}}QueryHandler{
-		service: service.New{{.Name}}QueryAppService(),
+		service: service.Get{{.Name}}QueryAppService(),
 	}
 }
 {{- $factoryPackage := .AggregateFactoryPackage}}
@@ -46,16 +46,16 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 //
 func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-		v := factory.New{{$entityName}}ViewBy{{$event.Name}}(event)
-		{{- if $event.IsCreate }}
+	    v := factory.New{{$AggregateName}}ViewBy{{$event.Name}}(ctx, event)
+		{{- if $event.IsEntityCreateEvent }}
 		return h.service.Create(ctx, v)
-		{{- end}}
-        {{- if $event.IsUpdate }}
+		{{- else if $event.IsEntityUpdateEvent }}
         return h.service.Update(ctx, v)
-        {{- end}}
-        {{- if $event.IsDelete }}
-        return h.service.DeleteById(ctx, v.TenantId, v.Id)
-        {{- end}}
+        {{- else if $event.IsEntityDeleteByIdEvent }}
+        return h.service.DeleteById(ctx, v.GetTenantId(), v.Id)
+        {{- else }}
+        return h.service.{{$event.MethodName}}(ctx, v)
+        {{- end }}
 	})
 }
 {{- end }}

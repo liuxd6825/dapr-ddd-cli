@@ -24,5 +24,6 @@ func NewBuildQueryServiceAggregate(base builds.BaseBuild, aggregate *config.Aggr
 func (b *BuildQueryServiceAggregate) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Name"] = b.aggregate.Name
+	res["name"] = b.aggregate.FirstLowerName()
 	return res
 }

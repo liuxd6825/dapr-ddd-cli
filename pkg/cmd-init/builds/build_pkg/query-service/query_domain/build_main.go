@@ -23,6 +23,7 @@ type BuildDomainLayer struct {
 
 	buildFactoryAggregate *BuildFactoryAggregate
 	buildFactoryEntities  []*BuildFactoryEntity
+	buildEnumObjects      []*BuildEnumObject
 }
 
 func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildDomainLayer {
@@ -49,6 +50,7 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 	res.initFactoryEntities()
 	res.initFactoryAggregate()
 
+	res.initEnumObjects()
 	return res
 }
 
@@ -79,37 +81,27 @@ func (b *BuildDomainLayer) Build() error {
 		list = append(list, buildFieldsObjects()...)*/
 
 	// repository
-	buildRepositoryEntities := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildRepositoryEntities {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildRepositoryEntities {
+		list = append(list, item)
 	}
 	list = append(list, b.buildRepositoryAggregate)
-	list = append(list, buildRepositoryEntities()...)
 
 	// query_service
-	buildQueryServiceEntities := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildQueryServiceEntities {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildQueryServiceEntities {
+		list = append(list, item)
 	}
 	list = append(list, b.buildQueryServiceAggregate)
-	list = append(list, buildQueryServiceEntities()...)
 
 	// factory
-	buildFactoryEntities := func() []builds.Build {
-		var res []builds.Build
-		for _, item := range b.buildFactoryEntities {
-			res = append(res, item)
-		}
-		return res
+	for _, item := range b.buildFactoryEntities {
+		list = append(list, item)
 	}
 	list = append(list, b.buildFactoryAggregate)
-	list = append(list, buildFactoryEntities()...)
+
+	// enum
+	for _, item := range b.buildEnumObjects {
+		list = append(list, item)
+	}
 
 	return b.DoBuild(list...)
 }
@@ -176,4 +168,15 @@ func (b *BuildDomainLayer) initFactoryEntities() {
 func (b *BuildDomainLayer) initFactoryAggregate() {
 	outFile := fmt.Sprintf("%s/%s/factory/%s_factory.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
 	b.buildFactoryAggregate = NewBuildFactoryAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+}
+
+func (b *BuildDomainLayer) initEnumObjects() {
+	b.buildEnumObjects = []*BuildEnumObject{}
+	if b.aggregate.EnumObjects != nil {
+		for _, item := range b.aggregate.EnumObjects {
+			outFile := fmt.Sprintf("%s/%s/view/%s_enum.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
+			buildEnumObject := NewBuildEnumObject(b.BaseBuild, item, utils.ToLower(outFile))
+			b.buildEnumObjects = append(b.buildEnumObjects, buildEnumObject)
+		}
+	}
 }

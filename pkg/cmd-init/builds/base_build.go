@@ -77,6 +77,15 @@ func (b *BaseBuild) Values() map[string]interface{} {
 	res["CommandServiceName"] = b.Config.Configuration.CommandServiceName()
 	res["QueryServiceName"] = b.Config.Configuration.QueryServiceName()
 	res["ApiVersion"] = b.Config.Configuration.ApiVersion
+
+	if b.Config != nil && b.Config.Configuration != nil {
+		res["DefaultViewProperties"] = b.Config.Configuration.DefaultReservedProperties.ViewProperties
+		res["DefaultEntityProperties"] = b.Config.Configuration.DefaultReservedProperties.EntityProperties
+		res["DefaultValueProperties"] = b.Config.Configuration.DefaultReservedProperties.ValueProperties
+		res["DefaultAggregateProperties"] = b.Config.Configuration.DefaultReservedProperties.AggregateProperties
+		res["DefaultFieldProperties"] = b.Config.Configuration.DefaultReservedProperties.FieldProperties
+	}
+
 	if b.Aggregate != nil {
 		aggregateName := utils.SnakeString(b.Aggregate.Name)
 		res["Aggregate"] = b.Aggregate

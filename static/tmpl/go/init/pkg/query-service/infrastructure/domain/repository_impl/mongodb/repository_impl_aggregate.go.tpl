@@ -9,7 +9,7 @@ import (
 )
 
 type {{.Name}}ViewRepositoryImpl struct {
-    base *mongodb_base.BaseRepository[*view.{{.Name}}View]
+	base *mongodb_base.BaseRepository[*view.{{.Name}}View]
 }
 
 func New{{.Name}}ViewRepository(opts ...*mongodb_base.RepositoryOptions) repository.{{.Name}}ViewRepository {
@@ -17,7 +17,7 @@ func New{{.Name}}ViewRepository(opts ...*mongodb_base.RepositoryOptions) reposit
 		return &view.{{.Name}}View{}
 	}
 	return &{{.Name}}ViewRepositoryImpl{
-		base: mongodb_base.NewBaseRepository[*view.{{.Name}}View](newFunc, "{{.name}}", opts...),
+		base: mongodb_base.NewBaseRepository[*view.{{.Name}}View](newFunc, "{{.aggregate_name}}", opts...),
 	}
 }
 
@@ -33,13 +33,6 @@ func (r {{.Name}}ViewRepositoryImpl) DeleteById(ctx context.Context, tenantId st
 	return r.base.DeleteById(ctx, tenantId, id)
 }
 
-func (r {{.Name}}ViewRepositoryImpl) DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) error {
-	filterMap := map[string]interface{}{
-	    "{{.aggregateName}}Id": {{.aggregateName}}Id,
-	}
-	return r.base.DeleteByMap(ctx, tenantId, filterMap)
-}
-
 func (r {{.Name}}ViewRepositoryImpl) DeleteAll(ctx context.Context, tenantId string) error {
 	return r.base.DeleteAll(ctx, tenantId)
 }
@@ -48,17 +41,10 @@ func (r {{.Name}}ViewRepositoryImpl) FindById(ctx context.Context, tenantId stri
 	return r.base.FindById(ctx, tenantId, id)
 }
 
-func (r {{.Name}}ViewRepositoryImpl) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) (*[]*view.{{.Name}}View, bool, error) {
-	filterMap := map[string]interface{}{
-	    "{{.aggregateName}}Id": {{.aggregateName}}Id,
-	}
-	return r.base.FindListByMap(ctx, tenantId, filterMap).Result()
-}
-
 func (r {{.Name}}ViewRepositoryImpl) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
 	return r.base.FindAll(ctx, tenantId).Result()
 }
 
-func (r {{.Name}}ViewRepositoryImpl) FindPaging(ctx context.Context, query *ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
+func (r {{.Name}}ViewRepositoryImpl) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
 	return r.base.FindPaging(ctx, query).Result()
 }

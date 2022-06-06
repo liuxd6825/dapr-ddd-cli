@@ -25,7 +25,11 @@ func FirstUpper(s string) string {
 	if s == "" {
 		return ""
 	}
-	return strings.ToUpper(s[:1]) + s[1:]
+	v := strings.ToUpper(s[:1]) + s[1:]
+	if v == "" {
+		println(v)
+	}
+	return v
 }
 
 // FirstLower 字符串首字母小写

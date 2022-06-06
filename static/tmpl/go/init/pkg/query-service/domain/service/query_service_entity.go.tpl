@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
-	service_impl "{{.Namespace}}/pkg/query-service/infrastructure/domain/{{.aggregate_name}}/service"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
@@ -19,7 +18,3 @@ type {{.Name}}QueryDomainService interface {
 	FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)
 }
 
-
-func New{{.Name}}QueryDomainService() {{.Name}}QueryDomainService {
-	return service_impl.New{{.Name}}QueryDomainService()
-}

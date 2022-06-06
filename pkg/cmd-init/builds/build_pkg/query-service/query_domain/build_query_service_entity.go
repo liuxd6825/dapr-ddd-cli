@@ -24,5 +24,6 @@ func NewBuildQueryServiceEntity(base builds.BaseBuild, entity *config.Entity, ou
 func (b *BuildQueryServiceEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["Name"] = b.Entity.Name
+	res["name"] = b.Entity.FirstLowerName()
 	return res
 }

@@ -1,19 +1,42 @@
 package service_impl
 
 import (
+    "sync"
 	"context"
-    view "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
+    "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/service"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/repository"
-    "{{.Namespace}}/pkg/query-service/infrastructure/domain/{{.aggregate_name}}/repository/mongodb"
+    "{{.Namespace}}/pkg/query-service/infrastructure/domain/{{.aggregate_name}}/repository_impl/mongodb"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
+//
+// {{.Name}}QueryDomainServiceImpl
+// @Description: 查询领域服务实现类
+//
 type {{.Name}}QueryDomainServiceImpl struct {
 	repos repository.{{.Name}}ViewRepository
 }
 
-func New{{.Name}}QueryDomainService() service.{{.Name}}QueryDomainService {
+// 单例应用服务
+var {{.name}}QueryDomainService service.{{.Name}}QueryDomainService
+
+// 并发安全
+var once{{.Name}} sync.Once
+
+//
+// Get{{.Name}}QueryDomainService
+// @Description: 获取单例领域服务
+// @return service.{{.Name}}QueryDomainService
+//
+func Get{{.Name}}QueryDomainService() service.{{.Name}}QueryDomainService {
+    once{{.Name}}.Do(func() {
+       {{.name}}QueryDomainService = new{{.Name}}QueryDomainService()
+    })
+	return {{.name}}QueryDomainService
+}
+
+func new{{.Name}}QueryDomainService() service.{{.Name}}QueryDomainService {
 	return &{{.Name}}QueryDomainServiceImpl{
 		repos: mongodb.New{{.Name}}ViewRepository(),
 	}

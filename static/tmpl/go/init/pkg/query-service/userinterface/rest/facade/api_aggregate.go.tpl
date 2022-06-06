@@ -20,7 +20,7 @@ type {{.Name}}QueryApi struct {
 
 func New{{.Name}}QueryApi() *{{.Name}}QueryApi {
 	return &{{.Name}}QueryApi{
-		queryService: service.New{{.Name}}QueryAppService(),
+		queryService: service.Get{{.Name}}QueryAppService(),
 	}
 }
 

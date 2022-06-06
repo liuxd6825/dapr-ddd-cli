@@ -1,18 +1,38 @@
 package service
 {{$AggregateName := .AggregateName}}
 import (
+    "sync"
 	"context"
-	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/service"
+	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
+	"{{.Namespace}}/pkg/query-service/infrastructure/domain/{{.aggregate_name}}/service_impl"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 //
-// ScanCellQueryAppService
+// {{.Name}}QueryAppService
 // @Description: {{.Description}}查询应用服务类
 //
 type {{.Name}}QueryAppService struct {
-	domainService service.{{.Name}}QueryDomainService
+	{{.name}}DomainService service.{{.Name}}QueryDomainService
+}
+
+// 单例应用服务
+var {{.name}}QueryAppService *{{.Name}}QueryAppService
+
+// 并发安全
+var once{{.Name}} sync.Once
+
+//
+// Get{{.Name}}QueryAppService
+// @Description: 获取单例应用服务
+// @return *{{.Name}}QueryAppService
+//
+func Get{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
+    once{{.Name}}.Do(func() {
+        {{.name}}QueryAppService = new{{.Name}}QueryAppService()
+    })
+	return {{.name}}QueryAppService
 }
 
 //
@@ -20,9 +40,9 @@ type {{.Name}}QueryAppService struct {
 // @Description: 创建{{.Name}}View查询应用服务
 // @return *{{.Name}}QueryAppService
 //
-func New{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
+func new{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
 	return &{{.Name}}QueryAppService{
-		domainService: service.New{{.Name}}QueryDomainService(),
+		{{.name}}DomainService: service_impl.Get{{.Name}}QueryDomainService(),
 	}
 }
 
@@ -36,7 +56,7 @@ func New{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
 // @return error
 //
 func (a *{{.Name}}QueryAppService) Create(ctx context.Context, v *view.{{.Name}}View) error {
-	return a.domainService.Create(ctx, v)
+	return a.{{.name}}DomainService.Create(ctx, v)
 }
 
 //
@@ -48,7 +68,7 @@ func (a *{{.Name}}QueryAppService) Create(ctx context.Context, v *view.{{.Name}}
 // @return error
 //
 func (a *{{.Name}}QueryAppService) Update(ctx context.Context, v *view.{{.Name}}View) error {
-	return a.domainService.Update(ctx, v)
+	return a.{{.name}}DomainService.Update(ctx, v)
 }
 
 //
@@ -61,7 +81,7 @@ func (a *{{.Name}}QueryAppService) Update(ctx context.Context, v *view.{{.Name}}
 // @return error
 //
 func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id string) error {
-	return a.domainService.DeleteById(ctx, tenantId, id)
+	return a.{{.name}}DomainService.DeleteById(ctx, tenantId, id)
 }
 
 //
@@ -73,7 +93,7 @@ func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id 
 // @return error
 //
 func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId string) error {
-	return a.domainService.DeleteAll(ctx, tenantId)
+	return a.{{.name}}DomainService.DeleteAll(ctx, tenantId)
 }
 
 //
@@ -86,7 +106,7 @@ func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId strin
 // @return error
 //
 func (a *{{.Name}}QueryAppService) DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId, {{.aggregateName}}id string) error {
-	return a.domainService.DeleteBy{{.AggregateName}}Id(ctx, tenantId, {{.aggregateName}}id)
+	return a.{{.name}}DomainService.DeleteBy{{.AggregateName}}Id(ctx, tenantId, {{.aggregateName}}id)
 }
 
 
@@ -102,7 +122,7 @@ func (a *{{.Name}}QueryAppService) DeleteBy{{.AggregateName}}Id(ctx context.Cont
 // @return error
 //
 func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string, id string) (*view.{{.Name}}View, bool, error) {
-	return a.domainService.FindById(ctx, tenantId, id)
+	return a.{{.name}}DomainService.FindById(ctx, tenantId, id)
 }
 
 //
@@ -116,7 +136,7 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
-	return a.domainService.FindAll(ctx, tenantId)
+	return a.{{.name}}DomainService.FindAll(ctx, tenantId)
 }
 
 
@@ -132,7 +152,7 @@ func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string)
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) (*[]*view.{{.Name}}View, bool, error) {
-	return a.domainService.FindBy{{.AggregateName}}Id(ctx, tenantId, {{.aggregateName}}Id)
+	return a.{{.name}}DomainService.FindBy{{.AggregateName}}Id(ctx, tenantId, {{.aggregateName}}Id)
 }
 
 //
@@ -146,5 +166,5 @@ func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Contex
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
-	return a.domainService.FindPaging(ctx, query)
+	return a.{{.name}}DomainService.FindPaging(ctx, query)
 }

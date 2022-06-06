@@ -7,10 +7,9 @@ import (
 type {{.ClassName}} struct {
     CommandId string               `json:"commandId"`
     EventId   string               `json:"eventId"`
-{{- if .Event.HasDataProperty }}
+{{- if .HasDataProperty }}
     Data      field.{{.FieldName}}  `json:"data"`
-{{- end}}
-{{- if not .Event.HasDataProperty }}
+{{- else }}
 {{- range $name, $property := .Properties}}
     {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
 {{- end}}
