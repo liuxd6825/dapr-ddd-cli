@@ -47,7 +47,7 @@ func (a *Aggregate) init() {
 		aggregateProperties := a.Config.Configuration.DefaultReservedProperties.AggregateProperties
 		a.Properties.Adds(&aggregateProperties)
 	}
-	a.Properties.Init(a)
+	a.Properties.Init(a, a.Config)
 
 	if a.Entities == nil {
 		a.Entities = Entities{}

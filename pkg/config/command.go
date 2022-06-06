@@ -50,7 +50,7 @@ func (c *Command) init(a *Aggregate, name string) {
 		f := strings.Contains(name, a.Name)
 		c.IsAggregateCommand = &f
 	}
-	c.Properties.Init(a)
+	c.Properties.Init(a, a.Config)
 	if c.EventName != "" {
 		c.event = c.Aggregate.Events[c.EventName]
 	}

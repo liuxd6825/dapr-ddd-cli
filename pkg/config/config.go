@@ -81,7 +81,7 @@ func NewConfigWithDir(dirName string, lang string) (*Config, error) {
 		config.Aggregates.init(config)
 	}
 	if config.Configuration != nil {
-		config.Configuration.Init(config.lanType)
+		config.Configuration.Init(config, config.lanType)
 	}
 
 	return config, nil

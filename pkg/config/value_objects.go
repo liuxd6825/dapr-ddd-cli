@@ -29,5 +29,5 @@ func (v *ValueObjects) init(a *Aggregate) {
 func (v *ValueObject) init(a *Aggregate, name string) {
 	v.Name = name
 	v.Aggregate = a
-	v.Properties.Init(a)
+	v.Properties.Init(a, a.Config)
 }

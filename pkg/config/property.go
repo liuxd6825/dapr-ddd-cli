@@ -9,10 +9,10 @@ type Properties map[string]*Property
 
 const TenantId = "TenantId"
 
-func (p *Properties) Init(a *Aggregate) {
+func (p *Properties) Init(a *Aggregate, c *Config) {
 	if p != nil {
 		for name, property := range *p {
-			property.init(a, name)
+			property.init(a, c, name)
 		}
 	}
 }
@@ -72,7 +72,7 @@ func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Prope
 			}
 		}
 	}
-	res.Init(agg)
+	res.Init(agg, agg.Config)
 	return res
 }
 
@@ -88,6 +88,7 @@ type Property struct {
 	Json          string `yaml:"json"`
 	Bson          string `yaml:"bson"`
 	Aggregate     *Aggregate
+	Config        *Config
 }
 
 func NewProperty(name string, dataType string) *Property {
@@ -114,9 +115,10 @@ func (p *Property) Copy() *Property {
 	return t
 }
 
-func (p *Property) init(a *Aggregate, name string) {
+func (p *Property) init(a *Aggregate, c *Config, name string) {
 	p.Name = name
 	p.Aggregate = a
+	p.Config = c
 }
 
 //
@@ -129,10 +131,13 @@ func (p *Property) LanType() string {
 	if p == nil {
 		return ""
 	}
-	if p.Aggregate == nil || p.Aggregate.Config == nil {
-		return p.Type
+	if p.Config != nil {
+		return p.Config.GetType(p.Type)
 	}
-	return p.Aggregate.Config.GetType(p.Type)
+	if p.Aggregate != nil && p.Aggregate.Config != nil {
+		return p.Aggregate.Config.GetType(p.Type)
+	}
+	return p.Type
 }
 
 func (p *Property) HasValidate() bool {

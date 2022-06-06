@@ -81,7 +81,7 @@ func (e *Event) init(a *Aggregate, name string) {
 	e.Route = fmt.Sprintf("%s/%s/ver:%s", utils.SnakeString(e.Aggregate.Name), utils.SnakeString(e.Name), utils.SnakeString(e.Version))
 	e.hasDataProperty = false
 	e.Version = strings.ToLower(e.Version)
-	e.Properties.Init(a)
+	e.Properties.Init(a, a.Config)
 
 	data := e.Properties["data"]
 	if data == nil {

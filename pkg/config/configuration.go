@@ -30,10 +30,10 @@ type DefaultReservedProperties struct {
 	FieldProperties     Properties `yaml:"field"`
 }
 
-func (c *Configuration) Init(langType LangType) {
+func (c *Configuration) Init(config *Config, langType LangType) {
 	c.LangType = langType
 	c.GoUtil = NewMetadataUtil(c.Go)
-	c.DefaultReservedProperties.init()
+	c.DefaultReservedProperties.init(config)
 }
 
 func (c *Configuration) GetNamespace() string {
@@ -56,10 +56,10 @@ func (c *Configuration) CommandServiceName() string {
 	return fmt.Sprintf("%s-command-service", c.ServiceName)
 }
 
-func (p *DefaultReservedProperties) init() {
-	p.ViewProperties.Init(nil)
-	p.FieldProperties.Init(nil)
-	p.AggregateProperties.Init(nil)
-	p.EntityProperties.Init(nil)
-	p.ValueProperties.Init(nil)
+func (p *DefaultReservedProperties) init(c *Config) {
+	p.ViewProperties.Init(nil, c)
+	p.FieldProperties.Init(nil, c)
+	p.AggregateProperties.Init(nil, c)
+	p.EntityProperties.Init(nil, c)
+	p.ValueProperties.Init(nil, c)
 }
