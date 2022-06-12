@@ -1,10 +1,10 @@
 package command
 
 import (
+	"github.com/google/uuid"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
-    "github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_errors"
 )
 
 //
@@ -12,7 +12,8 @@ import (
 // @Description: {{.Description}}
 //
 type {{.ClassName}} struct {
-    ddd.BaseCommand
+	CommandId   string    `json:"commandId"  validate:"gt=0"`   // 命令id
+	IsValidOnly bool      `json:"isValidOnly"`                  // 是否仅验证，不执行
 {{- range $name, $property := .Properties}}
     {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
 {{- end}}
@@ -24,7 +25,7 @@ type {{.ClassName}} struct {
 //
 func (c *{{.ClassName}}) NewDomainEvent() ddd.DomainEvent {
     return &event.{{.EventName}}{
-        EventId:   c.CommandId,
+        EventId:   uuid.New().String(),
         CommandId: c.CommandId,
         Data:      c.Data,
     }
@@ -55,17 +56,23 @@ func (c *{{.ClassName}}) GetTenantId() string {
 }
 
 //
+// GetIsValidOnly
+// @Description: 是否只验证不执行。
+//
+func (c *{{.ClassName}}) GetIsValidOnly() bool {
+	return c.IsValidOnly
+}
+
+//
 // Validate
 // @Description: 命令数据验证
 //
 func (c *{{.ClassName}}) Validate() error {
-    errs := ddd_errors.NewVerifyError()
-    c.BaseCommand.ValidateError(errs)
-    if c.Data.TenantId == "" {
-        errs.AppendField("data.tenantId", "不能为空")
+	ve := ddd.ValidateCommand(c, nil)
+    /* 添加其他数据检查
+    if c.Data.Id == "" {
+        ve.AppendField("data.id", "不能为空")
     }
-
-    /* 添加其他数据检查  */
-
-    return errs.GetError()
+    */
+	return ve.GetError()
 }

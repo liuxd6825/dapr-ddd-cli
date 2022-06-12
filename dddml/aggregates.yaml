@@ -177,6 +177,10 @@ aggregates:
             type: string
           UserId:
             type: string
+          UserName:
+            type: string
+            uses:
+              - view
           ContactType:
             type: ContactType
           ContactValue:

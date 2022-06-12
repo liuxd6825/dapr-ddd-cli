@@ -5,16 +5,21 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init/builds"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
-	"strings"
 )
 
 type BuildRestControllerLayer struct {
 	builds.BaseBuild
-	aggregate             *config.Aggregate
-	outDir                string
+	aggregate *config.Aggregate
+	outDir    string
+
+	buildAssemblerAggregate *BuildAssemblerAggregate
+	buildAssemblerEntities  []*BuildAssemblerEntity
+
 	buildRestAggregateApi *BuildRestApiAggregate
 	buildRestEntityApis   []*BuildRestApiEntity
-	buildDtoCommands      []*BuildDtoCommand
+
+	buildDtoAggregate *BuildDtoAggregate
+	buildDtoEntities  []*BuildDtoEntity
 }
 
 func NewBuildRestControllerLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildRestControllerLayer {
@@ -47,30 +52,52 @@ func (b *BuildRestControllerLayer) init() {
 	}
 	b.buildRestEntityApis = buildEntityApis
 
-	var buildDtoCommands []*BuildDtoCommand
-	for _, command := range b.aggregate.Commands {
-		fileName := strings.Replace(command.FileName(), "_command", "", 1)
-		outFile := fmt.Sprintf("%s/rest/%s/dto/%s_dto.go", b.outDir, b.aggregate.FileName(), fileName)
-		buildDtoCommand := NewBuildDtoCommand(b.BaseBuild, b.aggregate, command, utils.ToLower(outFile))
-		buildDtoCommands = append(buildDtoCommands, buildDtoCommand)
+	// dto
+	outFile = fmt.Sprintf("%s/rest/%s/dto/%s_dto.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	b.buildDtoAggregate = NewBuildDtoAggregate(b.BaseBuild, b.aggregate, outFile)
+
+	var buildDtoEntities []*BuildDtoEntity
+	for _, entity := range b.aggregate.Entities {
+		outFile = fmt.Sprintf("%s/rest/%s/dto/%s_dto.go", b.outDir, b.aggregate.FileName(), entity.FileName())
+		buildDtoEntity := NewBuildDtoCommand(b.BaseBuild, b.aggregate, entity, utils.ToLower(outFile))
+		buildDtoEntities = append(buildDtoEntities, buildDtoEntity)
 	}
-	b.buildDtoCommands = buildDtoCommands
+	b.buildDtoEntities = buildDtoEntities
+
+	// assembler
+	outFile = fmt.Sprintf("%s/rest/%s/assembler/%s_assembler.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	b.buildAssemblerAggregate = NewBuildAssemblerAggregate(b.BaseBuild, b.aggregate, outFile)
+
+	var buildAssemblerEntities []*BuildAssemblerEntity
+	for _, entity := range b.aggregate.Entities {
+		outFile = fmt.Sprintf("%s/rest/%s/assembler/%s_assembler.go", b.outDir, b.aggregate.FileName(), entity.FileName())
+		buildAssemblerEntity := NewBuildAssemblerEntity(b.BaseBuild, b.aggregate, entity, utils.ToLower(outFile))
+		buildAssemblerEntities = append(buildAssemblerEntities, buildAssemblerEntity)
+	}
+	b.buildAssemblerEntities = buildAssemblerEntities
 
 }
 
 func (b *BuildRestControllerLayer) Build() error {
 	var list []builds.Build
-	list = append(list, b.buildRestAggregateApi)
 
 	// api
+	list = append(list, b.buildRestAggregateApi)
 	for _, item := range b.buildRestEntityApis {
 		list = append(list, item)
 	}
 
 	// dto
-	for _, dto := range b.buildDtoCommands {
+	for _, dto := range b.buildDtoEntities {
 		list = append(list, dto)
 	}
+	list = append(list, b.buildDtoAggregate)
+
+	// assembler
+	for _, entity := range b.buildAssemblerEntities {
+		list = append(list, entity)
+	}
+	list = append(list, b.buildAssemblerAggregate)
 
 	return b.DoBuild(list...)
 }

@@ -11,6 +11,10 @@ import (
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
 
+//
+// {{.ClassName}}
+// @Description:  {{.Description}} 命令领域服务
+//
 type {{.ClassName}} struct {
     base_service.BaseCommandDomainService
 }
@@ -37,23 +41,58 @@ func New{{.ClassName}}() *{{.ClassName}} {
 // @return *model.{{$ClassName}}
 // @return error
 //
-func (s *{{$ClassName}}) {{$command.ServiceFuncName}}(ctx context.Context, cmd *command.{{$commandName}}) (*model.{{$AggregateName}}Aggregate, error) {
-    if err := s.ValidateCommand(cmd); err != nil {
-        return nil, err
-    }
-    agg := s.NewAggregate()
-    {{- if $command.IsCreate }}
-    err := ddd.CreateAggregate(ctx, agg, cmd)
-    {{- else }}
-    err := ddd.CommandAggregate(ctx, agg, cmd)
-    {{- end }}
-    if err != nil {
-        return nil, err
-    }
-    return agg, nil
+func (s *{{$ClassName}}) {{$command.ServiceFuncName}}(ctx context.Context, cmd *command.{{$commandName}}, opts ...ddd.DoCommandOption) (*model.{{$AggregateName}}Aggregate, error) {
+	return s.doCommand(ctx, cmd, func() error {
+		return cmd.Validate()
+	}, opts...)
 }
 
 {{- end}}
+
+//
+//  doCommand
+//  @Description:
+//  @receiver s
+//  @param ctx
+//  @param cmd
+//  @return *model.UserAggregate
+//  @return error
+//
+func (s *{{$ClassName}}) doCommand(ctx context.Context, cmd ddd.Command, validateFunc func() error, opts ...ddd.DoCommandOption) (*model.{{$AggregateName}}Aggregate, error) {
+	option := ddd.NewDoCommandOptionMerges(opts...)
+
+	// 进行业务检查
+	if validateFunc != nil {
+		if err := validateFunc(); err != nil {
+			return nil, err
+		}
+	} else if err := cmd.Validate(); err != nil {
+		return nil, err
+	}
+
+	// 如果只是业务检查，则不执行领域命令，
+	validOnly := option.GetIsValidOnly()
+	if (validOnly == nil && cmd.GetIsValidOnly()) || (validOnly != nil && *validOnly == true) {
+		return nil, nil
+	}
+
+	// 执行领域命令
+	var err error
+	agg := s.NewAggregate()
+	if _, ok := cmd.(*command.{{$AggregateName}}CreateCommand); ok {
+		err = ddd.CreateAggregate(ctx, agg, cmd)
+	} else {
+		err = ddd.CommandAggregate(ctx, agg, cmd)
+	}
+
+	// 如果领域命令执行时出错，则返回错误
+	if err != nil {
+		return nil, err
+	}
+
+	return agg, nil
+}
+
 
 //
 // GetAggregateById

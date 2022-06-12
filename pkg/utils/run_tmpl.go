@@ -9,7 +9,6 @@ import (
 )
 
 func RunTemplate(tmplFile string, data interface{}, outFile string) error {
-	println("building: " + tmplFile)
 	bytes, err := resource.Local().ReadFile(tmplFile)
 	if err != nil {
 		return err

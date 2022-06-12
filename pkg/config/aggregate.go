@@ -19,19 +19,20 @@ func (a *Aggregates) init(config *Config) {
 }
 
 type Aggregate struct {
-	Name          string        `yaml:"name"`
-	Id            *Property     `yaml:"id"`
-	Version       string        `yaml:"version"`
-	Description   string        `yaml:"description"`
-	Properties    Properties    `yaml:"properties"`
-	ValueObjects  ValueObjects  `yaml:"valueObjects"`
-	EnumObjects   EnumObjects   `yaml:"enumObjects"`
-	Entities      Entities      `yaml:"entities"`
-	FieldsObjects FieldsObjects `yaml:"fields"`
-	Events        Events        `yaml:"events"`
-	Commands      Commands      `yaml:"commands"`
-	Factory       Factory       `yaml:"factory"`
-	Config        *Config
+	Name              string        `yaml:"name"`
+	Id                *Property     `yaml:"id"`
+	Version           string        `yaml:"version"`
+	Description       string        `yaml:"description"`
+	Properties        Properties    `yaml:"properties"`
+	ValueObjects      ValueObjects  `yaml:"valueObjects"`
+	EnumObjects       EnumObjects   `yaml:"enumObjects"`
+	Entities          Entities      `yaml:"entities"`
+	FieldsObjects     FieldsObjects `yaml:"fields"`
+	Events            Events        `yaml:"events"`
+	Commands          Commands      `yaml:"commands"`
+	Factory           Factory       `yaml:"factory"`
+	AggregateCommands *[]Command
+	Config            *Config
 }
 
 func (a *Aggregate) init() {
@@ -64,6 +65,7 @@ func (a *Aggregate) init() {
 	a.FieldsObjects.init(a)
 	a.EnumObjects.init(a)
 	a.Factory.init(a)
+	a.AggregateCommands = a.getAggregateCommands()
 
 }
 
@@ -109,4 +111,15 @@ func (a *Aggregate) MidlineName() string {
 
 func (a *Aggregate) PluralName() string {
 	return utils.Plural(a.Name)
+}
+
+func (a *Aggregate) getAggregateCommands() *[]Command {
+	var commands []Command
+	for _, event := range a.Events {
+		if event.To == "" || event.To == a.Name {
+			command := a.Commands.GetByEventName(event.Name)
+			commands = append(commands, *command)
+		}
+	}
+	return &commands
 }

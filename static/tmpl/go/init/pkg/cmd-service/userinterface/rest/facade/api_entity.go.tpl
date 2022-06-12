@@ -1,3 +1,7 @@
+{{- $AggregatePluralName := .AggregatePluralName}}
+{{- $aggregateName := .aggregateName}}
+{{- $AggregateName := .AggregateName}}
+{{- $ClassName := .ClassName}}
 package facade
 
 import (
@@ -5,26 +9,22 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
-    service "{{.Namespace}}/pkg/cmd-service/application/internals/service/{{.aggregate_name}}_service"
+    "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/service"
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 )
 
-{{- $AggregateName := .AggregateName}}
-{{- $ClassName := .ClassName}}
+
 type {{$ClassName}} struct {
-    appService *service.{{.AggregateName}}CommandAppService
-    queryAppId string
+    service *service.{{.AggregateName}}CommandAppService
 }
 
 func New{{$ClassName}}() *{{$ClassName}} {
     return &{{$ClassName}}{
-        appService: service.New{{.AggregateName}}CommandAppService(),
-        queryAppId: service.Get{{.AggregateName}}QueryAppService().AppId(),
+        service: service.New{{.AggregateName}}CommandAppService(),
     }
 }
 
-{{$AggregatePluralName := .AggregatePluralName}}
 {{$EntityPluralName := .EntityPluralName}}
 func (c *{{$ClassName}}) BeforeActivation(b mvc.BeforeActivation) {
     {{- range $cmdName, $cmd := .Commands }}
@@ -42,29 +42,48 @@ func (c *{{$ClassName}}) BeforeActivation(b mvc.BeforeActivation) {
     {{- end }}
 }
 
-
 {{- range $i, $cmd := .Commands}}
 {{- if $cmd.IsEntity }}
+
+//
+// {{$cmd.ControllerMethod}}
+// @Description: {{$cmd.Description}}
+// @receiver c
+// @param ctx
+//
 func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ctx iris.Context) {
-	cmd := &command.{{$cmd.Name}}{}
-	_ = restapp.DoCmd(ctx, cmd, func(ctx context.Context) error {
-		return c.appService.{{$cmd.ServiceFuncName}}(ctx, cmd)
+    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ctx)
+    if err != nil {
+        restapp.SetError(ctx, err)
+        return
+    }
+	_ = restapp.DoCmd(ctx, func(ctx context.Context) error {
+		return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
 	})
 }
 
 {{- if $cmd.IsEntityCreateOrUpdateCommand }}
+
+//
+// {{$cmd.ControllerMethod}}AndGet
+// @Description: {{$cmd.Description}}
+// @receiver c
+// @param ctx
+//
 func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ctx iris.Context) {
-	cmd := &command.{{$cmd.Name}}{}
-	_, _, _ = restapp.DoCmdAndQueryOne(ctx, c.queryAppId, cmd, func(ctx context.Context) error {
-		return c.appService.{{$cmd.ServiceFuncName}}(ctx, cmd)
+    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ctx)
+    if err != nil {
+        restapp.SetError(ctx, err)
+        return
+    }
+	_, _, _ = restapp.DoCmdAndQueryOne(ctx, c.service.QueryAppId, cmd, func(ctx context.Context) error {
+		return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
 	}, func(ctx context.Context) (interface{}, bool, error) {
-		return c.getById(ctx, cmd.GetTenantId(), cmd.Data.Id)
+		return c.service.QueryById(ctx, cmd.GetTenantId(), cmd.Data.Id)
 	})
 }
+
 {{- end }}
 {{- end }}
 {{- end }}
 
-func (c *{{.ClassName}}) getById(ctx context.Context, tenantId, id string) (data *view.{{.Name}}View, isFound bool, err error) {
-	return service.Get{{.Name}}QueryAppService().GetById(ctx, tenantId, id)
-}

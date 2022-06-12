@@ -7,60 +7,61 @@ import (
 	base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/dto"
 )
 
-//
-// {{.Name}}FindByIdRequest
-// @Description:  请求内容
-//
-type {{.Name}}FindByIdRequest struct {
-	base.FindByIdRequest
-}
+// 按ID查询
 
 //
 // {{.Name}}FindByIdResponse
-// @Description:  请求内容
+// @Description:  按ID查询响应体
 //
 type {{.Name}}FindByIdResponse struct {
-	base.FindByIdResponse
-	{{.Name}}ViewDto
+    {{.Name}}Dto
 }
 
-//
-// {{.Name}}FindAllRequest
-// @Description:
-//
-type {{.Name}}FindAllRequest struct {
-	base.FindAllRequest
-}
 
-//
-// {{.Name}}FindPagingRequest
-// @Description:
-//
-type {{.Name}}FindPagingRequest struct {
-	base.FindPagingRequest[*{{.Name}}ViewDto]
-}
+// 分页查询
 
 //
 // {{.Name}}FindPagingResponse
-// @Description:
+// @Description: {{.Name}} 分页请求数据
 //
 type {{.Name}}FindPagingResponse struct {
-	base.FindPagingResponse
+	base.FindPagingResponse[*{{.Name}}FindPagingResponseItem]
 }
 
-//
-// {{.Name}}ViewList
-// @Description: {{.Description}}  请求业务数据列表
-//
-type {{.Name}}ViewList *[]*{{.Name}}ViewDto
-
 
 //
-// {{.Name}}ViewDto
+// {{.Name}}FindPagingResponseItem
 // @Description: {{.Description}}  请求业务数据
 //
-type {{.Name}}ViewDto struct {
+type {{.Name}}FindPagingResponseItem struct {
+    {{.Name}}Dto
+}
+
+
+// 查询所有
+
+//
+// {{.Name}}FindAllResponse
+// @Description: {{.Description}}  查询所有响应体
+//
+type {{.Name}}FindAllResponse []*{{.Name}}FindAllResponseItem
+
+//
+// {{.Name}}FindAllResponseItem
+// @Description: {{.Description}}  请求业务数据
+//
+type {{.Name}}FindAllResponseItem struct {
+    {{.Name}}Dto
+}
+
+
+//
+// {{.Name}}Dto
+// @Description: {{.Description}}  响应业务数据
+//
+type {{.Name}}Dto struct {
 {{- range $name, $property := .DataFieldsProperties}}
-    {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
 {{- end}}
 }
+

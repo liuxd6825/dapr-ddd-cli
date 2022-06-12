@@ -46,7 +46,7 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 //
 func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-	    v := factory.New{{$AggregateName}}ViewBy{{$event.Name}}(ctx, event)
+	    v := factory.New{{$entityName}}ViewBy{{$event.Name}}(ctx, event)
 		{{- if $event.IsEntityCreateEvent }}
 		return h.service.Create(ctx, v)
 		{{- else if $event.IsEntityUpdateEvent }}

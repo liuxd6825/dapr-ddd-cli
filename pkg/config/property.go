@@ -61,6 +61,21 @@ func (p *Properties) HasTimeType() bool {
 	return p.HasType("dateTime")
 }
 
+func (p *Properties) GetDataFieldProperties() *Properties {
+	for _, item := range *p {
+		if item.IsData() {
+			fieldName := item.Type
+			field := item.Aggregate.FieldsObjects[fieldName]
+			if field != nil {
+				dataProperties := field.Properties
+				defaultProperties := NewProperties(item.Aggregate, item.Config.GetDefaultFieldProperties(), &dataProperties)
+				return defaultProperties
+			}
+		}
+	}
+	return &Properties{}
+}
+
 func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Properties {
 	res := &Properties{}
 	res.Adds(properties)
@@ -78,15 +93,16 @@ func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Prope
 
 type Property struct {
 	Name          string
-	Type          string `yaml:"type"`
-	ReferenceType string `yaml:"referenceType"`
-	DefaultValue  any    `yaml:"defaultValue"`
-	Validate      string `yaml:"validate"`
-	Description   string `yaml:"description"`
-	IsAggregateId bool   `yaml:"isAggregateId"`
-	IsArray       bool   `yaml:"isArray"`
-	Json          string `yaml:"json"`
-	Bson          string `yaml:"bson"`
+	Type          string   `yaml:"type"`
+	ReferenceType string   `yaml:"referenceType"`
+	DefaultValue  any      `yaml:"defaultValue"`
+	Validate      string   `yaml:"validate"`
+	Description   string   `yaml:"description"`
+	IsAggregateId bool     `yaml:"isAggregateId"`
+	IsArray       bool     `yaml:"isArray"`
+	Json          string   `yaml:"json"`
+	Bson          string   `yaml:"bson"`
+	Uses          []string `yaml:"uses"`
 	Aggregate     *Aggregate
 	Config        *Config
 }
@@ -180,4 +196,23 @@ func (p *Property) IsData() bool {
 
 func (p *Property) TypeIsDateTime() bool {
 	return strings.ToLower(p.Type) == "datetime"
+}
+
+func (p *Property) IsUseView() bool {
+	return p.IsUse("view")
+}
+
+func (p *Property) IsUse(useType string) bool {
+	if p == nil {
+		return false
+	}
+	if len(p.Uses) == 0 {
+		return true
+	}
+	for _, ut := range p.Uses {
+		if strings.ToLower(ut) == strings.ToLower(useType) {
+			return true
+		}
+	}
+	return true
 }

@@ -7,29 +7,31 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 )
 
-type BuildCmdApplicationService struct {
+type BuildCmdAppServiceEntity struct {
 	builds.BaseBuild
 	aggregate *config.Aggregate
+	entity    *config.Entity
 }
 
-func NewBuildCmdApplicationService(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildCmdApplicationService {
-	res := &BuildCmdApplicationService{
+func NewBuildCmdAppServiceEntity(base builds.BaseBuild, aggregate *config.Aggregate, entity *config.Entity, outFile string) *BuildCmdAppServiceEntity {
+	res := &BuildCmdAppServiceEntity{
 		BaseBuild: base,
 		aggregate: aggregate,
+		entity:    entity,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/application/internals/service/cmd_appservice.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/application/internals/service/cmd_app_service_entity.go.tpl"
 	res.OutFile = outFile
 	return res
 }
 
-func (b *BuildCmdApplicationService) Values() map[string]interface{} {
+func (b *BuildCmdAppServiceEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	res["ClassName"] = b.ClassName()
 	res["AggregateType"] = b.AggregateType()
 	res["Properties"] = b.aggregate.Properties
 	res["Events"] = b.aggregate.Events
-	res["Commands"] = b.aggregate.Commands
+	res["Commands"] = b.entity.GetCommands()
 	res["Description"] = b.aggregate.Description
 	res["EnumObjects"] = b.aggregate.EnumObjects
 	res["Id"] = b.aggregate.Id
@@ -41,10 +43,10 @@ func (b *BuildCmdApplicationService) Values() map[string]interface{} {
 	return res
 }
 
-func (b *BuildCmdApplicationService) ClassName() string {
+func (b *BuildCmdAppServiceEntity) ClassName() string {
 	return utils.FirstUpper(b.AggregateName() + "CommandAppService")
 }
 
-func (b *BuildCmdApplicationService) AggregateType() string {
+func (b *BuildCmdAppServiceEntity) AggregateType() string {
 	return utils.FirstUpper(fmt.Sprintf("%s.%s", b.Namespace(), b.ClassName()))
 }

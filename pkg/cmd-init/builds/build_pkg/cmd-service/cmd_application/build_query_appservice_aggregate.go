@@ -17,7 +17,7 @@ func NewBuildQueryAppServiceAggregate(base builds.BaseBuild, aggregate *config.A
 		aggregate: aggregate,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/application/internals/service/query_appservice_aggregate.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/application/internals/service/query_app_service_aggregate.go.tpl"
 	res.OutFile = outFile
 	return res
 }

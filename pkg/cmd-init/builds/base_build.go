@@ -72,8 +72,7 @@ func (b *BaseBuild) Values() map[string]interface{} {
 	res["Namespace"] = b.Namespace()
 	res["namespace"] = strings.ToLower(b.Namespace())
 	res["Aggregates"] = b.Config.Aggregates
-	serviceName := b.Config.Configuration.ServiceName
-	res["ServiceName"] = serviceName
+	res["ServiceName"] = b.Config.Configuration.ServiceName
 	res["CommandServiceName"] = b.Config.Configuration.CommandServiceName()
 	res["QueryServiceName"] = b.Config.Configuration.QueryServiceName()
 	res["ApiVersion"] = b.Config.Configuration.ApiVersion
@@ -108,11 +107,11 @@ func (b *BaseBuild) NewFileBuild(tmplFile, outFile string, values map[string]int
 }
 
 func (b *BaseBuild) DoBuild(builds ...Build) error {
-
 	if builds == nil {
 		return nil
 	}
 	for _, build := range builds {
+		println("building: " + build.GetOutFile())
 		if err := build.Build(); err != nil {
 			return err
 		}

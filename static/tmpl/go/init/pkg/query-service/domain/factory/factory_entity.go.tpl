@@ -5,8 +5,10 @@ package factory
 
 import (
 	"context"
-	"{{.Namespace}}/pkg/query-service/domain/{{$aggregate_name}}/view"
 	"{{.Namespace}}/pkg/cmd-service/domain/{{$aggregate_name}}/event"
+	"{{.Namespace}}/pkg/query-service/domain/{{$aggregate_name}}/view"
+	"{{.Namespace}}/pkg/query-service/infrastructure/utils"
+
 )
 {{- range $eventName, $event := .Events }}
 

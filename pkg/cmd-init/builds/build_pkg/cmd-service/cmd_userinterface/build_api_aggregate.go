@@ -28,6 +28,7 @@ func (b *BuildRestApiAggregate) Values() map[string]interface{} {
 	res["Events"] = b.aggregate.Events
 	res["Commands"] = b.aggregate.Commands
 	res["AggregatePluralName"] = b.aggregate.PluralName()
+	res["ClassName"] = b.ClassName()
 	return res
 }
 

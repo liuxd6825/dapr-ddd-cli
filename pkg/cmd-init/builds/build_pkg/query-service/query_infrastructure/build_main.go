@@ -28,7 +28,9 @@ type BuildInfrastructureLayer struct {
 	buildDtoBase       *builds.BuildAnyFile
 	buildTypesDateTime *BuildTypesDateTime
 
-	buildUtils *BuildUtils
+	buildApiBase       *BuildApiBase
+	buildAssemblerBase *BuildAssemblerBase
+	buildUtils         *BuildUtils
 }
 
 func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildInfrastructureLayer {
@@ -56,7 +58,8 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initDtoBase()
 	res.initTypes()
 	res.initUtils()
-
+	res.initApiBase()
+	res.initAssemblerBase()
 	return res
 }
 
@@ -98,6 +101,8 @@ func (b *BuildInfrastructureLayer) Build() error {
 	list = append(list, b.buildDtoBase)
 	list = append(list, b.buildTypesDateTime)
 	list = append(list, b.buildUtils)
+	list = append(list, b.buildApiBase)
+	list = append(list, b.buildAssemblerBase)
 
 	return b.DoBuild(list...)
 }
@@ -170,4 +175,14 @@ func (b *BuildInfrastructureLayer) initTypes() {
 func (b *BuildInfrastructureLayer) initUtils() {
 	outFile := fmt.Sprintf("%s/utils/utils.go", b.outDir)
 	b.buildUtils = NewBuildUtils(b.BaseBuild, outFile)
+}
+
+func (b *BuildInfrastructureLayer) initApiBase() {
+	outFile := fmt.Sprintf("%s/base/userinterface/rest/facade/base_api.go", b.outDir)
+	b.buildApiBase = NewBuildApiBase(b.BaseBuild, outFile)
+}
+
+func (b *BuildInfrastructureLayer) initAssemblerBase() {
+	outFile := fmt.Sprintf("%s/base/userinterface/rest/assembler/base_assembler.go", b.outDir)
+	b.buildAssemblerBase = NewBuildAssemblerBase(b.BaseBuild, outFile)
 }

@@ -1,3 +1,4 @@
+{{$AggregatePluralName := .AggregatePluralName}}
 package facade
 
 import (
@@ -12,11 +13,9 @@ import (
 
 var {{.Name}}Assembler = assembler.{{.Name}}
 
-
 type {{.Name}}QueryApi struct {
 	queryService *service.{{.Name}}QueryAppService
 }
-
 
 func New{{.Name}}QueryApi() *{{.Name}}QueryApi {
 	return &{{.Name}}QueryApi{
@@ -24,44 +23,73 @@ func New{{.Name}}QueryApi() *{{.Name}}QueryApi {
 	}
 }
 
-
 func (a *{{.Name}}QueryApi) BeforeActivation(b mvc.BeforeActivation) {
-	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}/{id}", "FindById")
-	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}:all", "FindAll")
-	b.Handle("GET", "/tenants/{tenantId}/{{.AggregatePluralName}}", "FindPaging")
+	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{$AggregatePluralName}}/{id}", "FindById")
+	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{$AggregatePluralName}}:all", "FindAll")
+	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{$AggregatePluralName}}", "FindPaging")
 }
 
-
-func (a *{{.Name}}QueryApi) FindById(ctx iris.Context, tenantId, id string) {
-	req, err := {{.Name}}Assembler.AssFindByIdRequest(ctx)
-	if err != nil {
-		return
-	}
+// FindById godoc
+// @Summary      按ID查询
+// @Description  get string by ID
+// @Tags         {{$AggregatePluralName}}
+// @Accept       json
+// @Produce      json
+// @Param        tenantId   path       int           true  "Tenant ID"
+// @Param        id         path       int           true  "User ID"
+// @Success      200        {object}   dto.{{.Name}}FindByIdResponse
+// @Failure      404        {object}   string        "按ID找到数据"
+// @Failure      500        {object}   string        "应用错误"
+// @Router       /tenants/{tenantId}/{{$AggregatePluralName}}/{id} [get]
+func (a *{{.Name}}QueryApi) FindById(ctx iris.Context) {
 	_, _, _ = restapp.DoQueryOne(ctx, func(c context.Context) (interface{}, bool, error) {
-		v, b, e := a.queryService.FindById(c, req.TenantId(), req.Id())
-		return {{.Name}}Assembler.AssOneResponse(ctx, v, b, e)
+		req, err := {{.Name}}Assembler.AssFindByIdRequest(ctx)
+    	if err != nil {
+    		return nil, false, err
+    	}
+		v, b, e := a.queryService.FindById(c, req.TenantId, req.Id)
+		return {{.Name}}Assembler.AssFindByIdResponse(ctx, v, b, e)
 	})
 }
 
-
+// FindAll godoc
+// @Summary      获取所有用户
+// @Description  get string by ID
+// @Tags         {{$AggregatePluralName}}
+// @Accept       json
+// @Produce      json
+// @Param        tenantId  path      int     true    "Tenant ID"
+// @Success      200       {object}  dto.UserFindAllResponse
+// @Failure      500       {object}  string          "应用错误"
+// @Router       /tenants/{tenantId}/{{$AggregatePluralName}}:all [get]
 func (a *{{.Name}}QueryApi) FindAll(ctx iris.Context, tenantId string) {
-	req, err := {{.Name}}Assembler.AssFindAllRequest(ctx)
-	if err != nil {
-		return
-	}
 	_, _, _ = restapp.DoQuery(ctx, func(c context.Context) (interface{}, bool, error) {
-		fpr, b, e := a.queryService.FindAll(c, req.TenantId())
-		return {{.Name}}Assembler.AssListResponse(ctx, fpr, b, e)
+		req, err := {{.Name}}Assembler.AssFindAllRequest(ctx)
+    	if err != nil {
+    		return nil, false, err
+    	}
+		fpr, b, e := a.queryService.FindAll(c, req.TenantId)
+		return {{.Name}}Assembler.AssFindAllResponse(ctx, fpr, b, e)
 	})
 }
 
 
+// FindPaging godoc
+// @Summary      分页查询
+// @Description  分页查询
+// @Tags         {{$AggregatePluralName}}
+// @Accept       json
+// @Produce      json
+// @Param        tenantId   path        int         true    "Tenant ID"
+// @Success      200        {object}    dto.{{.Name}}FindPagingResponse
+// @Failure      500        {object}    string      "应用错误"
+// @Router       /tenants/{tenantId}/{{$AggregatePluralName}} [get]
 func (a *{{.Name}}QueryApi) FindPaging(ctx iris.Context, tenantId string) {
-	req, err := {{.Name}}Assembler.AssGetPagingRequest(ctx)
-	if err != nil {
-		return
-	}
 	_, _, _ = restapp.DoQuery(ctx, func(c context.Context) (interface{}, bool, error) {
+		req, err := {{.Name}}Assembler.AssFindPagingRequest(ctx)
+    	if err != nil {
+    		return nil, false, err
+    	}
 		fpr, b, e := a.queryService.FindPaging(c, req)
 		return {{.Name}}Assembler.AssFindPagingResponse(ctx, fpr, b, e)
 	})
