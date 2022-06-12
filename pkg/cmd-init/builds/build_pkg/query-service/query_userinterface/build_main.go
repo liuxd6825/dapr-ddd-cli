@@ -20,6 +20,8 @@ type BuildUserInterfaceLayer struct {
 
 	buildAssemblerAggregate *BuildAssemblerAggregate
 	buildAssemblerEntities  *[]*BuildAssemblerEntity
+
+	buildSwagger *BuildSwagger
 }
 
 func NewBuildUserInterfaceLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildUserInterfaceLayer {
@@ -57,6 +59,9 @@ func (b *BuildUserInterfaceLayer) Build() error {
 	for _, item := range *b.buildAssemblerEntities {
 		list = append(list, item)
 	}
+
+	// swagger
+	list = append(list, b.buildSwagger)
 
 	return b.DoBuild(list...)
 }
@@ -98,5 +103,9 @@ func (b *BuildUserInterfaceLayer) init() {
 		buildAssemblerEntities = append(buildAssemblerEntities, build)
 	}
 	b.buildAssemblerEntities = &buildAssemblerEntities
+
+	// swagger
+	outFile = fmt.Sprintf("%s/rest/main.go", b.outDir)
+	b.buildSwagger = NewBuildSwagger(b.BaseBuild, outFile)
 
 }

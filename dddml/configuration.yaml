@@ -5,12 +5,17 @@ configuration:
   defaultModule: "Dddml.Wms"
   # 服务名
   serviceName: "dapr-ddd-demo"
+  # API版本号
   apiVersion: "v1.0"
   # 命名空间
   namespace:
     go: "gitee.com/liuxu6825/dapr-ddd-demo"
     c#: "com.liuxu6825.dapr-ddd-demo"
     java: "com.liuxu6825.dapr-ddd-demo"
+  k8s:
+    namespace: "dapr-ddd-demo"
+    commandImage: "192.168.64.12/dapr-ddd-demo-cmd-service:dapr-linux-arm64"
+    queryImage: "192.168.64.12/dapr-ddd-demo-query-service:dapr-linux-arm64"
 
   # 上下文中每个实体都需要的保留属性
   defaultReservedProperties:

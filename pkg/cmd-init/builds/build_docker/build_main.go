@@ -23,7 +23,7 @@ func NewBuildDockerLayer(cfg *config.Config, outDir string) *BuildDockerLayer {
 
 func (b *BuildDockerLayer) Build() error {
 	var list []builds.Build
-	values := map[string]interface{}{}
+	values := b.Values()
 	outDir := b.outDir
 	list = append(list, b.NewFileBuild("/docker/docker.mk.tpl", outDir+"/docker.mk", values))
 	list = append(list, b.NewFileBuild("/docker/cmd/Dockerfile.tpl", outDir+"/cmd/Dockerfile", values))

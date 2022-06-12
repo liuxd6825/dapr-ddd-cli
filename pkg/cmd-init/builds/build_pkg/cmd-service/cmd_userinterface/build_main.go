@@ -20,6 +20,8 @@ type BuildRestControllerLayer struct {
 
 	buildDtoAggregate *BuildDtoAggregate
 	buildDtoEntities  []*BuildDtoEntity
+
+	buildSwagger *BuildSwagger
 }
 
 func NewBuildRestControllerLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildRestControllerLayer {
@@ -76,6 +78,10 @@ func (b *BuildRestControllerLayer) init() {
 	}
 	b.buildAssemblerEntities = buildAssemblerEntities
 
+	// swagger
+	outFile = fmt.Sprintf("%s/rest/main.go", b.outDir)
+	b.buildSwagger = NewBuildSwagger(b.BaseBuild, outFile)
+
 }
 
 func (b *BuildRestControllerLayer) Build() error {
@@ -98,6 +104,9 @@ func (b *BuildRestControllerLayer) Build() error {
 		list = append(list, entity)
 	}
 	list = append(list, b.buildAssemblerAggregate)
+
+	// swagger
+	list = append(list, b.buildSwagger)
 
 	return b.DoBuild(list...)
 }

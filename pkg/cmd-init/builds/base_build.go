@@ -76,6 +76,9 @@ func (b *BaseBuild) Values() map[string]interface{} {
 	res["CommandServiceName"] = b.Config.Configuration.CommandServiceName()
 	res["QueryServiceName"] = b.Config.Configuration.QueryServiceName()
 	res["ApiVersion"] = b.Config.Configuration.ApiVersion
+	res["K8sNamespace"] = b.Config.Configuration.GetK8sNamespace()
+	res["K8sQueryImage"] = b.Config.Configuration.GetK8sQueryImage()
+	res["K8sCommandImage"] = b.Config.Configuration.GetK8sCommandImage()
 
 	if b.Config != nil && b.Config.Configuration != nil {
 		res["DefaultViewProperties"] = b.Config.Configuration.DefaultReservedProperties.ViewProperties

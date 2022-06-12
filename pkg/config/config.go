@@ -15,6 +15,7 @@ type Config struct {
 	ValueObjects    ValueObjects    `yaml:"valueObjects"`
 	TypeDefinitions TypeDefinitions `yaml:"typeDefinitions"`
 	Configuration   *Configuration  `yaml:"configuration"`
+	K8s             K8S             `yaml:"k8s"`
 	//  当前语言类型
 	lanType LangType
 }

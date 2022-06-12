@@ -2,6 +2,12 @@ package config
 
 import "fmt"
 
+type K8S struct {
+	Namespace    string `yaml:"namespace"`
+	CommandImage string `yaml:"commandImage"`
+	QueryImage   string `yaml:"queryImage"`
+}
+
 type Configuration struct {
 	BoundedContextName        string                     `yaml:"boundedContextName"`
 	DefaultModule             string                     `yaml:"defaultModule"`
@@ -10,6 +16,7 @@ type Configuration struct {
 	ApiVersion                string                     `yaml:"apiVersion"`
 	Description               string                     `yaml:"description"`
 	DefaultReservedProperties *DefaultReservedProperties `yaml:"defaultReservedProperties"`
+	K8s                       K8S                        `yaml:"k8s"`
 	Metadata                  Metadata                   `yaml:"metadata"`
 	CSharp                    Metadata                   `yaml:"c#"`
 	Java                      Metadata                   `yaml:"java"`
@@ -34,6 +41,18 @@ func (c *Configuration) Init(config *Config, langType LangType) {
 	c.LangType = langType
 	c.GoUtil = NewMetadataUtil(c.Go)
 	c.DefaultReservedProperties.init(config)
+}
+
+func (c *Configuration) GetK8sNamespace() string {
+	return c.K8s.Namespace
+}
+
+func (c *Configuration) GetK8sQueryImage() string {
+	return c.K8s.QueryImage
+}
+
+func (c *Configuration) GetK8sCommandImage() string {
+	return c.K8s.CommandImage
 }
 
 func (c *Configuration) GetNamespace() string {
