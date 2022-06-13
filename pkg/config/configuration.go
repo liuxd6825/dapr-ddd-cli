@@ -17,13 +17,16 @@ type Configuration struct {
 	Description               string                     `yaml:"description"`               // 领域上下文说明
 	DefaultReservedProperties *DefaultReservedProperties `yaml:"defaultReservedProperties"` // 系统中固定的字段
 	Metadata                  Metadata                   `yaml:"metadata"`                  // 领域元数据
-	CSharp                    Metadata                   `yaml:"c#"`                        // C# 元数据
-	Java                      Metadata                   `yaml:"java"`                      // Java 元数据
-	Go                        Metadata                   `yaml:"go"`                        // Go 元数据
-	K8s                       K8S                        `yaml:"k8s"`                       // K8s 元数据
+	CSharpMetadata            Metadata                   `yaml:"c#"`                        // C# 元数据
+	JavaMetadata              Metadata                   `yaml:"java"`                      // Java 元数据
+	GoMetadata                Metadata                   `yaml:"go"`                        // Go 元数据
+	K8sMetadata               Metadata                   `yaml:"k8s"`                       // K8s 元数据
+	DaprMetadata              Metadata                   `yaml:"dapr"`                      // Dapr 元数据
 	GoUtil                    *MetadataUtil
 	CSharpUtil                *MetadataUtil
 	JavaUtil                  *MetadataUtil
+	DaprUtil                  *MetadataUtil
+	K8sUtil                   *MetadataUtil
 	LangType                  LangType
 }
 
@@ -37,20 +40,26 @@ type DefaultReservedProperties struct {
 
 func (c *Configuration) Init(config *Config, langType LangType) {
 	c.LangType = langType
-	c.GoUtil = NewMetadataUtil(c.Go)
+
+	c.GoUtil = NewMetadataUtil(c.GoMetadata)
+	c.JavaUtil = NewMetadataUtil(c.JavaMetadata)
+	c.CSharpUtil = NewMetadataUtil(c.CSharpMetadata)
+	c.DaprUtil = NewMetadataUtil(c.DaprMetadata)
+	c.K8sUtil = NewMetadataUtil(c.K8sMetadata)
+
 	c.DefaultReservedProperties.init(config)
 }
 
 func (c *Configuration) GetK8sNamespace() string {
-	return c.K8s.Namespace
+	return c.K8sUtil.GetValue("Namespace", "")
 }
 
 func (c *Configuration) GetK8sQueryImage() string {
-	return c.K8s.QueryImage
+	return c.K8sUtil.GetValue("QueryImage", "")
 }
 
 func (c *Configuration) GetK8sCommandImage() string {
-	return c.K8s.CommandImage
+	return c.K8sUtil.GetValue("CommandImage", "")
 }
 
 func (c *Configuration) GetNamespace() string {

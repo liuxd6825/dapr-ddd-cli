@@ -80,6 +80,9 @@ func (b *BaseBuild) Values() map[string]interface{} {
 	res["K8sNamespace"] = b.Config.Configuration.GetK8sNamespace()
 	res["K8sQueryImage"] = b.Config.Configuration.GetK8sQueryImage()
 	res["K8sCommandImage"] = b.Config.Configuration.GetK8sCommandImage()
+	res["GoMetadata"] = b.Config.Configuration.GoMetadata
+	res["JavaMetadata"] = b.Config.Configuration.JavaMetadata
+	res["C#Metadata"] = b.Config.Configuration.CSharpMetadata
 
 	if b.Config != nil && b.Config.Configuration != nil {
 		res["DefaultViewProperties"] = b.Config.Configuration.DefaultReservedProperties.ViewProperties
@@ -103,6 +106,7 @@ func (b *BaseBuild) Values() map[string]interface{} {
 		res["AggregateFactoryPackage"] = fmt.Sprintf("%s_factory", aggregateName)
 		res["AggregateServicePackage"] = fmt.Sprintf("%s_service", aggregateName)
 	}
+
 	return res
 }
 

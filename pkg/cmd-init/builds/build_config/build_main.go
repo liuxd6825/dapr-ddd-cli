@@ -23,7 +23,7 @@ func NewBuildConfigLayer(cfg *config.Config, outDir string) *BuildConfigLayer {
 
 func (b *BuildConfigLayer) Build() error {
 	var list []builds.Build
-	values := map[string]interface{}{}
+	values := b.Values()
 	values["CommandServiceName"] = b.Config.Configuration.CommandServiceName()
 	values["QueryServiceName"] = b.Config.Configuration.QueryServiceName()
 	outDir := b.outDir
