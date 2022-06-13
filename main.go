@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"fmt"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
 	_ "github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
@@ -18,6 +17,7 @@ func main() {
 	resource.Init(local)
 
 	app := &cli.App{
+		Version: "v1.7.1-1.0-alpha",
 		Commands: []*cli.Command{
 			{
 				Name:    "init",
@@ -42,38 +42,6 @@ func main() {
 						Aliases: []string{"o"},
 						Value:   "./",
 						Usage:   "生成源代码目录",
-					},
-				},
-			},
-			{
-				Name:    "complete",
-				Aliases: []string{"c"},
-				Usage:   "complete a task on the list",
-				Action: func(c *cli.Context) error {
-					fmt.Println("completed task: ", c.Args().First())
-					return nil
-				},
-			},
-			{
-				Name:    "template",
-				Aliases: []string{"t"},
-				Usage:   "options for task templates",
-				Subcommands: []*cli.Command{
-					{
-						Name:  "add",
-						Usage: "add a new template",
-						Action: func(c *cli.Context) error {
-							fmt.Println("new task template: ", c.Args().First())
-							return nil
-						},
-					},
-					{
-						Name:  "remove",
-						Usage: "remove an existing template",
-						Action: func(c *cli.Context) error {
-							fmt.Println("removed task template: ", c.Args().First())
-							return nil
-						},
 					},
 				},
 			},
