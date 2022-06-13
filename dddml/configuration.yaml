@@ -14,13 +14,9 @@ configuration:
     go: "gitee.com/liuxu6825/dapr-ddd-demo"
     c#: "com.liuxu6825.dapr-ddd-demo"
     java: "com.liuxu6825.dapr-ddd-demo"
-  k8s:
-    namespace: "dapr-ddd-demo"
-    commandImage: "192.168.64.12/dapr-ddd-demo-cmd-service:dapr-linux-arm64"
-    queryImage: "192.168.64.12/dapr-ddd-demo-query-service:dapr-linux-arm64"
-
   # 上下文中每个实体都需要的保留属性
   defaultReservedProperties:
+    # 聚合根固定属性
     aggregate:
       Id:
         type: string
@@ -31,6 +27,7 @@ configuration:
       IsDeleted:
         type: bool
         description: "是否删除"
+    # 实体根固定属性
     entity:
       Id:
         type: string
@@ -38,6 +35,7 @@ configuration:
       IsDeleted:
         type: bool
         description: "是否删除"
+    # 视图投射类固定属性
     view:
       TenantId:
         type: string
@@ -72,6 +70,7 @@ configuration:
       IsDeleted:
         type: bool
         description: "是否删除"
+    # 共有字段固定属性
     field:
       Id:
         type: string
@@ -79,14 +78,21 @@ configuration:
       TenantId:
         type: string
         description: "租户ID"
-
-  # DDDML规范中没有明确定义的扩展点， 其值类型为Map<String, Object>
+  # 没有明确定义的扩展点， 其值类型为Map<String, Object>
   metadata:
     HttpServicesAuthorizationEnalbled: false
     SpringSecurityEnalbeld: true
+  # K8S扩展点
+  k8s:
+    namespace: "dapr-ddd-demo"
+    commandImage: "192.168.64.12/dapr-ddd-demo-cmd-service:dapr-linux-arm64"
+    queryImage: "192.168.64.12/dapr-ddd-demo-query-service:dapr-linux-arm64"
+  # C# 扩展点
   c#:
+  # Java 扩展点
   java:
+  # Go 扩展点
   go:
-      DaprSrcPath: "/Users/lxd/go/src/github.com/dapr"
+    DaprSrcPath: "/Users/lxd/go/src/github.com/dapr"
 
 
