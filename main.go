@@ -46,35 +46,12 @@ func main() {
 				},
 			},
 			{
-				Name:    "complete",
-				Aliases: []string{"c"},
-				Usage:   "complete a task on the list",
+				Name:    "version",
+				Aliases: []string{"v"},
+				Usage:   "版本号",
 				Action: func(c *cli.Context) error {
-					fmt.Println("completed task: ", c.Args().First())
+					fmt.Println("v1.7.1-1.0-alpha")
 					return nil
-				},
-			},
-			{
-				Name:    "template",
-				Aliases: []string{"t"},
-				Usage:   "options for task templates",
-				Subcommands: []*cli.Command{
-					{
-						Name:  "add",
-						Usage: "add a new template",
-						Action: func(c *cli.Context) error {
-							fmt.Println("new task template: ", c.Args().First())
-							return nil
-						},
-					},
-					{
-						Name:  "remove",
-						Usage: "remove an existing template",
-						Action: func(c *cli.Context) error {
-							fmt.Println("removed task template: ", c.Args().First())
-							return nil
-						},
-					},
 				},
 			},
 		},
