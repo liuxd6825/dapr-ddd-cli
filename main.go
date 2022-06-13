@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"fmt"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
 	_ "github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
@@ -21,7 +20,7 @@ func main() {
 		Commands: []*cli.Command{
 			{
 				Name:    "init",
-				Aliases: []string{""},
+				Aliases: []string{"i"},
 				Usage:   "初始化项目结构与代码",
 				Action:  cmd_init.Acton,
 				Flags: []cli.Flag{
@@ -45,16 +44,9 @@ func main() {
 					},
 				},
 			},
-			{
-				Name:    "version",
-				Aliases: []string{"v"},
-				Usage:   "版本号",
-				Action: func(c *cli.Context) error {
-					fmt.Println("v1.7.1-1.0-alpha")
-					return nil
-				},
-			},
 		},
+
+		Version: "v1.7.1-1.0-alpha",
 	}
 
 	err := app.Run(os.Args)
