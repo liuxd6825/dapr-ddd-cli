@@ -24,7 +24,7 @@ envs:
     app:
       id: {{.QueryServiceName}}
       httpPort: 8080
-      rootUrl: /api/v1.0
+      rootUrl: /api/{{.ApiVersion}}
     dapr:
       host: localhost
       pubsubs:
@@ -42,7 +42,7 @@ envs:
     app:
       id: {{.QueryServiceName}}
       httpPort: 8080
-      rootUrl: /api/v1.0
+      rootUrl: /api/{{.ApiVersion}}
     dapr:
       host: localhost
       pubsubs:

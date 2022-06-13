@@ -28,7 +28,7 @@ func New{{$ClassName}}() *{{$ClassName}} {
 }
 
 func (c *{{$ClassName}}) BeforeActivation(b mvc.BeforeActivation) {
-    b.Handle("GET", "/tenants/{tenantId}/{{$AggregatePluralName}}/aggregate/{id}", "GetAggregateById")
+    b.Handle("GET", "/tenants/{tenantId}/{{$AggregatePluralName}}/aggregate/{id}", "FindAggregateById")
     {{- range $cmdName, $cmd := .Commands }}
         {{- if $cmd.IsAggregateDeleteByIdCommand }}
     b.Handle("{{$cmd.HttpType}}", "/tenants/{tenantId}/{{$AggregatePluralName}}", "{{$cmd.ControllerMethod}}")

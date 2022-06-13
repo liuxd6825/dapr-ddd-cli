@@ -17,7 +17,7 @@ envs
     app:
       id: {{.CommandServiceName}}
       httpPort: 8080
-      rootUrl: /api/v1.0
+      rootUrl: /api/{{.ApiVersion}}
     dapr:
       host: localhost
       #httpPort: 3500
@@ -30,7 +30,7 @@ envs
     app:
       id: {{.CommandServiceName}}
       httpPort: 8080
-      rootUrl: /api/v1.0
+      rootUrl: /api/{{.ApiVersion}}
     dapr:
       host: localhost
       #httpPort: 3500

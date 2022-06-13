@@ -9,24 +9,22 @@ type K8S struct {
 }
 
 type Configuration struct {
-	BoundedContextName        string                     `yaml:"boundedContextName"`
-	DefaultModule             string                     `yaml:"defaultModule"`
-	ServiceName               string                     `yaml:"serviceName"`
-	Namespace                 Namespace                  `yaml:"namespace"`
-	ApiVersion                string                     `yaml:"apiVersion"`
-	Description               string                     `yaml:"description"`
-	DefaultReservedProperties *DefaultReservedProperties `yaml:"defaultReservedProperties"`
-	K8s                       K8S                        `yaml:"k8s"`
-	Metadata                  Metadata                   `yaml:"metadata"`
-	CSharp                    Metadata                   `yaml:"c#"`
-	Java                      Metadata                   `yaml:"java"`
-	Go                        Metadata                   `yaml:"go"`
-
-	GoUtil     *MetadataUtil
-	CSharpUtil *MetadataUtil
-	JavaUtil   *MetadataUtil
-
-	LangType LangType
+	BoundedContextName        string                     `yaml:"boundedContextName"`        // 领域上下文名称
+	DefaultModule             string                     `yaml:"defaultModule"`             // 领域模块
+	ServiceName               string                     `yaml:"serviceName"`               // 服务名
+	Namespace                 Namespace                  `yaml:"namespace"`                 // 命名空间
+	ApiVersion                string                     `yaml:"apiVersion"`                // API 版本号
+	Description               string                     `yaml:"description"`               // 领域上下文说明
+	DefaultReservedProperties *DefaultReservedProperties `yaml:"defaultReservedProperties"` // 系统中固定的字段
+	Metadata                  Metadata                   `yaml:"metadata"`                  // 领域元数据
+	CSharp                    Metadata                   `yaml:"c#"`                        // C# 元数据
+	Java                      Metadata                   `yaml:"java"`                      // Java 元数据
+	Go                        Metadata                   `yaml:"go"`                        // Go 元数据
+	K8s                       K8S                        `yaml:"k8s"`                       // K8s 元数据
+	GoUtil                    *MetadataUtil
+	CSharpUtil                *MetadataUtil
+	JavaUtil                  *MetadataUtil
+	LangType                  LangType
 }
 
 type DefaultReservedProperties struct {

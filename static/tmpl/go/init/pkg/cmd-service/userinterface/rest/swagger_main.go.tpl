@@ -1,7 +1,7 @@
 // 添加注释以描述 server 信息
-// @title           go-ddd-example cmd-service API
+// @title           {{.Namespace}} cmd-service API
 // @version         1.0
-// @description     This is a sample server celler server.
+// @description     {{.Configuration.Description}} 命令服务
 // @termsOfService  http://swagger.io/terms/
 
 // @contact.name   API Support

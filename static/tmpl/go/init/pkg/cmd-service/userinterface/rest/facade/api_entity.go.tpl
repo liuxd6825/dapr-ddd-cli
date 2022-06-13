@@ -26,6 +26,12 @@ func New{{$ClassName}}() *{{$ClassName}} {
 }
 
 {{$EntityPluralName := .EntityPluralName}}
+//
+// BeforeActivation
+// @Description: 注册http
+// @receiver c
+// @param ctx
+//
 func (c *{{$ClassName}}) BeforeActivation(b mvc.BeforeActivation) {
     {{- range $cmdName, $cmd := .Commands }}
         {{- if $cmd.IsEntityDeleteByIdCommand }}
