@@ -81,7 +81,7 @@ func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Prope
 	res.Adds(properties)
 	if delProperties != nil {
 		m := *res
-		for k, _ := range *delProperties {
+		for k := range *delProperties {
 			if _, ok := m[k]; ok {
 				delete(*res, k)
 			}
@@ -92,17 +92,17 @@ func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Prope
 }
 
 type Property struct {
-	Name          string
-	Type          string   `yaml:"type"`
-	ReferenceType string   `yaml:"referenceType"`
-	DefaultValue  any      `yaml:"defaultValue"`
-	Validate      string   `yaml:"validate"`
-	Description   string   `yaml:"description"`
-	IsAggregateId bool     `yaml:"isAggregateId"`
-	IsArray       bool     `yaml:"isArray"`
-	Json          string   `yaml:"json"`
-	Bson          string   `yaml:"bson"`
-	Uses          []string `yaml:"uses"`
+	Name          string   // 属性名称
+	Type          string   `yaml:"type"`          // 数据类型
+	ReferenceType string   `yaml:"referenceType"` // 引用类型
+	DefaultValue  any      `yaml:"defaultValue"`  // 默认值
+	Validate      string   `yaml:"validate"`      // 验证说明
+	Description   string   `yaml:"description"`   // 说明描述
+	IsAggregateId bool     `yaml:"isAggregateId"` // 是聚合根ID
+	IsArray       bool     `yaml:"isArray"`       // 是否循环 数组类型
+	Json          string   `yaml:"json"`          // JSON 属性
+	Bson          string   `yaml:"bson"`          // Mongo属性
+	Uses          []string `yaml:"uses"`          // 使用范围 view, entity 等扩展
 	Aggregate     *Aggregate
 	Config        *Config
 }
