@@ -5,8 +5,12 @@ go 1.18
 require (
 	github.com/go-playground/validator/v10 v10.10.1
 	github.com/kataras/iris/v12 v12.2.0-alpha9
-	github.com/liuxd6825/dapr-go-ddd-sdk v1.7.1-1.0-alpha
 	golang.org/x/exp v0.0.0-20220325121720-054d8573a5d8
+
+ 	github.com/liuxd6825/go-sdk v1.7.1-1.0-alpha
+    github.com/liuxd6825/dapr v1.7.1-1.0-alpha
+    github.com/liuxd6825/dapr-go-ddd-sdk v1.7.1-1.0-alpha
+    github.com/liuxd6825/components-contrib v1.7.1-1.0-alpha
 )
 
 require (
@@ -87,7 +91,6 @@ require (
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
-
 
 //replace github.com/liuxd6825/go-sdk => {{.GoMetadata.DaprSrcPath}}/go-sdk
 //replace github.com/liuxd6825/dapr => {{.GoMetadata.DaprSrcPath}}/dapr
