@@ -40,7 +40,8 @@ func (b *BuildEvent) Values() map[string]interface{} {
 	res["ServiceName"] = b.Config.Configuration.ServiceName
 	res["EventType"] = b.event.EventType
 	res["FieldName"] = b.FieldName()
-	res["EventName"] = b.event
+	res["EventName"] = b.event.Name
+	res["Event"] = b.event
 	res["HasDataProperty"] = b.event.HasDataProperty()
 	return res
 }

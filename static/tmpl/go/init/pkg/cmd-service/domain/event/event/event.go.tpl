@@ -5,8 +5,11 @@ import (
 )
 
 type {{.ClassName}} struct {
-    CommandId string               `json:"commandId"`
-    EventId   string               `json:"eventId"`
+    EventId      string           `json:"eventId"`
+    CommandId    string           `json:"commandId"`
+    {{- if .Event.IsUpdate }}
+	UpdateMask   []string         `json:"updateMask"`
+    {{- end }}
 {{- if .HasDataProperty }}
     Data      field.{{.FieldName}}  `json:"data"`
 {{- else }}
