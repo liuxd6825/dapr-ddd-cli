@@ -8,7 +8,7 @@ import (
 
 func main() {
 	help := flag.Bool("help", false, "参数提示。")
-	envType := flag.String("envType", "", "替换配置文件中的envType值。")
+	env := flag.String("env", "", "替换配置文件中的env值。")
 	config := flag.String("config", "./config/query-config.yaml", "配置文件。")
 	flag.Parse()
 
@@ -16,7 +16,7 @@ func main() {
 		return
 	}
 
-	if _, err := restapp.RunWithConfig(*envType, *config, subscribes, controllers, events, restapp.Actors); err != nil {
+	if _, err := restapp.RunWithConfig(*env, *config, subscribes, controllers, events, restapp.Actors); err != nil {
 		panic(err)
 	}
 }

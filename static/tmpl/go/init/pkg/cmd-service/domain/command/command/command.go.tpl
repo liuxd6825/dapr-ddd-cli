@@ -12,8 +12,11 @@ import (
 // @Description: {{.Description}}
 //
 type {{.ClassName}} struct {
-	CommandId   string    `json:"commandId"  validate:"gt=0"`   // 命令id
-	IsValidOnly bool      `json:"isValidOnly"`                  // 是否仅验证，不执行
+	CommandId   string    `json:"commandId"     validate:"gt=0"`   // 命令ID
+	IsValidOnly bool      `json:"isValidOnly"   validate:"gt=0"`   // 是否仅验证，不执行
+    {{- if .Command.IsUpdate }}
+	UpdateMask  []string  `json:"updateMask"`                      // 要更新的字段项，空值：更新所有字段
+    {{- end }}
 {{- range $name, $property := .Properties}}
     {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
 {{- end}}
@@ -25,9 +28,12 @@ type {{.ClassName}} struct {
 //
 func (c *{{.ClassName}}) NewDomainEvent() ddd.DomainEvent {
     return &event.{{.EventName}}{
-        EventId:   uuid.New().String(),
-        CommandId: c.CommandId,
-        Data:      c.Data,
+        EventId:    uuid.New().String(),
+        CommandId:  c.CommandId,
+        {{- if .Command.IsUpdate }}
+        UpdateMask: c.UpdateMask,
+        {{- end }}
+        Data:       c.Data,
     }
 }
 

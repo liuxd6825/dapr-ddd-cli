@@ -30,7 +30,7 @@ $  CGO_ENABLED=0 GOOS=darwin  GOARCH=arm64  go build -o /Users/lxd/go/bin/dapr-d
 
 
 1. 请参见 DDDML目录.yaml文件 
-2. DDDML的语法定义参考了《深入实践DDD以DSL驱动复杂软件开发》一书。
+
 
 
 #### 参与贡献

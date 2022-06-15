@@ -1,6 +1,7 @@
 aggregates:
+  # 定义聚合根
   UserInfo:
-    # ----------------------------------
+    # 聚合根的属性
     properties:
       Id:
         type: string
@@ -15,8 +16,7 @@ aggregates:
       Contacts:
         type:  Contact
         isArray: true
-
-    # ----------------------------------
+    # 领域中的数据字段， 供Command与Event使用。
     fields:
       UserFields:
         properties:
@@ -52,7 +52,7 @@ aggregates:
             type: string
           UserId:
             type: string
-    # ----------------------------------
+    # 领域命令
     commands:
       UserCreateCommand:
         description: 新建用户命令
@@ -114,7 +114,7 @@ aggregates:
           Data:
             type: ContactDeleteFields
             referenceType: ContactDeleteFields
-    # ----------------------------------
+    # 领域事件
     events:
       UserCreateEventV1:
         aggregateId: Data.Id
@@ -167,7 +167,7 @@ aggregates:
         properties:
           Data:
             type: ContactDeleteFields
-    # ----------------------------------
+    # 实体类
     entities:
       Contact:
         id:
@@ -185,7 +185,7 @@ aggregates:
             type: ContactType
           ContactValue:
             type: string
-    # ----------------------------------
+    # 值对象
     valueObjects:
       Address:
         properties:
@@ -195,7 +195,7 @@ aggregates:
             type: string
           Detail:
             type: string
-    # ----------------------------------
+    # 枚举类型
     enumObjects:
       ContactType:
         values:
@@ -208,27 +208,6 @@ aggregates:
           WeChat:
             value: 3
             title: 微信号
-    # ----------------------------------
-    query:
-      projections:
-        UserView:
-          properties:
-            Id:
-              type: string
-              validate: "gt=0"
-              description: ""
-            UserCode:
-              type: string
-            UserName:
-              type: string
-            Email:
-              type: string
-            Telephone:
-              type: string
-            IsDelete:
-              type: bool
-            Addresses:
-              type: string
 
 
 

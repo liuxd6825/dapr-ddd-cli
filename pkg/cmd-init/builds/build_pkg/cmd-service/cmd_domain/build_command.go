@@ -25,6 +25,7 @@ func NewBuildCommand(base builds.BaseBuild, command *config.Command, outFile str
 
 func (b *BuildCommand) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
+	res["Command"] = b.command
 	res["ClassName"] = utils.FirstUpper(b.command.Name)
 	res["Properties"] = b.command.Properties
 	res["Description"] = b.command.Description

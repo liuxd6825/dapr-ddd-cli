@@ -21,7 +21,7 @@ func main() {
 		Commands: []*cli.Command{
 			{
 				Name:    "init",
-				Aliases: []string{""},
+				Aliases: []string{"i"},
 				Usage:   "初始化项目结构与代码",
 				Action:  cmd_init.Acton,
 				Flags: []cli.Flag{
@@ -46,6 +46,8 @@ func main() {
 				},
 			},
 		},
+
+		Version: "v1.7.1-1.0-alpha",
 	}
 
 	err := app.Run(os.Args)
