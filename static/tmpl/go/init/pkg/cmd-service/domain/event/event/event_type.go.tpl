@@ -15,6 +15,10 @@ const (
 {{- end }}
 )
 
+//
+// String()
+// @Description: 转换成字符串
+//
 func (p {{$AggregateName}}EventType) String() string {
 	switch p {
 {{- $ServiceName := .ServiceName}}

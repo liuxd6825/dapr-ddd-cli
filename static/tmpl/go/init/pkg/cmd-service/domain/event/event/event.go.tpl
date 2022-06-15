@@ -4,14 +4,18 @@ import (
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
 )
 
+//
+// {{.ClassName}}
+// @Description: {{.Description}}
+//
 type {{.ClassName}} struct {
-    EventId      string           `json:"eventId"`
-    CommandId    string           `json:"commandId"`
+    EventId      string           `json:"eventId"`       // 领域事件ID
+    CommandId    string           `json:"commandId"`     // 关联命令ID
     {{- if .Event.IsUpdate }}
-	UpdateMask   []string         `json:"updateMask"`
+	UpdateMask   []string         `json:"updateMask"`    // 要更新字段
     {{- end }}
 {{- if .HasDataProperty }}
-    Data      field.{{.FieldName}}  `json:"data"`
+    Data      field.{{.FieldName}}  `json:"data"`        // 业务字段项
 {{- else }}
 {{- range $name, $property := .Properties}}
     {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
