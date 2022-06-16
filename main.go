@@ -15,7 +15,6 @@ var local embed.FS
 
 func main() {
 	resource.Init(local)
-
 	app := &cli.App{
 		Version: "v1.7.1-1.0-alpha",
 		Commands: []*cli.Command{
@@ -46,10 +45,7 @@ func main() {
 				},
 			},
 		},
-
-		Version: "v1.7.1-1.0-alpha",
 	}
-
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)

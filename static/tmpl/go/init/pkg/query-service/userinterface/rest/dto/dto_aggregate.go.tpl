@@ -17,6 +17,9 @@ type {{.Name}}FindByIdResponse struct {
     {{.Name}}Dto
 }
 
+func New{{.Name}}FindByIdResponse() *{{.Name}}FindByIdResponse {
+	return &{{.Name}}FindByIdResponse{}
+}
 
 // 分页查询
 
@@ -28,6 +31,11 @@ type {{.Name}}FindPagingResponse struct {
 	base.FindPagingResponse[*{{.Name}}FindPagingResponseItem]
 }
 
+func New{{.Name}}FindPagingResponse() *{{.Name}}FindPagingResponse {
+	resp := &{{.Name}}FindPagingResponse{}
+	resp.Init()
+	return resp
+}
 
 //
 // {{.Name}}FindPagingResponseItem
@@ -35,6 +43,10 @@ type {{.Name}}FindPagingResponse struct {
 //
 type {{.Name}}FindPagingResponseItem struct {
     {{.Name}}Dto
+}
+
+func New{{.Name}}FindPagingResponseItem() *{{.Name}}FindPagingResponseItem {
+	return &{{.Name}}FindPagingResponseItem{}
 }
 
 
@@ -46,6 +58,10 @@ type {{.Name}}FindPagingResponseItem struct {
 //
 type {{.Name}}FindAllResponse []*{{.Name}}FindAllResponseItem
 
+func New{{.Name}}FindAllResponseItem() *{{.Name}}FindAllResponseItem {
+	return &{{.Name}}FindAllResponseItem{}
+}
+
 //
 // {{.Name}}FindAllResponseItem
 // @Description: {{.Description}}  请求业务数据
@@ -54,6 +70,9 @@ type {{.Name}}FindAllResponseItem struct {
     {{.Name}}Dto
 }
 
+func New{{.Name}}FindAllResponseItem() *{{.Name}}FindAllResponseItem {
+	return &{{.Name}}FindAllResponseItem{}
+}
 
 //
 // {{.Name}}Dto
@@ -63,5 +82,9 @@ type {{.Name}}Dto struct {
 {{- range $name, $property := .DataFieldsProperties}}
     {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
 {{- end}}
+}
+
+func New{{.Name}}Dto() *{{.Name}}Dto {
+	return &{{.Name}}Dto{}
 }
 

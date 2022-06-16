@@ -17,6 +17,9 @@ type {{.Name}}FindByIdResponse struct {
     {{.Name}}Dto
 }
 
+func New{{.Name}}FindByIdResponse() *{{.Name}}FindByIdResponse{
+    return &{{.Name}}FindByIdResponse{}
+}
 
 // 按{{.Name}}Id查询
 
@@ -35,12 +38,21 @@ type {{.Name}}FindBy{{.AggregateName}}IdRequest struct {
 //
 type {{.Name}}FindBy{{.AggregateName}}IdResponse []*{{.Name}}FindBy{{.AggregateName}}IdResponseItem
 
+
+func New{{.Name}}FindBy{{.AggregateName}}IdResponse() *{{.Name}}FindBy{{.AggregateName}}IdResponse{
+    return &{{.Name}}FindBy{{.AggregateName}}IdResponse{}
+}
+
 //
 // {{.Name}}FindBy{{.AggregateName}}IdResponseItem
 // @Description: {{.Description}}  请求{{.Name}}Id响应体
 //
 type {{.Name}}FindBy{{.AggregateName}}IdResponseItem struct {
     {{.Name}}Dto
+}
+
+func New{{.Name}}FindBy{{.AggregateName}}IdResponseItem() *{{.Name}}FindBy{{.AggregateName}}IdResponseItem{
+    return &{{.Name}}FindBy{{.AggregateName}}IdResponseItem{}
 }
 
 // 分页查询
@@ -54,12 +66,23 @@ type {{.Name}}FindPagingResponse struct {
 }
 
 
+func New{{.Name}}FindPagingResponse() *{{.Name}}FindPagingResponse {
+	resp := &{{.Name}}FindPagingResponse{}
+	resp.Init()
+	return resp
+}
+
+
 //
 // {{.Name}}FindPagingResponseItem
-// @Description: {{.Description}}  请求业务数据
+// @Description: {{.Description}} 请求业务数据
 //
 type {{.Name}}FindPagingResponseItem struct {
     {{.Name}}Dto
+}
+
+func New{{.Name}}FindPagingResponseItem() *{{.Name}}FindPagingResponseItem{
+    return &{{.Name}}FindPagingResponseItem{}
 }
 
 
@@ -67,16 +90,27 @@ type {{.Name}}FindPagingResponseItem struct {
 
 //
 // {{.Name}}FindAllResponse
-// @Description: {{.Description}}  查询所有响应体
+// @Description: {{.Description}} 查询所有响应体
 //
 type {{.Name}}FindAllResponse []*{{.Name}}FindAllResponseItem
 
+
+func New{{.Name}}FindAllResponse() *{{.Name}}FindAllResponse{
+    return &{{.Name}}FindAllResponse{}
+}
+
+
 //
 // {{.Name}}FindAllResponseItem
-// @Description: {{.Description}}  请求业务数据
+// @Description: {{.Description}} 请求业务数据
 //
 type {{.Name}}FindAllResponseItem struct {
     {{.Name}}Dto
+}
+
+
+func New{{.Name}}FindAllResponseItem() *{{.Name}}FindAllResponseItem{
+    return &{{.Name}}FindAllResponseItem{}
 }
 
 
@@ -89,4 +123,10 @@ type {{.Name}}Dto struct {
     {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
 {{- end}}
 }
+
+
+func New{{.Name}}Dto() *{{.Name}}Dto{
+    return &{{.Name}}Dto{}
+}
+
 

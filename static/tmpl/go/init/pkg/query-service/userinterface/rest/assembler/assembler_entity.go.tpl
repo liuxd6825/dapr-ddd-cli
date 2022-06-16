@@ -17,12 +17,11 @@ type {{.Name}}Assembler struct {
 
 var {{.Name}} = &{{.Name}}Assembler{}
 
-
 func (a *{{.Name}}Assembler) AssFindByIdResponse(ctx iris.Context, v *view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindByIdResponse, bool, error) {
 	if findErr != nil || !isFound {
 		return nil, isFound, findErr
 	}
-	res := &dto.{{.Name}}FindByIdResponse{}
+	res := dto.New{{.Name}}FindByIdResponse()
 	err := mapper.Mapper(v, res)
 	if err != nil {
 		return nil, false, err
@@ -31,25 +30,22 @@ func (a *{{.Name}}Assembler) AssFindByIdResponse(ctx iris.Context, v *view.{{.Na
 }
 
 func (a *{{.Name}}Assembler) AssFindPagingResponse(ctx iris.Context, v *ddd_repository.FindPagingResult[*view.{{.Name}}View], isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
-	if findErr != nil || !isFound {
-		return nil, isFound, findErr
-	}
-
-	var response dto.{{.Name}}FindPagingResponse
-	err := mapper.Mapper(v, &response)
+    if findErr != nil {
+        return nil, isFound, findErr
+    }
+	response := dto.New{{.Name}}FindPagingResponse()
+	err := mapper.Mapper(v, response)
 	if err != nil {
 		return nil, false, err
 	}
-
-	return &response, isFound, nil
+	return response, isFound, nil
 }
 
 func (a *{{.Name}}Assembler) AssFindAllResponse(ctx iris.Context, vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
-	if findErr != nil || !isFound {
+	if findErr != nil {
 		return nil, isFound, findErr
 	}
-
-	res := &dto.{{.Name}}FindAllResponse{}
+	res := dto.New{{.Name}}FindAllResponse()
 	err := mapper.Mapper(vList, res)
 	if err != nil {
 		return nil, false, err
@@ -69,20 +65,20 @@ func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdRequest(ctx iris.Conte
         return nil, err
     }
 
-	res := &dto.{{.Name}}FindBy{{.AggregateName}}IdRequest{
-	    TenantId: tenantId,
-	    {{.AggregateName}}Id :{{.aggregateName}}Id ,
-	}
+	res := dto.New{{.Name}}FindBy{{.AggregateName}}IdRequest()
+	res.TenantId = tenantId
+	res.AggregateNameId = {{.aggregateName}}Id
+
 	return res, nil
 }
 
 
 func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdResponse(ctx iris.Context , vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindBy{{.AggregateName}}IdResponse, bool, error) {
-	if findErr != nil || !isFound {
+	if findErr != nil {
 		return nil, isFound, findErr
 	}
 
-	res := &dto.{{.Name}}FindBy{{.AggregateName}}IdResponse{}
+	res := dto.New{{.Name}}FindBy{{.AggregateName}}IdResponse()
 	err := mapper.Mapper(vList, res)
 	if err != nil {
 		return nil, false, err

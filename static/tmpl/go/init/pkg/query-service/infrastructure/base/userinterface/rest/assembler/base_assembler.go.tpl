@@ -55,8 +55,6 @@ func (a *BaseAssembler) AssFindPagingRequest(ctx iris.Context) (*dto.FindPagingR
 	}, nil
 }
 
-
-
 func (a *BaseAssembler) GetTenantId(ctx iris.Context) (string, error) {
 	return a.GetIdParam(ctx, "tenantId")
 }

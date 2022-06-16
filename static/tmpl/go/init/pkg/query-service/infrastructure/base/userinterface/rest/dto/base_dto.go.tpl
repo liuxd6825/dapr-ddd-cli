@@ -45,3 +45,18 @@ type FindPagingResponse[T any] struct {
 	Filter     string `json:"filter"`
 	Sort       string `json:"sort"`
 }
+
+func NewFindPagingResponse[T any]() *FindPagingResponse[T] {
+	res := FindPagingResponse[T]{}
+	res.InitData()
+	return &res
+}
+
+func (r *FindPagingResponse[T]) Init() {
+	r.InitData()
+}
+
+func (r *FindPagingResponse[T]) InitData() {
+	data := make([]T, 0)
+	r.Data = &data
+}
