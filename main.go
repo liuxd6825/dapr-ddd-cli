@@ -16,7 +16,7 @@ var local embed.FS
 func main() {
 	resource.Init(local)
 	app := &cli.App{
-		Version: "v1.7.1-1.0-alpha",
+		Version: "v1.7.1-1.0-alpha2",
 		Commands: []*cli.Command{
 			{
 				Name:    "init",
