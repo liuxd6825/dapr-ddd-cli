@@ -81,7 +81,7 @@ func (e *Entity) SnakeName() string {
 // @return string
 //
 func (e *Entity) PluralName() string {
-	return utils.Plural(e.Name)
+	return utils.PluralMidline(e.Name)
 }
 
 func (e *Entity) GetCommands() *[]Command {

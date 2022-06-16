@@ -18,7 +18,9 @@ type BuildDomainLayer struct {
 	buildAggregate     *BuildAggregate
 	buildDomainService *BuildDomainService
 	buildValueObjects  []*BuildValueObject
+
 	buildEntityObjects []*BuildEntityObject
+	buildEntityLists   []*BuildEntityList
 
 	buildEventType   *BuildEventType
 	buildEnumObjects []*BuildEnumObject
@@ -43,6 +45,7 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 	res.initBuildEntityObjects()
 	res.initEnumObjects()
 	res.initEventTypes()
+	res.initEntityLists()
 
 	return res
 }
@@ -60,6 +63,11 @@ func (b *BuildDomainLayer) Build() error {
 
 	// entityObject
 	for _, item := range b.buildEntityObjects {
+		list = append(list, item)
+	}
+
+	// entityList
+	for _, item := range b.buildEntityLists {
 		list = append(list, item)
 	}
 
@@ -168,4 +176,15 @@ func (b *BuildDomainLayer) initEnumObjects() {
 func (b *BuildDomainLayer) initEventTypes() {
 	outFile := fmt.Sprintf("%s/%s/event/event_type.go", b.outDir, b.aggregate.FileName())
 	b.buildEventType = NewBuildEventType(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+
+}
+
+func (b *BuildDomainLayer) initEntityLists() {
+	b.buildEntityLists = []*BuildEntityList{}
+	for _, item := range b.aggregate.Entities {
+		fileName := utils.SnakeString(utils.Plural(item.Name))
+		outFile := fmt.Sprintf("%s/%s/model/%s.go", b.outDir, b.aggregate.FileName(), fileName)
+		buildEntityList := NewBuildEntityList(b.BaseBuild, item, utils.ToLower(outFile))
+		b.buildEntityLists = append(b.buildEntityLists, buildEntityList)
+	}
 }
