@@ -82,3 +82,4 @@ func (c *{{.ClassName}}) Validate() error {
     */
 	return ve.GetError()
 }
+

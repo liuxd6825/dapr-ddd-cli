@@ -17,6 +17,7 @@ func (f *FieldsObjects) init(a *Aggregate) {
 	for name, fields := range *f {
 		fields.Name = name
 		fields.Properties.Init(a, a.Config)
+		fields.Properties.Adds(a.Config.GetDefaultFieldProperties())
 	}
 }
 

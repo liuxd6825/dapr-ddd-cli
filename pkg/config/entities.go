@@ -36,8 +36,8 @@ func (e *Entity) int(a *Aggregate, name string) {
 	}
 	e.Name = name
 	e.Aggregate = a
-
 	e.Properties.Init(a, a.Config)
+	e.Properties.Adds(a.Config.GetDefaultEntityProperties())
 }
 
 //

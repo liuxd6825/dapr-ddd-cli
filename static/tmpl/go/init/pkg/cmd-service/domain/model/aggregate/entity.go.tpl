@@ -14,7 +14,7 @@ type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
     {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
 {{- end}}
-    {{.aggregateName}}Id string `json:"{{.aggregateName}}Id" bson:"{{.aggregate_name}}_id" `   // 聚合根Id
+    {{.AggregateName}}Id string `json:"{{.aggregateName}}Id" bson:"{{.aggregate_name}}_id" `   // 聚合根Id
 }
 
 //

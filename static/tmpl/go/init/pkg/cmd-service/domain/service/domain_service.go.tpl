@@ -55,7 +55,7 @@ func (s *{{$ClassName}}) {{$command.ServiceFuncName}}(ctx context.Context, cmd *
 //  @receiver s
 //  @param ctx
 //  @param cmd
-//  @return *model.UserAggregate
+//  @return *model.{{$AggregateName}}Aggregate
 //  @return error
 //
 func (s *{{$ClassName}}) doCommand(ctx context.Context, cmd ddd.Command, validateFunc func() error, opts ...ddd.DoCommandOption) (*model.{{$AggregateName}}Aggregate, error) {
