@@ -147,13 +147,23 @@ func CamelString(s string) string {
 }
 
 //
+// PluralMidline
+// @Description: 单数转复数形式，并且是中线分隔
+// @param str 单数
+// @return string 复数
+//
+func PluralMidline(str string) string {
+	return inflection.Plural(MidlineString(str))
+}
+
+//
 // Plural
-// @Description: 将单词的单数形式转换为复数形式
+// @Description: 单数转复数形式
 // @param str 单数
 // @return string 复数
 //
 func Plural(str string) string {
-	return inflection.Plural(MidlineString(str))
+	return inflection.Plural(str)
 }
 
 //

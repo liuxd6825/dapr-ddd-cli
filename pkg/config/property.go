@@ -67,9 +67,7 @@ func (p *Properties) GetDataFieldProperties() *Properties {
 			fieldName := item.Type
 			field := item.Aggregate.FieldsObjects[fieldName]
 			if field != nil {
-				dataProperties := field.Properties
-				defaultProperties := NewProperties(item.Aggregate, item.Config.GetDefaultFieldProperties(), &dataProperties)
-				return defaultProperties
+				return &field.Properties
 			}
 		}
 	}

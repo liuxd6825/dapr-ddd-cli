@@ -110,7 +110,7 @@ func (a *Aggregate) MidlineName() string {
 }
 
 func (a *Aggregate) PluralName() string {
-	return utils.Plural(a.Name)
+	return utils.PluralMidline(a.Name)
 }
 
 func (a *Aggregate) getAggregateCommands() *[]Command {
