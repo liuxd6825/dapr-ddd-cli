@@ -5,7 +5,7 @@ package model
 
 import (
     "context"
-    {{- if .Properties.HasTimeType }}
+    {{- if .Properties.HasDateTimeType }}
     "time"
     {{- end}}
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"

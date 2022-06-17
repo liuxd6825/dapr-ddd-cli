@@ -28,6 +28,8 @@ func (b *BuildFactoryEntity) Values() map[string]interface{} {
 	defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultViewProperties(), &b.aggregate.Properties)
 	res["Events"] = b.aggregate.Events.GetEntityEvents(b.entity.Name)
 	res["Name"] = b.entity.FirstUpperName()
+	res["name"] = b.entity.FirstLowerName()
+	res["Entity"] = b.entity
 	res["DefaultProperties"] = defaultProperties
 	return res
 }

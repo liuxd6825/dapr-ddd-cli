@@ -26,6 +26,7 @@ func (b *BuildFactoryAggregate) Values() map[string]interface{} {
 	defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultAggregateProperties(), &b.aggregate.Properties)
 	res["Events"] = b.aggregate.Events.GetAggregateEvents()
 	res["Name"] = b.aggregate.FirstUpperName()
+	res["name"] = b.aggregate.FirstLowerName()
 	res["DefaultProperties"] = defaultProperties
 	return res
 }

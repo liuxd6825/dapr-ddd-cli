@@ -99,12 +99,12 @@ func (b *BaseBuild) Values() map[string]interface{} {
 		res["aggregateName"] = b.aggregateName()
 		res["aggregateMidlineName"] = b.Aggregate.MidlineName()
 		res["aggregate_name"] = aggregateName
-		res["AggregateCommandPackage"] = fmt.Sprintf("%s_command", aggregateName)
-		res["AggregateEventPackage"] = fmt.Sprintf("%s_event", aggregateName)
-		res["AggregateFieldPackage"] = fmt.Sprintf("%s_field", aggregateName)
-		res["AggregateModelPackage"] = fmt.Sprintf("%s_model", aggregateName)
-		res["AggregateFactoryPackage"] = fmt.Sprintf("%s_factory", aggregateName)
-		res["AggregateServicePackage"] = fmt.Sprintf("%s_service", aggregateName)
+		res["AggregateCommandPackage"] = fmt.Sprintf("%s/command", aggregateName)
+		res["AggregateEventPackage"] = fmt.Sprintf("%s/event", aggregateName)
+		res["AggregateFieldPackage"] = fmt.Sprintf("%s/field", aggregateName)
+		res["AggregateModelPackage"] = fmt.Sprintf("%s/model", aggregateName)
+		res["AggregateFactoryPackage"] = fmt.Sprintf("%s/factory", aggregateName)
+		res["AggregateServicePackage"] = fmt.Sprintf("%s/service", aggregateName)
 	}
 
 	return res

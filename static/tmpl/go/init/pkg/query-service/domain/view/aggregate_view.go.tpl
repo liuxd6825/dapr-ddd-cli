@@ -2,7 +2,7 @@
 package view
 
 import (
-    {{- if .HasTimeType }}
+    {{- if .HasDateTimeType }}
     "time"
     {{- end}}
 )

@@ -2,10 +2,12 @@ package utils
 
 import (
     "context"
-    {{- if .HasTimeType }}
+    {{- if .HasDateTimeType }}
     "time"
     {{- end}}
+    "github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
 )
+
 
 type ViewDefaultFields interface {
 {{- range $name, $property := .DefaultViewProperties}}
@@ -16,73 +18,82 @@ type ViewDefaultFields interface {
 {{- end}}
 }
 
+type SetViewType int  // 设置类型枚举
+const (
+	SetViewCreated SetViewType = iota
+	SetViewUpdated
+	SetViewDeleted
+	SetViewOther
+)
+const StringEmpty = ""
 
-func SetViewDefaultFields(ctx context.Context, viewFields ViewDefaultFields) {
+//
+// SetViewDefaultFields
+// @Description:      通过ctx上下文，设置view视图对象属性， 如从ctx中的Token信息服务
+// @param ctx         上下文
+// @param viewFields  view视图对象
+// @return error      错误
+//
+func SetViewDefaultFields(ctx context.Context, viewObj ViewObject, setTime time.Time, setType SetViewType) error {
+	if viewObj == nil {
+		return nil
+	}
+	userName := "userName"
+	userId := "userId"
+	nowTime := &setTime
+	if nowTime.IsZero() {
+		t := time.Now()
+		nowTime = &t
+	}
 
+	switch setType {
+	case SetViewCreated:
+		viewObj.SetCreatedName(userName)
+		viewObj.SetCreatedId(userId)
+		viewObj.SetCreatedTime(&setTime)
+
+		viewObj.SetUpdatedName(userName)
+		viewObj.SetUpdatedId(userId)
+		viewObj.SetUpdatedTime(nowTime)
+
+		viewObj.SetDeletedName(StringEmpty)
+		viewObj.SetDeletedId(StringEmpty)
+		viewObj.SetDeletedTime(nil)
+		viewObj.SetIsDeleted(true)
+		break
+	case SetViewUpdated:
+		viewObj.SetUpdatedName(userName)
+		viewObj.SetUpdatedId(userId)
+		viewObj.SetUpdatedTime(nowTime)
+		break
+	case SetViewDeleted:
+		viewObj.SetDeletedName(userName)
+		viewObj.SetDeletedId(userId)
+		viewObj.SetDeletedTime(nowTime)
+		viewObj.SetIsDeleted(true)
+		break
+	default:
+		break
+	}
+	return nil
 }
 
-/*
-type FindRequest interface {
-    SetTenantId(value string)
+//
+// ViewMapper
+// @Description: 视图属性自动复制
+// @param ctx 上下文
+// @param toView 视图对象
+// @param fromData Event.Data 事件数据对象
+// @return error 错误
+//
+func ViewMapper(ctx context.Context, toView ViewObject, event ddd.DomainEvent, setType SetViewType) error {
+	err := mapper.Mapper(event.GetData(), toView)
+	if err != nil {
+		return err
+	}
+	err = SetViewDefaultFields(ctx, toView, event.GetTime(), setType)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-
-func SetFindRequest( ctx iris.Context, r *FindRequest) error {
-    tenantId := ctx.Params().Get("tenantId")
-	r.SetTenantId(tenantId)
-	return assert.NotEmpty(tenantId, assert.NewOptions("url \"{tenantId}\" cannot be empty"))
-}
-
-type FindByIdRequest interface {
-    FindRequest
-    SetId(value string)
-}
-
-func SetFindByIdRequest(ctx iris.Context, r *FindByIdRequest) error {
-    if err!=SetFindRequest(ctx, r); err!=nil{
-        return err
-    }
-    id := ctx.Params().Get("id")
-    r.SetId(id)
-    return assert.NotEmpty(id, assert.NewOptions("url \"{id}\" cannot be empty"))
-}
-
-
-type FindAllRequest interface {
-    FindRequest
-}
-
-func SetFindAllRequest(ctx iris.Context, r *FindAllRequest) error {
-    SetFindRequest(ctx, r)
-}
-
-
-type FindPagingRequest interface {
-    FindRequest
-    
-    GetPageNum() int64
-    SetPageNum(value int64)
-    
-    GetPageSize()
-    SetPageSize(value int64)
-    
-    GetFilter() string
-    SetFilter(value string)
-    
-    GetSort() string
-    SetSort(value string)
-    
-    GetFields() string
-    SetFields(value string)
-}
-
-func SetFindPagingRequest(ctx iris.Context, r *FindPagingRequest) error {
-    if err!=SetFindRequest(ctx, r); err!=nil{
-        return err
-    }
-	r.SetPageNum(ctx.URLParamInt64Default("pageNum", 0))
-	r.SetPageSize(ctx.URLParamInt64Default("pageSize", 20))
-	r.SetFilter(ctx.URLParamDefault("filter", ""))
-	r.SetSort(ctx.URLParamDefault("sort", ""))
-}
-
-*/

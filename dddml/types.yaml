@@ -4,7 +4,7 @@ typeDefinitions:
     sqlType: DATETIME
     cSharpType: DateTime?
     javaType: java.sql.Timestamp
-    goType: time.Time
+    goType: "*time.Time"
   id:
     sqlType: VARCHAR(20)
     cSharpType: string

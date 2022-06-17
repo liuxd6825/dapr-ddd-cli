@@ -57,8 +57,16 @@ func (p *Properties) HasType(typeName string) bool {
 	return false
 }
 
-func (p *Properties) HasTimeType() bool {
+func (p *Properties) HasDataTimeType() bool {
 	return p.HasType("dateTime")
+}
+
+func (p *Properties) HasDateType() bool {
+	return p.HasType("date")
+}
+
+func (p *Properties) HasTimeType() bool {
+	return p.HasType("time")
 }
 
 func (p *Properties) GetDataFieldProperties() *Properties {

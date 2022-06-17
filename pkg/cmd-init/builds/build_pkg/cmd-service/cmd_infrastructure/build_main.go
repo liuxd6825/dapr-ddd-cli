@@ -19,6 +19,7 @@ type BuildInfrastructureLayer struct {
 	buildAppBaseQueryService    *BuildAppBaseQueryService
 	buildRegisterRestController *BuildRegisterRestController
 	buildUtilsAssembler         *BuildUtilsAssembler
+	buildBaseEvent              *BuildBaseEvent
 }
 
 func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildInfrastructureLayer {
@@ -36,6 +37,7 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initBuildAppBaseQueryService()
 	res.initRegisterRestController()
 	res.initBuildUtilsAssembler()
+	res.initBaseEvent()
 	return res
 }
 
@@ -49,6 +51,8 @@ func (b *BuildInfrastructureLayer) Build() error {
 	list = append(list, b.buildAppBaseQueryService)
 	list = append(list, b.buildRegisterRestController)
 	list = append(list, b.buildUtilsAssembler)
+	list = append(list, b.buildBaseEvent)
+
 	return b.DoBuild(list...)
 }
 
@@ -67,8 +71,13 @@ func (b *BuildInfrastructureLayer) initRegisterAggregateType() {
 	b.buildRegisterAggregateType = NewBuildRegisterAggregateType(b.BaseBuild, utils.ToLower(outFile))
 }
 
+func (b *BuildInfrastructureLayer) initBaseEvent() {
+	outFile := fmt.Sprintf("%s/base/domain/event/base_event.go", b.outDir)
+	b.buildBaseEvent = NewBuildBaseEvent(b.BaseBuild, b.aggregate, outFile)
+}
+
 func (b *BuildInfrastructureLayer) initBuildDomainBaseCmdService() {
-	outFile := fmt.Sprintf("%s/domain/service/base_command_service.go", b.outDir)
+	outFile := fmt.Sprintf("%s/base/domain/service/base_command_service.go", b.outDir)
 	b.buildDomainBaseCmdService = NewBuildDomainBaseCmdService(b.BaseBuild, utils.ToLower(outFile))
 }
 

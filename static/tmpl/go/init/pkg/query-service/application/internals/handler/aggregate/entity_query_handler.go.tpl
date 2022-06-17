@@ -35,7 +35,6 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 {{- $factoryPackage := .AggregateFactoryPackage}}
 {{- range $eventName, $event := .Events}}
 
-
 //
 // On{{$event.Name}}
 // @Description: {{$event.Name}}事件处理器
@@ -46,7 +45,10 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 //
 func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-	    v := factory.New{{$entityName}}ViewBy{{$event.Name}}(ctx, event)
+	    v, err := factory.{{$entityName}}View.NewBy{{$event.Name}}(ctx, event)
+        if err != nil {
+            return err
+        }
 		{{- if $event.IsEntityCreateEvent }}
 		return h.service.Create(ctx, v)
 		{{- else if $event.IsEntityUpdateEvent }}
@@ -61,5 +63,5 @@ func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, eve
 {{- end }}
 
 func (h *{{$entityName}}QueryHandler) GetStructName() string {
-	return "{{.ServiceName}}.{{$entityName}}QueryHandler"
+	return "{{.ServiceName}}.{{.Aggregate.SnakeName}}.{{$entityName}}QueryHandler"
 }

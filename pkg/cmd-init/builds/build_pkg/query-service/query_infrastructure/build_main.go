@@ -60,6 +60,7 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initUtils()
 	res.initApiBase()
 	res.initAssemblerBase()
+
 	return res
 }
 
@@ -103,7 +104,6 @@ func (b *BuildInfrastructureLayer) Build() error {
 	list = append(list, b.buildUtils)
 	list = append(list, b.buildApiBase)
 	list = append(list, b.buildAssemblerBase)
-
 	return b.DoBuild(list...)
 }
 
