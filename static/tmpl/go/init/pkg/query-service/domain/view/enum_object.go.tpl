@@ -1,6 +1,5 @@
 package view
 
-
 type {{.Name}} int
 {{- $Name:=.Name}}
 

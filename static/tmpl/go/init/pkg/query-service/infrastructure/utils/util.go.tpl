@@ -8,7 +8,6 @@ import (
     "github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
 )
 
-
 type ViewDefaultFields interface {
 {{- range $name, $property := .DefaultViewProperties}}
 {{- if not $property.IsArray}}
@@ -18,14 +17,36 @@ type ViewDefaultFields interface {
 {{- end}}
 }
 
-type SetViewType int  // 设置类型枚举
+type SetViewType int
+
 const (
-	SetViewCreated SetViewType = iota
+	SetViewCreated SetViewType = iota // 开始生成枚举值, 默认为0
 	SetViewUpdated
 	SetViewDeleted
 	SetViewOther
 )
+
 const StringEmpty = ""
+
+//
+// ViewMapper
+// @Description: 视图属性自动复制
+// @param ctx 上下文
+// @param toView 视图对象
+// @param fromData Event.Data 事件数据对象
+// @return error 错误
+//
+func ViewMapper(ctx context.Context, toView ViewObject, event ddd.DomainEvent, setType SetViewType) error {
+	err := mapper.Mapper(event.GetData(), toView)
+	if err != nil {
+		return err
+	}
+	err = SetViewDefaultFields(ctx, toView, event.GetTime(), setType)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 //
 // SetViewDefaultFields
@@ -74,26 +95,6 @@ func SetViewDefaultFields(ctx context.Context, viewObj ViewObject, setTime time.
 		break
 	default:
 		break
-	}
-	return nil
-}
-
-//
-// ViewMapper
-// @Description: 视图属性自动复制
-// @param ctx 上下文
-// @param toView 视图对象
-// @param fromData Event.Data 事件数据对象
-// @return error 错误
-//
-func ViewMapper(ctx context.Context, toView ViewObject, event ddd.DomainEvent, setType SetViewType) error {
-	err := mapper.Mapper(event.GetData(), toView)
-	if err != nil {
-		return err
-	}
-	err = SetViewDefaultFields(ctx, toView, event.GetTime(), setType)
-	if err != nil {
-		return err
 	}
 	return nil
 }

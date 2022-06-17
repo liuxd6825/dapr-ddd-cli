@@ -2,7 +2,7 @@ package main
 
 import (
 	"embed"
-	"github.com/liuxd6825/dapr-ddd-cli/pkg/cmd-init"
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/action"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
 	_ "github.com/liuxd6825/dapr-ddd-cli/pkg/resource"
 	"github.com/urfave/cli/v2"
@@ -22,7 +22,7 @@ func main() {
 				Name:    "init",
 				Aliases: []string{"i"},
 				Usage:   "初始化项目结构与代码",
-				Action:  cmd_init.Acton,
+				Action:  action.Action,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:    "model",
@@ -39,8 +39,26 @@ func main() {
 					&cli.StringFlag{
 						Name:    "out",
 						Aliases: []string{"o"},
-						Value:   "./",
+						Value:   "",
 						Usage:   "生成源代码目录",
+					},
+					&cli.StringFlag{
+						Name:    "service",
+						Aliases: []string{"s"},
+						Value:   "",
+						Usage:   "服务类型 cmd,query",
+					},
+					&cli.StringFlag{
+						Name:    "layer",
+						Aliases: []string{""},
+						Value:   "",
+						Usage:   "按层更新 ui,app,domain,infra,other 多个以逗号分隔",
+					},
+					&cli.StringFlag{
+						Name:    "aggregate",
+						Aliases: []string{"a"},
+						Value:   "",
+						Usage:   "只更新指定聚合根，多个以逗号分隔",
 					},
 				},
 			},
