@@ -1,5 +1,9 @@
 package dto
 
+import (
+	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
+)
+
 type FindByIdRequest struct {
 	TenantId string
 	Id       string
@@ -59,4 +63,14 @@ func (r *FindPagingResponse[T]) Init() {
 func (r *FindPagingResponse[T]) InitData() {
 	data := make([]T, 0)
 	r.Data = &data
+}
+
+type BaseDto struct {
+{{- range $name, $property := .Properties}}
+    {{- if $property.TypeIsDateTime }}
+    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{- else }}
+    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{- end}}
+{{- end}}
 }

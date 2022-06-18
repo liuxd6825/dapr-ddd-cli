@@ -5,13 +5,13 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 )
 
-type BuildRepositoryBase struct {
+type BuildBaseRepository struct {
 	builds.BaseBuild
 	aggregate *config.Aggregate
 }
 
-func NewBuildRepositoryBase(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildRepositoryBase {
-	res := &BuildRepositoryBase{
+func NewBuildRepositoryBase(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildBaseRepository {
+	res := &BuildBaseRepository{
 		BaseBuild: base,
 		aggregate: aggregate,
 	}
@@ -21,7 +21,7 @@ func NewBuildRepositoryBase(base builds.BaseBuild, aggregate *config.Aggregate, 
 	return res
 }
 
-func (b *BuildRepositoryBase) Values() map[string]interface{} {
+func (b *BuildBaseRepository) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	return res
 }

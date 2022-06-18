@@ -4,7 +4,7 @@ package service
 
 import (
     "context"
-    base_service "{{.Namespace}}/pkg/cmd-service/infrastructure/domain/service"
+    base_service "{{.Namespace}}/pkg/cmd-service/infrastructure/base/domain/service"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/model"

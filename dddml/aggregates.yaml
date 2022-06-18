@@ -1,6 +1,6 @@
 aggregates:
   # 定义聚合根
-  UserInfo:
+  User:
     # 聚合根的属性
     properties:
       Id:
@@ -13,7 +13,7 @@ aggregates:
         type: string
       Address:
         type: Address
-      Contacts:
+      ContactItems:
         type:  Contact
         isArray: true
     # 领域中的数据字段， 供Command与Event使用。
@@ -148,7 +148,7 @@ aggregates:
         to: Contact
         properties:
           Data:
-            type: UserFields
+            type: ContactFields
       ContactUpdateEventV1:
         aggregateId: Data.Id
         eventType: ContactUpdateEvent

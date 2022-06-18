@@ -67,7 +67,7 @@ func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdRequest(ctx iris.Conte
 
 	res := dto.New{{.Name}}FindBy{{.AggregateName}}IdRequest()
 	res.TenantId = tenantId
-	res.AggregateNameId = {{.aggregateName}}Id
+	res.{{.AggregateName}}Id = {{.aggregateName}}Id
 
 	return res, nil
 }

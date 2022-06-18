@@ -27,12 +27,11 @@ func NewBuildProjectionEntity(base builds.BaseBuild, entity *config.Entity, outF
 
 func (b *BuildProjectionEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
-	defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultViewProperties(), &b.entity.Properties)
+	props := config.NewProperties(b.Aggregate, &b.entity.Properties, b.Config.GetDefaultViewProperties())
 	res["name"] = utils.FirstLower(b.entity.Name)
 	res["Name"] = utils.FirstUpper(b.entity.Name)
 	res["ClassName"] = fmt.Sprintf("%sView", utils.FirstUpper(b.entity.Name))
-	res["Properties"] = b.entity.Properties
-	res["DefaultProperties"] = defaultProperties
+	res["Properties"] = props
 	res["Description"] = b.entity.Description
 	res["Aggregate"] = b.Aggregate
 	res["HasTimeType"] = b.HasTimeType()

@@ -1,16 +1,15 @@
+package model
 {{- $ClassName := .ClassName }}
 {{- $EventPackage := .EventPackage}}
 {{- $CommandPackage := .CommandPackage}}
-package model
 
 import (
     "context"
-    {{- if .Properties.HasDateTimeType }}
     "time"
-    {{- end}}
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
 )
 
 //
@@ -19,7 +18,7 @@ import (
 //
 type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsArray}}map[string]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` // {{$property.Description}}
+    {{$property.UpperName}} {{$property.LanType}}{{if $property.IsArray}}Items{{end}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` // {{$property.Description}}
 {{- end}}
 }
 
@@ -77,12 +76,23 @@ func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.
 // @return err 错误
 //
 func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) error {
-    {{- if $event.IsCreateOrUpdate }}
-        {{- range $propName, $prop := $event.DataFields.Properties }}
-    a.{{$propName}} = e.Data.{{$propName}}
-	    {{- end }}
-	{{- end }}
-    return nil
+    {{- if $event.IsAggregateCreateEvent }}
+    return mapper.Mapper(e.Data, a)
+    {{- else if $event.IsAggregateUpdateEvent }}
+    return mapper.MaskMapper(e.Data, a, e.UpdateMask)
+    {{- else if $event.IsAggregateDeleteByIdEvent }}
+	a.IsDeleted = true
+	return nil
+    {{- else if $event.IsEntityCreateEvent }}
+    return a.{{$event.To}}Items.Add(ctx, e.Data.Id, &e.Data)
+    {{- else if $event.IsEntityUpdateEvent }}
+    return a.{{$event.To}}Items.Update(ctx, e.Data.Id, &e.Data, e.UpdateMask)
+    {{- else if $event.IsEntityDeleteByIdEvent}}
+    return a.{{$event.To}}Items.DeleteById(ctx, e.Data.Id)
+    {{- else }}
+	panic("{{$ClassName}}.On{{$event.Name}} error")
+	return nil
+    {{- end }}
 }
 {{- end }}
 

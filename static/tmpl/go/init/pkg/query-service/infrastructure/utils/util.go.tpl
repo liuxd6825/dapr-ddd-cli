@@ -8,7 +8,7 @@ import (
     "github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
 )
 
-type ViewDefaultFields interface {
+type ViewObject interface {
 {{- range $name, $property := .DefaultViewProperties}}
 {{- if not $property.IsArray}}
     Get{{$property.UpperName}}(){{$property.LanType}}   // 获取 {{$property.Description}}

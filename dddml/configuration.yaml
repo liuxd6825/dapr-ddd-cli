@@ -16,30 +16,42 @@ configuration:
     java: "com.liuxu6825.dapr-ddd-demo"
   # 上下文中每个实体都需要的保留属性
   defaultReservedProperties:
-    # 聚合根固定属性
     aggregate:
       Id:
         type: string
-        description: "ID"
+        description: "主键"
       TenantId:
         type: string
         description: "租户ID"
       IsDeleted:
         type: bool
-        description: "是否删除"
-    # 实体根固定属性
+        description: "已删除"
+      CaseId:
+        type: string
+        description: "案件ID"
+      Remarks:
+        type: string
+        description: "备注"
     entity:
       Id:
         type: string
-        description: "ID"
-      IsDeleted:
-        type: bool
-        description: "是否删除"
-    # 视图投射类固定属性
-    view:
+        description: "主键"
       TenantId:
         type: string
         description: "租户ID"
+      Remarks:
+        type: string
+        description: "备注"
+    view:
+      Id:
+        type: string
+        description: "主键"
+      TenantId:
+        type: string
+        description: "租户ID"
+      CaseId:
+        type: string
+        description: "案件ID"
       CreatedId:
         type: string
         description: "创建人ID"
@@ -51,13 +63,13 @@ configuration:
         description: "创建时间"
       UpdatedId:
         type: string
-        description: "更新人ID"
+        description: "修改人ID"
       UpdatedName:
         type: string
-        description: "更新人名称"
+        description: "修改人名称"
       UpdatedTime:
         type: dateTime
-        description: "更新时间"
+        description: "修改时间"
       DeletedId:
         type: string
         description: "删除人ID"
@@ -70,14 +82,22 @@ configuration:
       IsDeleted:
         type: bool
         description: "是否删除"
-    # 共有字段固定属性
+      Remarks:
+        type: string
+        description: "备注"
     field:
       Id:
         type: string
-        description: "ID"
+        description: "主键"
       TenantId:
         type: string
         description: "租户ID"
+      CaseId:
+        type: string
+        description: "案件ID"
+      Remarks:
+        type: string
+        description: "备注"
   # 没有明确定义的扩展点， 其值类型为Map<String, Object>
   metadata:
     HttpServicesAuthorizationEnalbled: false

@@ -3,7 +3,7 @@ package dto
 import (
     "github.com/kataras/iris/v12"
     "github.com/liuxd6825/dapr-go-ddd-sdk/assert"
-    "{{.Namespace}}/pkg/query-service/infrastructure/types"
+    "github.com/liuxd6825/dapr-go-ddd-sdk/types"
     base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/dto"
 )
 
@@ -30,6 +30,10 @@ func New{{.Name}}FindByIdResponse() *{{.Name}}FindByIdResponse{
 type {{.Name}}FindBy{{.AggregateName}}IdRequest struct {
     TenantId string
     {{.AggregateName}}Id string
+}
+
+func New{{.Name}}FindBy{{.AggregateName}}IdRequest() *{{.Name}}FindBy{{.AggregateName}}IdRequest{
+    return &{{.Name}}FindBy{{.AggregateName}}IdRequest{}
 }
 
 //
@@ -119,8 +123,13 @@ func New{{.Name}}FindAllResponseItem() *{{.Name}}FindAllResponseItem{
 // @Description: {{.Description}}  响应业务数据
 //
 type {{.Name}}Dto struct {
-{{- range $name, $property := .DataFieldsProperties}}
-    {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    base.BaseDto
+{{- range $name, $property := .Properties}}
+    {{- if $property.TypeIsDateTime }}
+    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{- else }}
+    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{- end}}
 {{- end}}
 }
 

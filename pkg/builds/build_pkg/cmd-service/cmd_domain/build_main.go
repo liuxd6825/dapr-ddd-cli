@@ -20,7 +20,7 @@ type BuildDomainLayer struct {
 	buildValueObjects  []*BuildValueObject
 
 	buildEntityObjects []*BuildEntityObject
-	buildEntityLists   []*BuildEntityList
+	buildEntityItems   []*BuildEntityItems
 
 	buildEventType   *BuildEventType
 	buildEnumObjects []*BuildEnumObject
@@ -45,7 +45,7 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 	res.initBuildEntityObjects()
 	res.initEnumObjects()
 	res.initEventTypes()
-	res.initEntityLists()
+	res.initEntityItems()
 
 	return res
 }
@@ -67,7 +67,7 @@ func (b *BuildDomainLayer) Build() error {
 	}
 
 	// entityList
-	for _, item := range b.buildEntityLists {
+	for _, item := range b.buildEntityItems {
 		list = append(list, item)
 	}
 
@@ -179,12 +179,12 @@ func (b *BuildDomainLayer) initEventTypes() {
 
 }
 
-func (b *BuildDomainLayer) initEntityLists() {
-	b.buildEntityLists = []*BuildEntityList{}
+func (b *BuildDomainLayer) initEntityItems() {
+	b.buildEntityItems = []*BuildEntityItems{}
 	for _, item := range b.aggregate.Entities {
-		fileName := utils.SnakeString(utils.Plural(item.Name))
-		outFile := fmt.Sprintf("%s/%s/model/%s.go", b.outDir, b.aggregate.FileName(), fileName)
-		buildEntityList := NewBuildEntityList(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildEntityLists = append(b.buildEntityLists, buildEntityList)
+		fileName := utils.SnakeString(item.Name)
+		outFile := fmt.Sprintf("%s/%s/model/%s_items.go", b.outDir, b.aggregate.FileName(), fileName)
+		buildEntityList := NewBuildEntityItems(b.BaseBuild, item, utils.ToLower(outFile))
+		b.buildEntityItems = append(b.buildEntityItems, buildEntityList)
 	}
 }

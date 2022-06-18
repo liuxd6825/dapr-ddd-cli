@@ -194,6 +194,16 @@ func (e *Event) SnakeName() string {
 	return utils.SnakeString(e.Name)
 }
 
+//
+// ToPluralName
+// @Description: To的复数名称
+// @receiver e
+// @return string
+//
+func (e *Event) ToPluralName() string {
+	return utils.FirstUpper(utils.Plural(e.To))
+}
+
 func (e *Event) IsAggregateDeleteByIdEvent() bool {
 	if e != nil && e.IsAggregate() && strings.HasPrefix(e.Name, e.Aggregate.Name+"DeleteEvent") {
 		return true

@@ -16,3 +16,10 @@ type {{.ClassName}} struct {
 {{- end}}
 }
 
+func (f *{{.ClassName}}) GetId() string {
+    return f.Id
+}
+
+func (f *{{.ClassName}}) GetTenantId() string {
+    return f.TenantId
+}

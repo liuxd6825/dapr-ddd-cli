@@ -22,16 +22,17 @@ type BuildInfrastructureLayer struct {
 	buildRegisterAggregateType  *BuildRegisterAggregateType
 	buildRegisterRestController *BuildRegisterRestApi
 
-	buildRepositoryBase    *BuildRepositoryBase
+	buildRepositoryBase    *BuildBaseRepository
 	buildRegisterSubscribe *BuildRegisterSubscribe
 
 	buildDtoBase       *builds2.BuildAnyFile
 	buildTypesDateTime *BuildTypesDateTime
 
-	buildApiBase       *BuildApiBase
-	buildAssemblerBase *BuildAssemblerBase
+	buildBaseApi       *BuildBaseApi
+	buildBaseAssembler *BuildBaseAssembler
 	buildUtils         *BuildUtils
-	buildViewBase      *BuildViewBase
+	buildBaseView      *BuildBaseView
+	buildBaseDto       *BuildBaseDto
 }
 
 func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildInfrastructureLayer {
@@ -59,9 +60,10 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initDtoBase()
 	res.initTypes()
 	res.initUtils()
-	res.initApiBase()
-	res.initAssemblerBase()
-	res.initViewBase()
+	res.initBaseApi()
+	res.initBaseAssembler()
+	res.initBaseView()
+	res.initBaseDto()
 	return res
 }
 
@@ -103,9 +105,11 @@ func (b *BuildInfrastructureLayer) Build() error {
 	list = append(list, b.buildDtoBase)
 	list = append(list, b.buildTypesDateTime)
 	list = append(list, b.buildUtils)
-	list = append(list, b.buildApiBase)
-	list = append(list, b.buildAssemblerBase)
-	list = append(list, b.buildViewBase)
+	list = append(list, b.buildBaseApi)
+	list = append(list, b.buildBaseAssembler)
+	list = append(list, b.buildBaseView)
+	list = append(list, b.buildBaseDto)
+
 	return b.DoBuild(list...)
 }
 
@@ -179,17 +183,22 @@ func (b *BuildInfrastructureLayer) initUtils() {
 	b.buildUtils = NewBuildUtils(b.BaseBuild, outFile)
 }
 
-func (b *BuildInfrastructureLayer) initApiBase() {
+func (b *BuildInfrastructureLayer) initBaseApi() {
 	outFile := fmt.Sprintf("%s/base/userinterface/rest/facade/base_api.go", b.outDir)
-	b.buildApiBase = NewBuildApiBase(b.BaseBuild, outFile)
+	b.buildBaseApi = NewBuildBaseApi(b.BaseBuild, outFile)
 }
 
-func (b *BuildInfrastructureLayer) initAssemblerBase() {
+func (b *BuildInfrastructureLayer) initBaseAssembler() {
 	outFile := fmt.Sprintf("%s/base/userinterface/rest/assembler/base_assembler.go", b.outDir)
-	b.buildAssemblerBase = NewBuildAssemblerBase(b.BaseBuild, outFile)
+	b.buildBaseAssembler = NewBuildBaseAssembler(b.BaseBuild, outFile)
 }
 
-func (b *BuildInfrastructureLayer) initViewBase() {
+func (b *BuildInfrastructureLayer) initBaseView() {
 	outFile := fmt.Sprintf("%s/base/domain/view/base_view.go", b.outDir)
-	b.buildViewBase = NewBuildViewBase(b.BaseBuild, b.aggregate, outFile)
+	b.buildBaseView = NewBuildBaseView(b.BaseBuild, b.aggregate, outFile)
+}
+
+func (b *BuildInfrastructureLayer) initBaseDto() {
+	outFile := fmt.Sprintf("%s/base/userinterface/rest/dto/base_dto.go", b.outDir)
+	b.buildBaseDto = NewBuildBaseDto(b.BaseBuild, b.aggregate, outFile)
 }

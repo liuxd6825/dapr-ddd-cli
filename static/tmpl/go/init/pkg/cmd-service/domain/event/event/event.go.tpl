@@ -2,6 +2,7 @@ package event
 
 import (
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
+    "time"
 )
 
 //
@@ -52,7 +53,7 @@ func (e *{{.ClassName}}) GetAggregateId() string {
     return e.Data.Id
 }
 
-func (e *{{.ClassName}}) GetTime() time {
+func (e *{{.ClassName}}) GetTime() time.Time {
     return e.Time
 }
 

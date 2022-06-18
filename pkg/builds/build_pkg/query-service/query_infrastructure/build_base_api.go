@@ -5,13 +5,13 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 )
 
-type BuildApiBase struct {
+type BuildBaseApi struct {
 	builds.BaseBuild
 	aggregate *config.Aggregate
 }
 
-func NewBuildApiBase(base builds.BaseBuild, outFile string) *BuildApiBase {
-	res := &BuildApiBase{
+func NewBuildBaseApi(base builds.BaseBuild, outFile string) *BuildBaseApi {
+	res := &BuildBaseApi{
 		BaseBuild: base,
 	}
 	res.ValuesFunc = res.Values
@@ -20,7 +20,7 @@ func NewBuildApiBase(base builds.BaseBuild, outFile string) *BuildApiBase {
 	return res
 }
 
-func (b *BuildApiBase) Values() map[string]interface{} {
+func (b *BuildBaseApi) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	return res
 }

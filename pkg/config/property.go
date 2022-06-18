@@ -82,6 +82,13 @@ func (p *Properties) GetDataFieldProperties() *Properties {
 	return &Properties{}
 }
 
+func (p *Properties) NewViewProject(config *Config) *Properties {
+	properties := &Properties{}
+	properties.Adds(p)
+	properties.Adds(config.GetDefaultViewProperties())
+	return properties
+}
+
 func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Properties {
 	res := &Properties{}
 	res.Adds(properties)
@@ -183,6 +190,10 @@ func (p *Property) JsonName() string {
 		return utils.FirstLower(p.Name)
 	}
 	return p.Json
+}
+
+func (p *Property) PluralName() string {
+	return utils.Plural(p.Name)
 }
 
 func (p *Property) BsonName() string {

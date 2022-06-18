@@ -25,8 +25,9 @@ func NewBuildDtoEntity(base builds.BaseBuild, aggregate *config.Aggregate, entit
 
 func (b *BuildDtoEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
+	props := config.NewProperties(b.aggregate, &b.entity.Properties, b.Config.GetDefaultViewProperties())
 	res["Name"] = b.entity.Name
-	res["Properties"] = b.entity.Properties
+	res["Properties"] = props
 	res["Description"] = b.entity.Description
 	return res
 }
