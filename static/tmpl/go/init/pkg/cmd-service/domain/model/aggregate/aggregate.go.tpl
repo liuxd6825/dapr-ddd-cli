@@ -76,6 +76,7 @@ func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.
 // @return err 错误
 //
 func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) error {
+
     {{- if $event.IsAggregateCreateEvent }}
     return mapper.Mapper(e.Data, a)
     {{- else if $event.IsAggregateUpdateEvent }}
@@ -90,7 +91,7 @@ func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$even
     {{- else if $event.IsEntityDeleteByIdEvent}}
     return a.{{$event.To}}Items.DeleteById(ctx, e.Data.Id)
     {{- else }}
-	panic("{{$ClassName}}.On{{$event.Name}} error")
+	panic("{{$ClassName}}.On{{$event.Name}} to={{$event.To}} error")
 	return nil
     {{- end }}
 }

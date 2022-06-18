@@ -43,8 +43,8 @@ func (t {{.ClassName}}) Update(ctx context.Context, id string, data *field.{{.En
 // @param item   明细对象
 // @return error 错误
 //
-func (t {{.ClassName}}) Delete(ctx context.Context, data *field.{{.Entity.Name}}Fields) error {
-	return t.Items.Delete(ctx, data)
+func (t {{.ClassName}}) Delete(ctx context.Context, item *{{.Entity.Name}}) error {
+	return t.Items.Delete(ctx, item)
 }
 
 //

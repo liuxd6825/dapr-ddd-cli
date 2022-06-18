@@ -108,6 +108,33 @@ func (e *Event) init(a *Aggregate, name string) {
 	if e.DataFieldProperties == nil {
 		e.DataFieldProperties = &Properties{}
 	}
+	e.initEventTo()
+}
+
+func (e *Event) initEventTo() {
+	if e.To != "" {
+		return
+	}
+	e.To = e.getEntityNameByEventName()
+}
+
+func (e *Event) getEntityNameByEventName() string {
+	if name, ok := e.getEntityName("CreateEvent"); ok {
+		return name
+	} else if name, ok := e.getEntityName("UpdateEvent"); ok {
+		return name
+	} else if name, ok := e.getEntityName("DeleteEvent"); ok {
+		return name
+	}
+	return ""
+}
+
+func (e *Event) getEntityName(eventTypeName string) (string, bool) {
+	index := strings.Index(e.Name, eventTypeName)
+	if index > -1 {
+		return e.Name[:index], true
+	}
+	return "", false
 }
 
 func (e *Event) ClassName() string {
