@@ -1,9 +1,7 @@
 package field
 
 import (
-    {{- if .HasDateTimeType }}
     "time"
-    {{- end }}
 )
 
 //

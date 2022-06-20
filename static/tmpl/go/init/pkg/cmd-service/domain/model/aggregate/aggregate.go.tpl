@@ -91,11 +91,13 @@ func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$even
 	a.IsDeleted = true
 	return nil
     {{- else if $event.IsEntityCreateEvent }}
-    return a.{{$event.To}}Items.AddMapper(ctx, e.Data.Id, &e.Data)
+    _, err := a.{{$event.ToPluralName}}.AddMapper(ctx, e.Data.Id, &e.Data)
+    return err
     {{- else if $event.IsEntityUpdateEvent }}
-    return a.{{$event.To}}Items.UpdateMapper(ctx, e.Data.Id, &e.Data, e.UpdateMask)
+    _, _, err := a.{{$event.ToPluralName}}.UpdateMapper(ctx, e.Data.Id, &e.Data, e.UpdateMask)
+    return err
     {{- else if $event.IsEntityDeleteByIdEvent}}
-    return a.{{$event.To}}Items.DeleteById(ctx, e.Data.Id)
+    return a.{{$event.ToPluralName}}.DeleteById(ctx, e.Data.Id)
     {{- else }}
 	panic("{{$ClassName}}.On{{$event.Name}} to={{$event.To}} error")
 	return nil

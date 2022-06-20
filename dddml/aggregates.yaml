@@ -13,7 +13,7 @@ aggregates:
         type: string
       Address:
         type: Address
-      ContactItems:
+      Contacts:
         type:  Contact
         isArray: true
     # 领域中的数据字段， 供Command与Event使用。

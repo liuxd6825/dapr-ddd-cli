@@ -45,13 +45,18 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 //
 func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-	    v, err := factory.{{$entityName}}View.NewBy{{$event.Name}}(ctx, event)
+
+		{{- if $event.IsEntityCreateEvent }}
+        v, err := factory.{{$entityName}}View.NewBy{{$event.Name}}(ctx, event)
         if err != nil {
             return err
         }
-		{{- if $event.IsEntityCreateEvent }}
 		return h.service.Create(ctx, v)
 		{{- else if $event.IsEntityUpdateEvent }}
+        v, err := factory.{{$entityName}}View.NewBy{{$event.Name}}(ctx, event)
+        if err != nil {
+            return err
+        }
         return h.service.Update(ctx, v)
         {{- else if $event.IsEntityDeleteByIdEvent }}
         return h.service.DeleteById(ctx, v.GetTenantId(), v.Id)

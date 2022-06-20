@@ -31,7 +31,11 @@ type {{$cmd.Name}}Request struct {
 //
 type {{$cmd.Name}}RequestData struct {
 {{- range $name, $property := $cmd.Properties.GetDataFieldProperties}}
+    {{- if $property.TypeIsDateTime}}
+    {{$property.UpperName}} *types.JSONTime `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{- else }}
     {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{- end }}
 {{- end}}
 }
 

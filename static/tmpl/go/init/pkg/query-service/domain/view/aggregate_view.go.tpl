@@ -2,9 +2,7 @@
 package view
 
 import (
-    {{- if .HasDateTimeType }}
     "time"
-    {{- end}}
     base "{{.Namespace}}/pkg/query-service/infrastructure/base/domain/view"
 )
 

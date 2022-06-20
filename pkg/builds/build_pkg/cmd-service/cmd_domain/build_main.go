@@ -176,7 +176,6 @@ func (b *BuildDomainLayer) initEnumObjects() {
 func (b *BuildDomainLayer) initEventTypes() {
 	outFile := fmt.Sprintf("%s/%s/event/event_type.go", b.outDir, b.aggregate.FileName())
 	b.buildEventType = NewBuildEventType(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
-
 }
 
 func (b *BuildDomainLayer) initEntityItems() {

@@ -58,13 +58,18 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 //
 func (h *{{$AggregateName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-		v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
-		if err != nil {
-		    return err
-		}
+
 		{{- if $event.IsAggregateCreateEvent }}
+        v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
+        if err != nil {
+            return err
+        }
 		return h.service.Create(ctx, v)
 		{{- else if $event.IsAggregateUpdateEvent }}
+        v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
+        if err != nil {
+            return err
+        }
         return h.service.Update(ctx, v)
         {{- else if $event.IsAggregateDeleteByIdEvent }}
         return h.service.DeleteById(ctx, event.GetTenantId(), event.Data.Id)

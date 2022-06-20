@@ -6,8 +6,10 @@ import (
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
+
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/userinterface/rest/{{.aggregate_name}}/dto"
+	"{{.Namespace}}/pkg/query-service/infrastructure/utils"
 	base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/assembler"
 )
 

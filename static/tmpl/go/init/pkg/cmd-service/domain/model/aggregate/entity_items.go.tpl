@@ -4,12 +4,12 @@ import (
 	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
 )
 
-type {{.ClassName}} struct {
+type {{.Name}}Items struct {
     types.Items[*{{.Entity.Name}}]
 }
 
-func New{{.ClassName}}() *{{.ClassName}}{
-    res := &{{.ClassName}}{}
+func New{{.Name}}Items() *{{.Name}}Items{
+    res := &{{.Name}}Items{}
     res.Init(func() interface{} {
         return &{{.Entity.Name}}{}
     })

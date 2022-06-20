@@ -5,22 +5,22 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 )
 
-type BuildTypesDateTime struct {
+type BuildTypes struct {
 	builds.BaseBuild
 	aggregate *config.Aggregate
 }
 
-func NewBuildTypesDateTime(base builds.BaseBuild, outFile string) *BuildTypesDateTime {
-	res := &BuildTypesDateTime{
+func NewBuildTypes(base builds.BaseBuild, outFile string) *BuildTypes {
+	res := &BuildTypes{
 		BaseBuild: base,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/types/date_time.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/types/types.go.tpl"
 	res.OutFile = outFile
 	return res
 }
 
-func (b *BuildTypesDateTime) Values() map[string]interface{} {
+func (b *BuildTypes) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
 	return res
 }

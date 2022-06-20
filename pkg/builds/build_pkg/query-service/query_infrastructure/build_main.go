@@ -25,8 +25,8 @@ type BuildInfrastructureLayer struct {
 	buildRepositoryBase    *BuildBaseRepository
 	buildRegisterSubscribe *BuildRegisterSubscribe
 
-	buildDtoBase       *builds2.BuildAnyFile
-	buildTypesDateTime *BuildTypesDateTime
+	buildDtoBase *builds2.BuildAnyFile
+	buildTypes   *BuildTypes
 
 	buildBaseApi       *BuildBaseApi
 	buildBaseAssembler *BuildBaseAssembler
@@ -103,7 +103,7 @@ func (b *BuildInfrastructureLayer) Build() error {
 	list = append(list, b.buildRegisterAggregateType)
 	list = append(list, b.buildRegisterAllEventType)
 	list = append(list, b.buildDtoBase)
-	list = append(list, b.buildTypesDateTime)
+	list = append(list, b.buildTypes)
 	list = append(list, b.buildUtils)
 	list = append(list, b.buildBaseApi)
 	list = append(list, b.buildBaseAssembler)
@@ -174,8 +174,8 @@ func (b *BuildInfrastructureLayer) initDtoBase() {
 }
 
 func (b *BuildInfrastructureLayer) initTypes() {
-	outFile := fmt.Sprintf("%s/types/date_time.go", b.outDir)
-	b.buildTypesDateTime = NewBuildTypesDateTime(b.BaseBuild, outFile)
+	outFile := fmt.Sprintf("%s/types/types.go", b.outDir)
+	b.buildTypes = NewBuildTypes(b.BaseBuild, outFile)
 }
 
 func (b *BuildInfrastructureLayer) initUtils() {

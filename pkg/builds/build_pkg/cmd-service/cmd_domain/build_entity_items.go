@@ -32,7 +32,7 @@ func (b *BuildEntityItems) Values() map[string]interface{} {
 	res["Name"] = utils.FirstUpper(b.entity.Name)
 	res["Entity"] = b.entity
 	res["Package"] = fmt.Sprintf("%s_model", b.entity.Aggregate.SnakeName())
-	res["ClassName"] = utils.FirstUpper(b.entity.Name) + "Items"
+	res["ClassName"] = utils.FirstUpper(utils.Plural(b.entity.Name))
 	res["Properties"] = b.entity.Properties
 	res["Description"] = b.entity.Description
 	return res
