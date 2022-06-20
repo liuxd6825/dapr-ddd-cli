@@ -4,8 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
+    "{{.Namespace}}/pkg/query-service/infrastructure/utils"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/userinterface/rest/{{.aggregate_name}}/dto"
     base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/assembler"
@@ -22,7 +21,7 @@ func (a *{{.Name}}Assembler) AssFindByIdResponse(ctx iris.Context, v *view.{{.Na
 		return nil, isFound, findErr
 	}
 	res := dto.New{{.Name}}FindByIdResponse()
-	err := mapper.Mapper(v, res)
+	err := utils.Mapper(v, res)
 	if err != nil {
 		return nil, false, err
 	}
@@ -33,12 +32,12 @@ func (a *{{.Name}}Assembler) AssFindPagingResponse(ctx iris.Context, v *ddd_repo
 	if findErr != nil {
 		return nil, isFound, findErr
 	}
-	response := dto.New{{.Name}}FindPagingResponse()
-	err := mapper.Mapper(v, response)
+	res := dto.New{{.Name}}FindPagingResponse()
+	err := utils.Mapper(v, res)
 	if err != nil {
 		return nil, false, err
 	}
-	return response, isFound, nil
+	return res, isFound, nil
 }
 
 func (a *{{.Name}}Assembler) AssFindAllResponse(ctx iris.Context, vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
@@ -46,7 +45,7 @@ func (a *{{.Name}}Assembler) AssFindAllResponse(ctx iris.Context, vList *[]*view
 		return nil, isFound, findErr
 	}
 	res := dto.New{{.Name}}FindAllResponse()
-	err := mapper.Mapper(vList, res)
+	err := utils.Mapper(vList, res)
 	if err != nil {
 		return nil, false, err
 	}

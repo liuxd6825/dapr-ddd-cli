@@ -49,31 +49,34 @@ configuration:
       TenantId:
         type: string
         description: "租户ID"
-      CaseId:
+      Remarks:
         type: string
-        description: "案件ID"
-      CreatedId:
+        description: "备注"
+
+      CreaterId:
         type: string
         description: "创建人ID"
-      CreatedName:
+      CreaterName:
         type: string
         description: "创建人名称"
       CreatedTime:
         type: dateTime
         description: "创建时间"
-      UpdatedId:
+
+      UpdaterId:
         type: string
         description: "修改人ID"
-      UpdatedName:
+      UpdaterName:
         type: string
         description: "修改人名称"
       UpdatedTime:
         type: dateTime
         description: "修改时间"
-      DeletedId:
+
+      DeleterId:
         type: string
         description: "删除人ID"
-      DeletedName:
+      DeleterName:
         type: string
         description: "删除人名称"
       DeletedTime:
@@ -82,9 +85,7 @@ configuration:
       IsDeleted:
         type: bool
         description: "是否删除"
-      Remarks:
-        type: string
-        description: "备注"
+
     field:
       Id:
         type: string

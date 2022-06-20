@@ -1,5 +1,6 @@
 {{- $aggregate_name := .aggregate_name}}
-{{- $name := .Name}}
+{{- $Name := .Name}}
+{{- $aggregateName := .aggregateName}}
 {{- $defaultProperties := .DefaultProperties}}
 package factory
 
@@ -10,15 +11,15 @@ import (
 	"{{.Namespace}}/pkg/query-service/domain/{{$aggregate_name}}/view"
 )
 
-type {{.aggregateName}}ViewFactory struct {
+type {{$aggregateName}}ViewFactory struct {
 }
 
 var {{.AggregateName}}View = &{{.aggregateName}}ViewFactory{}
 
 {{- range $eventName, $event := .Events }}
 
-func NewBy{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) (*view.{{$name}}View, error) {
-    v := &view.{{$name}}View{}
+func (f *{{$aggregateName}}ViewFactory)NewBy{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) (*view.{{$Name}}View, error) {
+    v := &view.{{$Name}}View{}
     {{- if $event.IsCreate}}
     setViewType := utils.SetViewCreated
     {{- else  if $event.IsUpdate}}

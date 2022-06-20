@@ -27,6 +27,8 @@ func (e *BaseDomainEvent) GetTime() time.Time {
 	return e.Time
 }
 
+
+
 //
 // UpdateDomainEvent
 // @Description: 更新事件基类

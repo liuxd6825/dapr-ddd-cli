@@ -10,9 +10,9 @@ import (
 // @Description: {{.Description}}
 //
 type {{.ClassName}} struct {
-    EventId      string           `json:"eventId"`       // 领域事件ID
-    CommandId    string           `json:"commandId"`     // 关联命令ID
-    Time         time.Time        `json:"time"`          // 事件创建时间
+    EventId       string           `json:"eventId"`       // 领域事件ID
+    CommandId     string           `json:"commandId"`     // 关联命令ID
+    CreatedTime   time.Time        `json:"time"`          // 事件创建时间
     {{- if .Event.IsUpdate }}
 	UpdateMask   []string         `json:"updateMask"`    // 要更新字段
     {{- end }}
@@ -53,8 +53,8 @@ func (e *{{.ClassName}}) GetAggregateId() string {
     return e.Data.Id
 }
 
-func (e *{{.ClassName}}) GetTime() time.Time {
-    return e.Time
+func (e *{{.ClassName}}) GetCreatedTime() time.Time {
+    return e.CreatedTime
 }
 
 func (e *{{.ClassName}}) GetData() interface{} {

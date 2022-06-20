@@ -1,5 +1,6 @@
 {{- $aggregate_name := .aggregate_name}}
-{{- $name := .Name}}
+{{- $Name := .Name}}
+{{- $name := .name}}
 {{- $defaultProperties := .DefaultProperties}}
 package factory
 
@@ -18,8 +19,8 @@ var {{.Name}}View = &{{.name}}ViewFactory{}
 
 {{- range $eventName, $event := .Events }}
 
-func NewBy{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) (*view.{{$name}}View, error) {
-    v := &view.{{$name}}View{}
+func (f *{{$name}}ViewFactory) NewBy{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) (*view.{{$Name}}View, error) {
+    v := &view.{{$Name}}View{}
     {{- if $event.IsCreate}}
     setViewType := utils.SetViewCreated
     {{- else  if $event.IsUpdate}}

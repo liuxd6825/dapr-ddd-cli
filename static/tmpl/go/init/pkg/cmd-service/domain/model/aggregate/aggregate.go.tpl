@@ -8,8 +8,8 @@ import (
     "time"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
+    "{{.Namespace}}/pkg/cmd-service/infrastructure/utils"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
-    "github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
 )
 
 //
@@ -30,7 +30,13 @@ const AggregateType = "{{.AggregateType}}"
 // @return *{{.ClassName}}
 //
 func New{{.ClassName}}() *{{.ClassName}} {
-    return &{{.ClassName}}{}
+    return &{{.ClassName}}{
+    {{- range $name, $property := .Properties}}
+      {{- if $property.IsArray}}
+      {{$property.UpperName}} : New{{$property.LanType}}Items() ,
+      {{- end}}
+    {{- end}}
+    }
 }
 
 //
@@ -78,16 +84,16 @@ func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.
 func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) error {
 
     {{- if $event.IsAggregateCreateEvent }}
-    return mapper.Mapper(e.Data, a)
+    return utils.Mapper(e.Data, a)
     {{- else if $event.IsAggregateUpdateEvent }}
-    return mapper.MaskMapper(e.Data, a, e.UpdateMask)
+    return utils.MaskMapper(e.Data, a, e.UpdateMask)
     {{- else if $event.IsAggregateDeleteByIdEvent }}
 	a.IsDeleted = true
 	return nil
     {{- else if $event.IsEntityCreateEvent }}
-    return a.{{$event.To}}Items.Add(ctx, e.Data.Id, &e.Data)
+    return a.{{$event.To}}Items.AddMapper(ctx, e.Data.Id, &e.Data)
     {{- else if $event.IsEntityUpdateEvent }}
-    return a.{{$event.To}}Items.Update(ctx, e.Data.Id, &e.Data, e.UpdateMask)
+    return a.{{$event.To}}Items.UpdateMapper(ctx, e.Data.Id, &e.Data, e.UpdateMask)
     {{- else if $event.IsEntityDeleteByIdEvent}}
     return a.{{$event.To}}Items.DeleteById(ctx, e.Data.Id)
     {{- else }}

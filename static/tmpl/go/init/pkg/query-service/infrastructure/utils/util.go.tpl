@@ -5,6 +5,7 @@ import (
     {{- if .HasDateTimeType }}
     "time"
     {{- end}}
+    "github.com/liuxd6825/dapr-go-ddd-sdk/types"
     "github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
 )
 
@@ -37,11 +38,11 @@ const StringEmpty = ""
 // @return error 错误
 //
 func ViewMapper(ctx context.Context, toView ViewObject, event ddd.DomainEvent, setType SetViewType) error {
-	err := mapper.Mapper(event.GetData(), toView)
+	err := Mapper(event.GetData(), toView)
 	if err != nil {
 		return err
 	}
-	err = SetViewDefaultFields(ctx, toView, event.GetTime(), setType)
+	err = SetViewDefaultFields(ctx, toView, event.GetCreatedTime(), setType)
 	if err != nil {
 		return err
 	}
@@ -69,27 +70,27 @@ func SetViewDefaultFields(ctx context.Context, viewObj ViewObject, setTime time.
 
 	switch setType {
 	case SetViewCreated:
-		viewObj.SetCreatedName(userName)
-		viewObj.SetCreatedId(userId)
+		viewObj.SetCreatorName(userName)
+		viewObj.SetCreatorId(userId)
 		viewObj.SetCreatedTime(&setTime)
 
-		viewObj.SetUpdatedName(userName)
-		viewObj.SetUpdatedId(userId)
+		viewObj.SetUpdaterName(userName)
+		viewObj.SetUpdaterId(userId)
 		viewObj.SetUpdatedTime(nowTime)
 
-		viewObj.SetDeletedName(StringEmpty)
-		viewObj.SetDeletedId(StringEmpty)
+		viewObj.SetDeleterName(StringEmpty)
+		viewObj.SetDeleterId(StringEmpty)
 		viewObj.SetDeletedTime(nil)
 		viewObj.SetIsDeleted(true)
 		break
 	case SetViewUpdated:
-		viewObj.SetUpdatedName(userName)
-		viewObj.SetUpdatedId(userId)
+		viewObj.SetUpdaterName(userName)
+		viewObj.SetUpdaterId(userId)
 		viewObj.SetUpdatedTime(nowTime)
 		break
 	case SetViewDeleted:
-		viewObj.SetDeletedName(userName)
-		viewObj.SetDeletedId(userId)
+		viewObj.SetDeleterName(userName)
+		viewObj.SetDeleterId(userId)
 		viewObj.SetDeletedTime(nowTime)
 		viewObj.SetIsDeleted(true)
 		break
@@ -97,4 +98,28 @@ func SetViewDefaultFields(ctx context.Context, viewObj ViewObject, setTime time.
 		break
 	}
 	return nil
+}
+
+
+//
+// Mapper
+// @Description: 进行struct属性复制，支持深度复制
+// @param fromObj 来源
+// @param toObj 目标
+// @return error
+//
+func Mapper(fromObj, toObj interface{}) error {
+	return types.Mapper(fromObj, toObj)
+}
+
+//
+// MaskMapper
+// @Description: 根据指定进行属性复制，不支持深度复制
+// @param fromObj 来源
+// @param toObj 目标
+// @param mask 要复制属性列表
+// @return error
+//
+func MaskMapper(fromObj, toObj interface{}, mask []string) error {
+	return types.MaskMapper(fromObj, toObj, mask)
 }

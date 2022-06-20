@@ -105,17 +105,18 @@ func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Prope
 }
 
 type Property struct {
-	Name          string   // 属性名称
-	Type          string   `yaml:"type"`          // 数据类型
-	ReferenceType string   `yaml:"referenceType"` // 引用类型
-	DefaultValue  any      `yaml:"defaultValue"`  // 默认值
-	Validate      string   `yaml:"validate"`      // 验证说明
-	Description   string   `yaml:"description"`   // 说明描述
-	IsAggregateId bool     `yaml:"isAggregateId"` // 是聚合根ID
-	IsArray       bool     `yaml:"isArray"`       // 是否循环 数组类型
-	Json          string   `yaml:"json"`          // JSON 属性
-	Bson          string   `yaml:"bson"`          // Mongo属性
-	Uses          []string `yaml:"uses"`          // 使用范围 view, entity 等扩展
+	Name          string            ``                     // 属性名称
+	Type          string            `yaml:"type"`          // 数据类型
+	ReferenceType string            `yaml:"referenceType"` // 引用类型
+	DefaultValue  any               `yaml:"defaultValue"`  // 默认值
+	Validate      string            `yaml:"validate"`      // 验证说明
+	Description   string            `yaml:"description"`   // 说明描述
+	IsAggregateId bool              `yaml:"isAggregateId"` // 是聚合根ID
+	IsArray       bool              `yaml:"isArray"`       // 是否循环 数组类型
+	Json          string            `yaml:"json"`          // JSON 属性
+	Bson          string            `yaml:"bson"`          // Mongo属性
+	Uses          []string          `yaml:"uses"`          // 使用范围 view, entity 等扩展
+	Tags          map[string]string `yaml:"tags"`          // 扩展标记
 	Aggregate     *Aggregate
 	Config        *Config
 }
