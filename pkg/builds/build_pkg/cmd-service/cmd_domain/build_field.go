@@ -4,6 +4,7 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/builds"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
+	"strings"
 )
 
 type BuildField struct {
@@ -35,6 +36,6 @@ func (b *BuildField) Values() map[string]interface{} {
 	res["Properties"] = b.fields.Properties
 	res["Description"] = b.fields.Description
 	res["Fields"] = b.fields
-
+	res["IsEntity"] = !strings.Contains(b.fields.Name, b.AggregateName())
 	return res
 }

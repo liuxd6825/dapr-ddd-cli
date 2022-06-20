@@ -1,6 +1,9 @@
 package config
 
-import "github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
+import (
+	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
+	"strings"
+)
 
 type FieldsObjects map[string]*Fields
 
@@ -15,10 +18,25 @@ func (f *FieldsObjects) init(a *Aggregate) {
 		return
 	}
 	for name, fields := range *f {
-		fields.Name = name
-		fields.Properties.Init(a, a.Config)
-		fields.Properties.Adds(a.Config.GetDefaultFieldProperties())
+		fields.init(a, name)
 	}
+}
+
+func (e *Fields) init(a *Aggregate, name string) {
+	e.Name = name
+	e.Properties.Init(a, a.Config)
+	e.Properties.Adds(a.Config.GetDefaultFieldProperties())
+
+	if !strings.Contains(name, a.Name) {
+		aggregateId := a.Name + "Id"
+		_, ok := e.Properties[aggregateId]
+		if !ok {
+			aggIdProp := NewProperty(aggregateId, "string")
+			aggIdProp.Validate = "gt=0"
+			e.Properties[aggregateId] = aggIdProp
+		}
+	}
+
 }
 
 func (e *Fields) FileName() string {

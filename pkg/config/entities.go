@@ -38,6 +38,14 @@ func (e *Entity) int(a *Aggregate, name string) {
 	e.Aggregate = a
 	e.Properties.Init(a, a.Config)
 	e.Properties.Adds(a.Config.GetDefaultEntityProperties())
+
+	aggregateId := a.Name + "Id"
+	_, ok := e.Properties[aggregateId]
+	if !ok {
+		aidProp := NewProperty(aggregateId, "string")
+		e.Properties[aggregateId] = aidProp
+		aidProp.Validate = "gt=0"
+	}
 }
 
 //
