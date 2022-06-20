@@ -18,7 +18,7 @@ import (
 //
 type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{$property.LanType}}{{if $property.IsArray}}Items{{end}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` // {{$property.Description}}
+    {{$property.UpperName}} {{if $property.IsArray}}*{{$property.LanType}}Items{{else}}{{$property.LanType}}{{end}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` // {{$property.Description}}
 {{- end}}
 }
 
@@ -32,9 +32,9 @@ const AggregateType = "{{.AggregateType}}"
 func New{{.ClassName}}() *{{.ClassName}} {
     return &{{.ClassName}}{
     {{- range $name, $property := .Properties}}
-      {{- if $property.IsArray}}
-      {{$property.UpperName}} : New{{$property.LanType}}Items() ,
-      {{- end}}
+        {{- if $property.IsArray}}
+        {{$property.UpperName}} : New{{$property.LanType}}Items() ,
+        {{- end}}
     {{- end}}
     }
 }
