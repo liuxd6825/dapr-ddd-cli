@@ -59,7 +59,7 @@ func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, eve
         }
         return h.service.Update(ctx, v)
         {{- else if $event.IsEntityDeleteByIdEvent }}
-        return h.service.DeleteById(ctx, v.GetTenantId(), v.Id)
+        return h.service.DeleteById(ctx, event.GetTenantId(), event.Id)
         {{- else }}
         return h.service.{{$event.MethodName}}(ctx, v)
         {{- end }}

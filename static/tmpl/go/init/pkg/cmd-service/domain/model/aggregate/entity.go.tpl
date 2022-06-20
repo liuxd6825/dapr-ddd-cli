@@ -21,3 +21,7 @@ type {{.ClassName}} struct {
 func New{{.ClassName}}()*{{.ClassName}}{
     return &{{.ClassName}}{}
 }
+
+func (e *{{.ClassName}}) GetId() string {
+    return e.Id
+}

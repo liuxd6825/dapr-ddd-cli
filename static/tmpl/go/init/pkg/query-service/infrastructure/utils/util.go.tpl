@@ -2,9 +2,7 @@ package utils
 
 import (
     "context"
-    {{- if .HasDateTimeType }}
     "time"
-    {{- end}}
     "github.com/liuxd6825/dapr-go-ddd-sdk/types"
     "github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
 )
