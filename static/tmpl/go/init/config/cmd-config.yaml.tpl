@@ -3,12 +3,12 @@ envs
   dev:
     app:
       id: {{.CommandServiceName}}
-      httpPort: 9010
+      httpPort: {{.Metadata.CommandService.Dev.AppHttpPort}}
       rootUrl: /api/{{.ApiVersion}}
     dapr:
       host: localhost
-      httpPort: 9011
-      grpcPort: 9012
+      httpPort: {{.Metadata.CommandService.Dev.DaprHttpPort}}
+      grpcPort: {{.Metadata.CommandService.Dev.DaprGrpcPort}}
       pubsubs:
         - "pubsub"
     log:

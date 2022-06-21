@@ -26,6 +26,7 @@ func (b *BuildConfigLayer) Build() error {
 	values := b.Values()
 	values["CommandServiceName"] = b.Config.Configuration.CommandServiceName()
 	values["QueryServiceName"] = b.Config.Configuration.QueryServiceName()
+	values["Metadata"] = b.Config.Configuration.GoMetadata
 	outDir := b.outDir
 
 	list = append(list, b.NewFileBuild("/config/cmd-config.yaml.tpl", outDir+"/cmd-config.yaml", values))

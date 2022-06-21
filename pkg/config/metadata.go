@@ -1,8 +1,10 @@
 package config
 
+import "fmt"
+
 type Any map[string]interface{}
 
-type Metadata map[string]string
+type Metadata map[string]interface{}
 
 type MetadataUtil struct {
 	mapValue Metadata
@@ -20,7 +22,7 @@ func (u *MetadataUtil) GetValue2(key string) (string, bool) {
 		return s, false
 	}
 	value, ok := u.mapValue[key]
-	return value, ok
+	return fmt.Sprintf("%s", value), ok
 }
 
 //
