@@ -29,8 +29,12 @@ type {{$cmd.Name}}Request struct {
 //
 type {{$cmd.Name}}RequestData struct {
 {{- range $name, $property := $cmd.Properties.GetDataFieldProperties}}
-    {{- if $property.TypeIsDateTime}}
+    {{- if $property.IsTimeType }}
     {{$property.UpperName}} *types.JSONTime `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{- else if $property.IsDateType }}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{- else if $property.IsEntityType }}
+    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}}Dto `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
     {{- else }}
     {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
     {{- end }}

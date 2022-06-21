@@ -225,10 +225,6 @@ func (p *Property) IsData() bool {
 	return strings.ToLower(p.Name) == "data"
 }
 
-func (p *Property) TypeIsDateTime() bool {
-	return strings.ToLower(p.Type) == "datetime"
-}
-
 func (p *Property) IsUseView() bool {
 	return p.IsUse("view")
 }
@@ -246,4 +242,32 @@ func (p *Property) IsUse(useType string) bool {
 		}
 	}
 	return true
+}
+
+func (p *Property) TypeIsDateTime() bool {
+	return strings.ToLower(p.Type) == "datetime"
+}
+
+func (p *Property) IsTimeType() bool {
+	return strings.ToLower(p.Type) == "datetime"
+}
+
+func (p *Property) IsDateType() bool {
+	return strings.ToLower(p.Type) == "date"
+}
+
+func (p *Property) IsEntityType() bool {
+	if p == nil || p.Aggregate == nil || p.Aggregate.Entities == nil {
+		return false
+	}
+	_, ok := p.Aggregate.Entities[p.Type]
+	return ok
+}
+
+func (p *Property) Entity() *Entity {
+	if p == nil {
+		return nil
+	}
+	entity, _ := p.Aggregate.Entities[p.Type]
+	return entity
 }

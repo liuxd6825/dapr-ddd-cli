@@ -33,7 +33,10 @@ aggregates:
           Email:
             type: string
           Address:
-            type: Address
+            type: string
+          Contacts:
+            type: Contact
+            isArray: true
       UserDeleteFields:
         properties:
           Id:

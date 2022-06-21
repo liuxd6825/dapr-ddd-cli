@@ -21,7 +21,7 @@ func NewBuildField(base builds.BaseBuild, name string, field *config.Fields, out
 		fields:    field,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/field/field/field.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/field/field.go.tpl"
 	res.OutFile = outFile
 	return res
 }

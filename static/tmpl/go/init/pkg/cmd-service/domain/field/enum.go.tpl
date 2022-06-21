@@ -1,5 +1,4 @@
-package model
-
+package field
 
 type {{.Name}} int
 {{- $Name:=.Name}}

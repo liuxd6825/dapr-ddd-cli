@@ -166,7 +166,7 @@ func (b *BuildDomainLayer) initEnumObjects() {
 	b.buildEnumObjects = []*BuildEnumObject{}
 	if b.aggregate.EnumObjects != nil {
 		for _, item := range b.aggregate.EnumObjects {
-			outFile := fmt.Sprintf("%s/%s/model/%s_enum.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
+			outFile := fmt.Sprintf("%s/%s/field/%s_enum.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
 			buildEnumObject := NewBuildEnumObject(b.BaseBuild, item, utils.ToLower(outFile))
 			b.buildEnumObjects = append(b.buildEnumObjects, buildEnumObject)
 		}

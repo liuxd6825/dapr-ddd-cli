@@ -21,7 +21,7 @@ func NewBuildEnumObject(base builds.BaseBuild, enumObject *config.EnumObject, ou
 		outFile:    outFile,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/model/aggregate/enum_object.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/field/enum.go.tpl"
 	res.OutFile = outFile
 	return res
 }
