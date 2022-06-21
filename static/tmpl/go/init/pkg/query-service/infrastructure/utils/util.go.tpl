@@ -80,7 +80,7 @@ func SetViewDefaultFields(ctx context.Context, viewObj ViewObject, setTime time.
 		viewObj.SetDeleterName(StringEmpty)
 		viewObj.SetDeleterId(StringEmpty)
 		viewObj.SetDeletedTime(nil)
-		viewObj.SetIsDeleted(true)
+		viewObj.SetIsDeleted(false)
 		break
 	case SetViewUpdated:
 		viewObj.SetUpdaterName(userName)
