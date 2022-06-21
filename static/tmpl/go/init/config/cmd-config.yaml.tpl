@@ -1,5 +1,5 @@
 env: dev
-envs
+envs:
   dev:
     app:
       id: {{.CommandServiceName}}
