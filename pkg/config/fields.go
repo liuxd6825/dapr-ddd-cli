@@ -14,7 +14,7 @@ type Fields struct {
 }
 
 func (f *FieldsObjects) init(a *Aggregate) {
-	if f == nil {
+	if f == nil || *f == nil {
 		return
 	}
 	for name, fields := range *f {

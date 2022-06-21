@@ -18,6 +18,8 @@ aggregates:
         isArray: true
     # 领域中的数据字段， 供Command与Event使用。
     fields:
+      UserUpdateFields:
+        properties:
       UserFields:
         properties:
           Id:

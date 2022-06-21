@@ -25,24 +25,31 @@ type Event struct {
 
 type Events map[string]*Event
 
+func (e *Events) isNil() bool {
+	return e == nil || *e == nil
+}
+
 func (e *Events) init(a *Aggregate) {
-	if e != nil {
-		for name, event := range *e {
-			event.init(a, name)
-		}
+	if e.isNil() {
+		return
+	}
+	for name, event := range *e {
+		event.init(a, name)
 	}
 }
 
 func (e *Events) GetEventTypes() *[]string {
 	typesMap := map[string]string{}
 	var res []string
-	if e != nil {
-		for _, event := range *e {
-			_, ok := typesMap[event.EventType]
-			if !ok {
-				typesMap[event.EventType] = event.EventType
-				res = append(res, event.EventType)
-			}
+	if e.isNil() {
+		return &res
+	}
+
+	for _, event := range *e {
+		_, ok := typesMap[event.EventType]
+		if !ok {
+			typesMap[event.EventType] = event.EventType
+			res = append(res, event.EventType)
 		}
 	}
 	return &res
@@ -50,25 +57,31 @@ func (e *Events) GetEventTypes() *[]string {
 
 func (e *Events) GetAggregateEvents() []*Event {
 	var events []*Event
-	if e != nil {
-		for _, event := range *e {
-			if event.To == "" || strings.ToLower(event.To) == strings.ToLower(event.Aggregate.Name) {
-				events = append(events, event)
-			}
+	if e.isNil() {
+		return events
+	}
+
+	for _, event := range *e {
+		if event.To == "" || strings.ToLower(event.To) == strings.ToLower(event.Aggregate.Name) {
+			events = append(events, event)
 		}
 	}
+
 	return events
 }
 
 func (e *Events) GetEntityEvents(entityName string) []*Event {
 	var events []*Event
-	if e != nil {
-		for _, event := range *e {
-			if strings.ToLower(event.To) == strings.ToLower(entityName) {
-				events = append(events, event)
-			}
+	if e.isNil() {
+		return events
+	}
+
+	for _, event := range *e {
+		if strings.ToLower(event.To) == strings.ToLower(entityName) {
+			events = append(events, event)
 		}
 	}
+
 	return events
 }
 

@@ -9,27 +9,37 @@ type Properties map[string]*Property
 
 const TenantId = "TenantId"
 
+func (p *Properties) IsNull() bool {
+	return p == nil || *p == nil
+}
+
 func (p *Properties) Init(a *Aggregate, c *Config) {
-	if p != nil {
-		for name, property := range *p {
-			property.init(a, c, name)
-		}
+	if p.IsNull() {
+		return
+	}
+	for name, property := range *p {
+		property.init(a, c, name)
 	}
 }
 
 func (p *Properties) Adds(sources *Properties) {
-	if p != nil && sources != nil {
-		for name, property := range *sources {
-			m := *p
+	if p.IsNull() || sources.IsNull() {
+		return
+	}
+
+	for name, property := range *sources {
+		m := *p
+		if m != nil {
 			if _, ok := m[name]; !ok {
 				m[name] = property
 			}
 		}
 	}
+
 }
 
 func (p *Properties) AddTenantId(a *Aggregate) {
-	if p == nil {
+	if p.IsNull() {
 		return
 	}
 	m := *p
@@ -45,7 +55,7 @@ func (p *Properties) AddTenantId(a *Aggregate) {
 }
 
 func (p *Properties) HasType(typeName string) bool {
-	if p == nil {
+	if p.IsNull() {
 		return false
 	}
 	m := *p
@@ -70,6 +80,9 @@ func (p *Properties) HasTimeType() bool {
 }
 
 func (p *Properties) GetDataFieldProperties() *Properties {
+	if p.IsNull() {
+		return &Properties{}
+	}
 	for _, item := range *p {
 		if item.IsData() {
 			fieldName := item.Type
