@@ -18,5 +18,5 @@ func New{{.Name}}Items() *{{.Name}}Items{
 }
 
 func (i *{{.Name}}Items) MarshalJSON() ([]byte, error) {
-	return json.Marshal(i.Items)
+    return json.Marshal(i.Items.MapData())
 }
