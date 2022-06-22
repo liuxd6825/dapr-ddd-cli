@@ -76,7 +76,7 @@ func (s *{{.ClassName}}) FindAggregateById(ctx context.Context, tenantId string,
 //
 func (s *{{.ClassName}}) QueryById(ctx context.Context, tenantId string, id string) (*query_dto.{{.Aggregate.Name}}FindByIdResponse, bool, error) {
 	var resp query_dto.{{.AggregateName}}FindByIdResponse
-	isFound, err := s.BaseQueryAppService.QueryById(ctx, tenantId, id, resp)
+	isFound, err := s.BaseQueryAppService.QueryById(ctx, tenantId, id, &resp)
 	if err != nil {
 		return nil, false, err
 	}
