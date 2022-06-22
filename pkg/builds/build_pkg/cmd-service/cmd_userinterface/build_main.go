@@ -79,7 +79,7 @@ func (b *BuildRestControllerLayer) init() {
 	b.buildAssemblerEntities = buildAssemblerEntities
 
 	// swagger
-	outFile = fmt.Sprintf("%s/rest/main.go", b.outDir)
+	outFile = fmt.Sprintf("%s/rest/swagger.go", b.outDir)
 	b.buildSwagger = NewBuildSwagger(b.BaseBuild, outFile)
 
 }

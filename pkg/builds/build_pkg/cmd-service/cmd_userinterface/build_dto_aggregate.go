@@ -23,6 +23,9 @@ func NewBuildDtoAggregate(base builds.BaseBuild, aggregate *config.Aggregate, ou
 
 func (b *BuildDtoAggregate) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
+	res["Name"] = b.aggregate.Name
+	res["Properties"] = b.aggregate.Properties
+	res["Description"] = b.Aggregate.Description
 	res["Commands"] = b.Aggregate.AggregateCommands
 	return res
 }

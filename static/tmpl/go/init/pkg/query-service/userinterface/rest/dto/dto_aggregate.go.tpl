@@ -4,6 +4,7 @@ import (
     "github.com/kataras/iris/v12"
     "github.com/liuxd6825/dapr-go-ddd-sdk/assert"
     "github.com/liuxd6825/dapr-go-ddd-sdk/types"
+    "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/dto"
 )
 
@@ -49,7 +50,6 @@ func New{{.Name}}FindPagingResponseItem() *{{.Name}}FindPagingResponseItem {
 	return &{{.Name}}FindPagingResponseItem{}
 }
 
-
 // 查询所有
 
 //
@@ -76,13 +76,21 @@ func New{{.Name}}FindAllResponseItem() *{{.Name}}FindAllResponseItem {
 
 //
 // {{.Name}}Dto
-// @Description: {{.Description}}  响应业务数据
+// @Description: {{.Description}} 请求或响应业务数据
 //
 type {{.Name}}Dto struct {
     base.BaseDto
 {{- range $name, $property := .Properties}}
-    {{- if $property.TypeIsDateTime }}
+    {{- if $property.IsArrayEntityType }}
+    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{- else if $property.IsEntityType}}
+    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{- else if $property.IsDateType }}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{- else if $property.IsTimeType }}
     {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{- else if $property.IsEnumType }}
+    {{$property.UpperName}} view.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
     {{- else }}
     {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
     {{- end}}

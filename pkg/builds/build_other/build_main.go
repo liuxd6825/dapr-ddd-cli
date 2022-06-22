@@ -28,6 +28,5 @@ func (b *BuildMakefile) Build() error {
 	list = append(list, b.NewFileBuild("/go.mod.tpl", outDir+"/go.mod", values))
 	list = append(list, b.NewFileBuild("/go.sum.tpl", outDir+"/go.sum", values))
 	list = append(list, b.NewFileBuild("/README.md.tpl", outDir+"/README.md", values))
-
 	return b.DoBuild(list...)
 }

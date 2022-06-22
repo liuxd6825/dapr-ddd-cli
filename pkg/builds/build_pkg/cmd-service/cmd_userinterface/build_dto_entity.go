@@ -25,6 +25,9 @@ func NewBuildDtoCommand(base builds.BaseBuild, aggregate *config.Aggregate, enti
 
 func (b *BuildDtoEntity) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
+	res["Name"] = b.entity.Name
+	res["Properties"] = b.entity.Properties
+	res["Description"] = b.Aggregate.Description
 	res["Commands"] = b.entity.GetCommands()
 	return res
 }

@@ -244,11 +244,11 @@ func (p *Property) IsUse(useType string) bool {
 	return true
 }
 
-func (p *Property) TypeIsDateTime() bool {
-	return strings.ToLower(p.Type) == "datetime"
+func (p *Property) IsTimeType() bool {
+	return p.IsDateTimeType()
 }
 
-func (p *Property) IsTimeType() bool {
+func (p *Property) IsDateTimeType() bool {
 	return strings.ToLower(p.Type) == "datetime"
 }
 
@@ -262,6 +262,21 @@ func (p *Property) IsEntityType() bool {
 	}
 	_, ok := p.Aggregate.Entities[p.Type]
 	return ok
+}
+
+func (p *Property) IsEnumType() bool {
+	if p == nil || p.Aggregate == nil || p.Aggregate.Entities == nil {
+		return false
+	}
+	_, ok := p.Aggregate.EnumObjects[p.Type]
+	return ok
+}
+
+func (p *Property) IsArrayEntityType() bool {
+	if p.IsEntityType() && p.IsArray {
+		return true
+	}
+	return false
 }
 
 func (p *Property) Entity() *Entity {

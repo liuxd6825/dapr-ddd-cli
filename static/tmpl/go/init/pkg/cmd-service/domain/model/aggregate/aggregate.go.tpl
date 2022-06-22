@@ -18,11 +18,28 @@ import (
 //
 type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsArray}}*{{$property.LanType}}Items{{else}}{{$property.LanType}}{{end}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` // {{$property.Description}}
+    {{- if $property.IsArrayEntityType }}
+    {{$property.UpperName}} *{{$property.LanType}}Items `json:"{{$property.JsonName}}" copier:"-" validate:"{{$property.Validate}}"` // {{$property.Description}}
+    {{- else if  $property.IsArray }}
+    {{$property.UpperName}} []{{$property.LanType}} `json:"{{$property.JsonName}}" validate:"{{$property.Validate}}"` // {{$property.Description}}
+    {{- else }}
+    {{$property.UpperName}} {{$property.LanType}} `json:"{{$property.JsonName}}" validate:"{{$property.Validate}}"` // {{$property.Description}}
+    {{- end }}
 {{- end}}
 }
 
 const AggregateType = "{{.AggregateType}}"
+
+// MaskMapper时不复制的属性
+var aggMapperRemove []string
+
+func init(){
+    {{- range $name, $property := .Properties}}
+    {{- if $property.IsArray}}
+    aggMapperRemove = append(aggMapperRemove, "{{$property.UpperName}}")
+    {{- end}}
+    {{- end}}
+}
 
 //
 // New{{.ClassName}}
@@ -82,11 +99,10 @@ func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.
 // @return err 错误
 //
 func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) error {
-
     {{- if $event.IsAggregateCreateEvent }}
     return utils.Mapper(e.Data, a)
     {{- else if $event.IsAggregateUpdateEvent }}
-    return utils.MaskMapper(e.Data, a, e.UpdateMask)
+    return utils.MaskMapperRemove(e.Data, a, e.UpdateMask, aggMapperRemove)
     {{- else if $event.IsAggregateDeleteByIdEvent }}
 	a.IsDeleted = true
 	return nil
@@ -104,7 +120,6 @@ func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$even
     {{- end }}
 }
 {{- end }}
-
 
 //
 // GetAggregateVersion

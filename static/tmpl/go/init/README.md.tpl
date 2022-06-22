@@ -22,7 +22,11 @@
 
 
 #### 部署
-1. 部署Dapr component 文件到k8s上，注册dapr应用与component需要在同一个namespace上。\
+1. 生成 swagger doc \
+   swag init -d ./pkg/query-service/userinterface/rest -o ./swagger/query --parseDependency --parseInternal \
+   swag init -d ./pkg/cmd-service/userinterface/rest -o ./swagger/cmd  --parseDependency   --parseInternal
+
+2. 部署Dapr component 文件到k8s上，注册dapr应用与component需要在同一个namespace上。\
    kubectl apply ./config/components/pubsub.yaml\
    kubectl apply ./config/components/applogger-mongo.yaml \
    kubectl apply ./config/components/eventstorage-mongo.yaml \

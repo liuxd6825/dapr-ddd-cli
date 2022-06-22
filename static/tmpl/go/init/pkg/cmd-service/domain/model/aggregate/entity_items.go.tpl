@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
 )
 
@@ -16,3 +17,6 @@ func New{{.Name}}Items() *{{.Name}}Items{
 	return res
 }
 
+func (i *{{.Name}}Items) MarshalJSON() ([]byte, error) {
+	return json.Marshal(i.Items)
+}
