@@ -30,6 +30,7 @@ func (c *{{.ClassName}}) NewDomainEvent() ddd.DomainEvent {
     return &event.{{.EventName}}{
         EventId:    uuid.New().String(),
         CommandId:  c.CommandId,
+        CreatedTime: time.Now(),
         {{- if .Command.IsUpdate }}
         UpdateMask: c.UpdateMask,
         {{- end }}

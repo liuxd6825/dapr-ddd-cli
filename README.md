@@ -15,15 +15,27 @@ $  CGO_ENABLED=0 GOOS=darwin  GOARCH=arm64  go build -o /Users/lxd/go/bin/dapr-d
 
 
 1. 新建目录，在其中定义DDDML文件。可定义多个，脚手架会自动合并文件内容。
-2. 执行dapr-ddd-cli脚手架。\
+2. 初始化项目。
 
 
     $ dapr-ddd-cli init -model ./dddml -lang go -out . 
 
    
-   - 参数 -model： dddml模型目录。\
-   - 参数 -lang： 要生成代码的开发语言 可选go/java/csharp。目前仅支持go\
+   - 参数 -model： dddml模型目录。
+   - 参数 -lang： 要生成代码的开发语言 可选go/java/csharp。目前仅支持go
    - 参数 -out：生成代码的存放位置。
+3. 添加或更新聚合。
+
+
+
+    $ dapr-ddd-cli aggregate -n ScanFile --model ./dddml --lang go --out ./test/init_out/go 
+
+
+
+  - 参数 -n: 要添加或更新的聚合名称，多个以逗号分隔。
+  - 参数 -model： dddml模型目录。
+  - 参数 -lang： 要生成代码的开发语言 可选go/java/csharp。目前仅支持go
+  - 参数 -out：生成代码的存放位置。
 
 
 #### DDDML 示例

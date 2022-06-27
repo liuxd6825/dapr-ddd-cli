@@ -61,21 +61,21 @@ func SetViewDefaultFields(ctx context.Context, viewObj ViewObject, setTime time.
 	}
 	userName := "userName"
 	userId := "userId"
-	nowTime := &setTime
-	if nowTime.IsZero() {
+	eventTime := &setTime
+	if eventTime.IsZero() {
 		t := time.Now()
-		nowTime = &t
+		eventTime = &t
 	}
 
 	switch setType {
 	case SetViewCreated:
 		viewObj.SetCreatorName(userName)
 		viewObj.SetCreatorId(userId)
-		viewObj.SetCreatedTime(&setTime)
+		viewObj.SetCreatedTime(eventTime)
 
 		viewObj.SetUpdaterName(userName)
 		viewObj.SetUpdaterId(userId)
-		viewObj.SetUpdatedTime(nowTime)
+		viewObj.SetUpdatedTime(eventTime)
 
 		viewObj.SetDeleterName(StringEmpty)
 		viewObj.SetDeleterId(StringEmpty)
@@ -85,12 +85,12 @@ func SetViewDefaultFields(ctx context.Context, viewObj ViewObject, setTime time.
 	case SetViewUpdated:
 		viewObj.SetUpdaterName(userName)
 		viewObj.SetUpdaterId(userId)
-		viewObj.SetUpdatedTime(nowTime)
+		viewObj.SetUpdatedTime(eventTime)
 		break
 	case SetViewDeleted:
 		viewObj.SetDeleterName(userName)
 		viewObj.SetDeleterId(userId)
-		viewObj.SetDeletedTime(nowTime)
+		viewObj.SetDeletedTime(eventTime)
 		viewObj.SetIsDeleted(true)
 		break
 	default:

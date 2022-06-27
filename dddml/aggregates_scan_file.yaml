@@ -1,0 +1,110 @@
+aggregates:
+  ScanFile:
+    description: "扫描文件"
+    properties:
+      Id:
+        type: string
+        description: "主键"
+      Name:
+        type: string
+        description: "标题"
+      DocumentId:
+        type: string
+        description: "文档id"
+      DocmentSize:
+        type: string
+        description: "文件大小"
+      FileId:
+        type: string
+        description: "文件id"
+      Version:
+        type: string
+        description: "版本号"
+      WorkStatue:
+        type: WorkStatueEnum
+        description: "工作状态"
+    fields:
+      ScanFileFields:
+        description: "扫描文件"
+        properties:
+      ScanFileDeleteFields:
+        description: "删除扫描文件"
+        properties:
+          Id:
+            type: string
+            description: "主键"
+    entities:
+    commands:
+      ScanFileCreateCommand:
+        description: "创建扫描文件"
+        aggregateId: Data.Id
+        action: create
+        event: ScanFileCreateEventV1s0
+        isAggregateCommand: true
+        properties:
+          Data:
+            type: ScanFileFields
+      ScanFileUpdateCommand:
+        description: "更新扫描文件"
+        aggregateId: Data.Id
+        action: update
+        event: ScanFileUpdateEventV1s0
+        isAggregateCommand: true
+        properties:
+          Data:
+            type: ScanFileFields
+      ScanFileDeleteCommand:
+        description: "删除扫描单"
+        aggregateId: Data.Id
+        action: delete
+        event: ScanFileDeleteEventV1s0
+        isAggregateCommand: true
+        properties:
+          Data:
+            type: ScanFileDeleteFields
+    events:
+      ScanFileCreateEventV1s0:
+        description: "创建扫描文件"
+        aggregateId: Data.Id
+        eventType: ScanFileCreateEvent
+        action: create
+        version: V1.0
+        properties:
+          Data:
+            type: ScanFileFields
+            referenceType: ScanFileFields
+      ScanFileUpdateEventV1s0:
+        description: "更新扫描文件"
+        aggregateId: Data.Id
+        eventType: ScanFileUpdateEvent
+        action: update
+        version: V1.0
+        properties:
+          Data:
+            type: ScanFileFields
+            referenceType: ScanFileFields
+      ScanFileDeleteEventV1s0:
+        description: "删除扫描文件"
+        aggregateId: Data.Id
+        eventType: ScanFileDeleteEvent
+        action: delete
+        version: V1.0
+        properties:
+          Data:
+            type: ScanFileDeleteFields
+            referenceType: ScanFileDeleteFields
+    enumObjects:
+      WorkStatueEnum:
+        values:
+          Uploaded:
+            value: 1
+            title: 已上传
+          Scanning:
+            value: 2
+            title: 扫描中
+          Checking:
+            value: 3
+            title: 校对中
+          Completed:
+            value: 4
+            title: 已完成

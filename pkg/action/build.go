@@ -19,14 +19,23 @@ import (
 	"strings"
 )
 
-func BuildProject(modelPath string, lang string, out string, aggregates []string, layers []string, services []string) error {
+type BuildType int
+
+const (
+	ProjectBuildType BuildType = iota
+	AggregateBuildType
+	ServiceBuildType
+	LayerBuildType
+)
+
+func BuildProject(modelPath string, lang string, out string, aggregates []string, layers []string, services []string, buildType BuildType) error {
 
 	cfg, err := config.NewConfigWithDir(modelPath, lang)
 	if err != nil {
 		return err
 	}
 
-	if isLayers("other", layers) {
+	if isLayers("other", layers, buildType) {
 		buildMain := build_cmd.NewMainLayer(cfg, out+"/cmd")
 		if err := buildMain.Build(); err != nil {
 			panic(err)
@@ -54,31 +63,33 @@ func BuildProject(modelPath string, lang string, out string, aggregates []string
 
 	}
 
-	if isServices("cmd", services) {
+	if isServices("cmd", services, buildType) {
 		cmdDir := fmt.Sprintf("%s/pkg/cmd-service", out)
 		for _, agg := range cfg.Aggregates {
-			if isUpdateAggregate(agg.Name, aggregates) {
-				if isLayers("domain", layers) {
+			if isUpdateAggregate(agg.Name, aggregates, buildType) {
+
+				if isLayers("domain", layers, buildType) {
 					buildDomain := cmd_domain.NewBuildDomainLayer(cfg, agg, cmdDir+"/domain")
 					if err := buildDomain.Build(); err != nil {
 						panic(err)
 					}
 				}
-				if isLayers("infra", layers) {
+
+				if isLayers("infra", layers, buildType) {
 					buildInfra := cmd_infrastructure.NewBuildInfrastructureLayer(cfg, agg, cmdDir+"/infrastructure")
 					if err := buildInfra.Build(); err != nil {
 						panic(err)
 					}
 				}
 
-				if isLayers("app", layers) {
+				if isLayers("app", layers, buildType) {
 					buildApplication := cmd_application.NewBuildApplicationLayer(cfg, agg, cmdDir+"/application")
 					if err := buildApplication.Build(); err != nil {
 						panic(err)
 					}
 				}
 
-				if isLayers("ui", layers) {
+				if isLayers("ui", layers, buildType) {
 					buildUserInterface := cmd_userinterface.NewBuildRestControllerLayer(cfg, agg, cmdDir+"/userinterface")
 					if err := buildUserInterface.Build(); err != nil {
 						panic(err)
@@ -88,32 +99,32 @@ func BuildProject(modelPath string, lang string, out string, aggregates []string
 		}
 	}
 
-	if isServices("query", services) {
+	if isServices("query", services, buildType) {
 		queryDir := fmt.Sprintf("%s/pkg/query-service", out)
 		for _, agg := range cfg.Aggregates {
-			if isUpdateAggregate(agg.Name, aggregates) {
-				if isLayers("domain", layers) {
+			if isUpdateAggregate(agg.Name, aggregates, buildType) {
+				if isLayers("domain", layers, buildType) {
 					buildDomain := query_domain.NewBuildDomainLayer(cfg, agg, queryDir+"/domain")
 					if err := buildDomain.Build(); err != nil {
 						panic(err)
 					}
 				}
 
-				if isLayers("infra", layers) {
+				if isLayers("infra", layers, buildType) {
 					buildInfra := query_infrastructure.NewBuildInfrastructureLayer(cfg, agg, queryDir+"/infrastructure")
 					if err := buildInfra.Build(); err != nil {
 						panic(err)
 					}
 				}
 
-				if isLayers("app", layers) {
+				if isLayers("app", layers, buildType) {
 					buildApplication := query_application.NewBuildApplicationLayer(cfg, agg, queryDir+"/application")
 					if err := buildApplication.Build(); err != nil {
 						panic(err)
 					}
 				}
 
-				if isLayers("ui", layers) {
+				if isLayers("ui", layers, buildType) {
 					buildUserInterface := query_userinterface.NewBuildUserInterfaceLayer(cfg, agg, queryDir+"/userinterface")
 					if err := buildUserInterface.Build(); err != nil {
 						panic(err)
@@ -126,35 +137,53 @@ func BuildProject(modelPath string, lang string, out string, aggregates []string
 	return nil
 }
 
-func isUpdateAggregate(aggName string, aggNames []string) bool {
-	if len(aggNames) == 0 {
+func isUpdateAggregate(aggName string, aggNames []string, buildType BuildType) bool {
+	switch buildType {
+	case ProjectBuildType:
 		return true
-	}
-	name := strings.ToLower(aggName)
-	for _, item := range aggNames {
-		if strings.ToLower(item) == name {
+	case AggregateBuildType:
+		if len(aggNames) == 0 {
 			return true
+		}
+		name := strings.ToLower(aggName)
+		for _, item := range aggNames {
+			if strings.ToLower(item) == name {
+				return true
+			}
 		}
 	}
 	return false
 }
 
-func isLayers(layer string, layers []string) bool {
-	if len(layers) == 0 {
+func isLayers(layer string, layers []string, buildType BuildType) bool {
+	switch buildType {
+	case ProjectBuildType:
 		return true
-	}
-	name := strings.ToLower(layer)
-	for _, item := range layers {
-		if strings.ToLower(item) == name {
+	case LayerBuildType:
+		if len(layers) == 0 {
 			return true
+		}
+		name := strings.ToLower(layer)
+		for _, item := range layers {
+			if strings.ToLower(item) == name {
+				return true
+			}
 		}
 	}
 	return false
 }
 
-func isServices(service string, services []string) bool {
+func isServices(service string, services []string, buildType BuildType) bool {
+	switch buildType {
+	case ProjectBuildType:
+		return true
+	case AggregateBuildType:
+		return true
+	case ServiceBuildType:
+		return true
+	}
 	if len(services) == 0 {
-		return true
+		return false
 	}
 	name := strings.ToLower(service)
 	for _, item := range services {

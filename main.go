@@ -22,7 +22,7 @@ func main() {
 				Name:    "init",
 				Aliases: []string{"i"},
 				Usage:   "初始化项目结构与代码",
-				Action:  action.Action,
+				Action:  action.ProjectAction,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:    "model",
@@ -59,6 +59,38 @@ func main() {
 						Aliases: []string{"a"},
 						Value:   "",
 						Usage:   "只更新指定聚合根，多个以逗号分隔",
+					},
+				},
+			},
+			{
+				Name:    "aggregate",
+				Aliases: []string{"a"},
+				Usage:   "更新Aggregate",
+				Action:  action.AggregateAction,
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:    "names",
+						Aliases: []string{"n"},
+						Value:   "",
+						Usage:   "只更新指定聚合根，多个以逗号分隔",
+					},
+					&cli.StringFlag{
+						Name:    "model",
+						Aliases: []string{"m"},
+						Value:   "",
+						Usage:   "DDDML文件目录",
+					},
+					&cli.StringFlag{
+						Name:    "lang",
+						Aliases: []string{"l"},
+						Value:   "go",
+						Usage:   "开发语言,默认是go，可选：go,java",
+					},
+					&cli.StringFlag{
+						Name:    "out",
+						Aliases: []string{"o"},
+						Value:   "",
+						Usage:   "生成源代码目录",
 					},
 				},
 			},
