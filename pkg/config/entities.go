@@ -21,9 +21,10 @@ func (e *Entities) init(a *Aggregate) {
 	entities := *e
 	props := a.Config.GetDefaultEntityProperties()
 	for _, entity := range entities {
-		if entity.Properties != nil {
-			entity.Properties.Adds(props)
+		if entity.Properties == nil {
+			entity.Properties = make(Properties)
 		}
+		entity.Properties.Adds(props)
 	}
 	for name, entity := range *e {
 		entity.int(a, name)

@@ -11,7 +11,7 @@ aggregates:
       DocumentId:
         type: string
         description: "文档id"
-      DocmentSize:
+      DocumentSize:
         type: string
         description: "文件大小"
       FileId:
@@ -21,13 +21,16 @@ aggregates:
         type: string
         description: "版本号"
       WorkStatue:
-        type: WorkStatueEnum
+        type: WorkStatue
         description: "工作状态"
     fields:
-      ScanFileFields:
+      ScanFileFieldsV1s0:
         description: "扫描文件"
         properties:
-      ScanFileDeleteFields:
+          Id:
+            type: string
+            description: "主键"
+      ScanFileDeleteFieldsV1s0:
         description: "删除扫描文件"
         properties:
           Id:
@@ -41,27 +44,18 @@ aggregates:
         action: create
         event: ScanFileCreateEventV1s0
         isAggregateCommand: true
-        properties:
-          Data:
-            type: ScanFileFields
       ScanFileUpdateCommand:
         description: "更新扫描文件"
         aggregateId: Data.Id
         action: update
         event: ScanFileUpdateEventV1s0
         isAggregateCommand: true
-        properties:
-          Data:
-            type: ScanFileFields
       ScanFileDeleteCommand:
         description: "删除扫描单"
         aggregateId: Data.Id
         action: delete
         event: ScanFileDeleteEventV1s0
         isAggregateCommand: true
-        properties:
-          Data:
-            type: ScanFileDeleteFields
     events:
       ScanFileCreateEventV1s0:
         description: "创建扫描文件"
@@ -71,8 +65,8 @@ aggregates:
         version: V1.0
         properties:
           Data:
-            type: ScanFileFields
-            referenceType: ScanFileFields
+            type: ScanFileFieldsV1s0
+            referenceType: ScanFileFieldsV1s0
       ScanFileUpdateEventV1s0:
         description: "更新扫描文件"
         aggregateId: Data.Id
@@ -81,8 +75,8 @@ aggregates:
         version: V1.0
         properties:
           Data:
-            type: ScanFileFields
-            referenceType: ScanFileFields
+            type: ScanFileFieldsV1s0
+            referenceType: ScanFileFieldsV1s0
       ScanFileDeleteEventV1s0:
         description: "删除扫描文件"
         aggregateId: Data.Id
@@ -91,10 +85,10 @@ aggregates:
         version: V1.0
         properties:
           Data:
-            type: ScanFileDeleteFields
-            referenceType: ScanFileDeleteFields
+            type: ScanFileDeleteFieldsV1s0
+            referenceType: ScanFileDeleteFieldsV1s0
     enumObjects:
-      WorkStatueEnum:
+      WorkStatue:
         values:
           Uploaded:
             value: 1

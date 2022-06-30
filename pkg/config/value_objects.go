@@ -17,9 +17,10 @@ func (v *ValueObjects) init(a *Aggregate) {
 	valueObjects := *v
 	props := a.Config.GetDefaultEntityProperties()
 	for _, value := range valueObjects {
-		if value != nil && value.Properties != nil {
-			value.Properties.Adds(props)
+		if value.Properties == nil {
+			value.Properties = make(Properties)
 		}
+		value.Properties.Adds(props)
 	}
 	for name, item := range *v {
 		item.init(a, name)

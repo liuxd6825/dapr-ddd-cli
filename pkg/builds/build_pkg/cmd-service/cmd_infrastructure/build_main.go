@@ -87,6 +87,6 @@ func (b *BuildInfrastructureLayer) initBuildAppBaseQueryService() {
 }
 
 func (b *BuildInfrastructureLayer) initBuildUtilsAssembler() {
-	outFile := fmt.Sprintf("%s/utils/assembler_uitl.go", b.outDir)
+	outFile := fmt.Sprintf("%s/utils/assembler_util.go", b.outDir)
 	b.buildUtilsAssembler = NewBuildUtilsAssembler(b.BaseBuild, utils.ToLower(outFile))
 }

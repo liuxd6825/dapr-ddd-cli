@@ -23,6 +23,7 @@ type Command struct {
 func (c *Command) Event() *Event {
 	return c.event
 }
+
 func (c *Commands) init(a *Aggregate) {
 	if c != nil {
 		for name, cmd := range *c {
@@ -50,10 +51,20 @@ func (c *Command) init(a *Aggregate, name string) {
 		f := strings.Contains(name, a.Name)
 		c.IsAggregateCommand = &f
 	}
-	c.Properties.Init(a, a.Config)
+
 	if c.EventName != "" {
 		c.event = c.Aggregate.Events[c.EventName]
 	}
+
+	if c.Properties == nil {
+		c.Properties = make(Properties)
+	}
+
+	// 如果Command的属性为空，则复制Event的Data属性
+	if len(c.Properties) == 0 && c.event != nil && c.event.DataProperty != nil {
+		c.Properties.Add(c.event.DataProperty)
+	}
+	c.Properties.Init(a, a.Config)
 }
 
 func (c *Command) FileName() string {

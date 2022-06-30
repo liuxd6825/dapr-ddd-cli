@@ -35,7 +35,14 @@ func (p *Properties) Adds(sources *Properties) {
 			}
 		}
 	}
+}
 
+func (p *Properties) Add(property *Property) {
+	if p.IsNull() || property == nil {
+		return
+	}
+	m := *p
+	m[property.Name] = property
 }
 
 func (p *Properties) AddTenantId(a *Aggregate) {
@@ -171,16 +178,21 @@ func (p *Property) init(a *Aggregate, c *Config, name string) {
 // @return string
 //
 func (p *Property) LanType() string {
+	dataType := ""
 	if p == nil {
 		return ""
 	}
 	if p.Config != nil {
-		return p.Config.GetType(p.Type)
+		dataType = p.Config.GetType(p.Type)
+	} else if p.Aggregate != nil && p.Aggregate.Config != nil {
+		dataType = p.Aggregate.Config.GetType(p.Type)
+	} else {
+		dataType = p.Type
 	}
-	if p.Aggregate != nil && p.Aggregate.Config != nil {
-		return p.Aggregate.Config.GetType(p.Type)
-	}
-	return p.Type
+	/*	if p.IsArray && p.Config.lanType == Go {
+		return fmt.Sprintf("[]*%s", dataType)
+	}*/
+	return dataType
 }
 
 func (p *Property) HasValidate() bool {

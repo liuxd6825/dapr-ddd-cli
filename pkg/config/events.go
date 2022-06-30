@@ -34,6 +34,9 @@ func (e *Events) init(a *Aggregate) {
 		return
 	}
 	for name, event := range *e {
+		if event.Properties == nil {
+			event.Properties = make(Properties)
+		}
 		event.init(a, name)
 	}
 }

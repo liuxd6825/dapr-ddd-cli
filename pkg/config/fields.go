@@ -23,6 +23,10 @@ func (f *FieldsObjects) init(a *Aggregate) {
 }
 
 func (e *Fields) init(a *Aggregate, name string) {
+	if e.Properties == nil {
+		e.Properties = make(Properties)
+	}
+
 	e.Name = name
 	e.Properties.Init(a, a.Config)
 	e.Properties.Adds(a.Config.GetDefaultFieldProperties())

@@ -52,7 +52,6 @@ configuration:
       Remarks:
         type: string
         description: "备注"
-
       CreaterId:
         type: string
         description: "创建人ID"
@@ -62,7 +61,6 @@ configuration:
       CreatedTime:
         type: dateTime
         description: "创建时间"
-
       UpdaterId:
         type: string
         description: "修改人ID"
@@ -72,7 +70,6 @@ configuration:
       UpdatedTime:
         type: dateTime
         description: "修改时间"
-
       DeleterId:
         type: string
         description: "删除人ID"
@@ -85,7 +82,6 @@ configuration:
       IsDeleted:
         type: bool
         description: "是否删除"
-
     field:
       Id:
         type: string

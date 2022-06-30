@@ -41,7 +41,7 @@ func (a *Aggregate) init() {
 		a.Version = "v1.0"
 	}
 	if a.Properties == nil {
-		a.Properties = Properties{}
+		a.Properties = make(Properties)
 	}
 	// 添加聚合默认属性
 	if a.Config != nil && a.Config.Configuration != nil && a.Config.Configuration.DefaultReservedProperties != nil {
@@ -51,12 +51,12 @@ func (a *Aggregate) init() {
 	a.Properties.Init(a, a.Config)
 
 	if a.Entities == nil {
-		a.Entities = Entities{}
+		a.Entities = make(Entities)
 	}
 	a.Entities.init(a)
 
 	if a.ValueObjects == nil {
-		a.ValueObjects = ValueObjects{}
+		a.ValueObjects = make(ValueObjects)
 	}
 	a.ValueObjects.init(a)
 

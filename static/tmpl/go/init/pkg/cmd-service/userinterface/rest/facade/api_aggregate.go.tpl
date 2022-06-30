@@ -57,7 +57,7 @@ func (c *{{$ClassName}}) BeforeActivation(b mvc.BeforeActivation) {
 // @Failure      500        {object}    string      "应用错误"
 // @Router       /tenants/{tenantId}/{{.AggregatePluralName}}/aggregate/{id} [get]
 //
-func (c *{{$ClassName}}) FindAggregateById(ctx iris.Context, tenantId string, id string) {
+func (c *{{$ClassName}}) FindAggregateById(ictx iris.Context, tenantId string, id string) {
     _, _, _ = restapp.DoQueryOne(ctx, func(ctx context.Context) (interface{}, bool, error) {
         return c.service.FindAggregateById(ctx, tenantId, id)
 	})
@@ -79,13 +79,12 @@ func (c *{{$ClassName}}) FindAggregateById(ctx iris.Context, tenantId string, id
 // @Failure      500        {object}    string      "应用错误"
 // @Router       /tenants/{tenantId}/{{$AggregatePluralName}} [{{$cmd.HttpType}}]
 //
-func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ctx iris.Context) {
-    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ctx)
-    if err != nil {
-        restapp.SetError(ctx, err)
-        return
-    }
-	_ = restapp.DoCmd(ctx, func(ctx context.Context) error {
+func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ictx iris.Context) {
+	_ = restapp.DoCmd(ictx, func(ctx context.Context) error {
+	    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ictx)
+        if err != nil {
+            return err
+        }
 		return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
 	})
 }
@@ -105,17 +104,20 @@ func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ctx iris.Context) {
 // @Failure      500        {object}    string      "应用错误"
 // @Router       /tenants/{tenantId}/{{$AggregatePluralName}}:get [{{$cmd.HttpType}}]
 //
-func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ctx iris.Context) {
-    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ctx)
-    if err != nil {
-        restapp.SetError(ctx, err)
-        return
+func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ictx iris.Context) {
+	_ = restapp.Do(ictx, func() error {
+		cmd, err := scanTableAssembler.AssScanTableCreateCommandDto(ictx)
+        if err != nil {
+            return err
+    	}
+
+        _, _, err = restapi.DoCmdAndQueryOne(ictx, c.service.QueryAppId, cmd, func(ctx context.Context) error {
+            return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
+        }, func(ctx context.Context) (interface{}, bool, error) {
+            return c.service.QueryById(ctx, cmd.GetTenantId(), cmd.Data.Id)
+        })
+        return err
     }
-	_, _, _ = restapp.DoCmdAndQueryOne(ctx, c.service.QueryAppId, cmd, func(ctx context.Context) error {
-		return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
-	}, func(ctx context.Context) (interface{}, bool, error) {
-		return c.service.QueryById(ctx, cmd.GetTenantId(), cmd.Data.Id)
-	})
 }
 {{- end }}
 {{- end }}
