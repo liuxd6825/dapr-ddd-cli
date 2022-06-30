@@ -58,7 +58,7 @@ func (c *{{$ClassName}}) BeforeActivation(b mvc.BeforeActivation) {
 // @Router       /tenants/{tenantId}/{{.AggregatePluralName}}/aggregate/{id} [get]
 //
 func (c *{{$ClassName}}) FindAggregateById(ictx iris.Context, tenantId string, id string) {
-    _, _, _ = restapp.DoQueryOne(ctx, func(ctx context.Context) (interface{}, bool, error) {
+    _, _, _ = restapp.DoQueryOne(ictx, func(ctx context.Context) (interface{}, bool, error) {
         return c.service.FindAggregateById(ctx, tenantId, id)
 	})
 }

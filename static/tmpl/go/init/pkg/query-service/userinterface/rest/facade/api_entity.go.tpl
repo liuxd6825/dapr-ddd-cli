@@ -45,14 +45,14 @@ func (a *{{.Name}}QueryApi) BeforeActivation(b mvc.BeforeActivation) {
 // @Failure      404        {object}   string        "按ID找到数据"
 // @Failure      500        {object}   string        "应用错误"
 // @Router       /tenants/{tenantId}/{{.AggregatePluralName}}/{id} [get]
-func (a *{{.Name}}QueryApi) FindById(ctx iris.Context) {
-	_, _, _ = restapp.DoQueryOne(ctx, func(c context.Context) (interface{}, bool, error) {
-		req, err := {{.Name}}Assembler.AssFindByIdRequest(ctx)
+func (a *{{.Name}}QueryApi) FindById(ictx iris.Context) {
+	_, _, _ = restapp.DoQueryOne(ictx, func(ctx context.Context) (interface{}, bool, error) {
+		req, err := {{.Name}}Assembler.AssFindByIdRequest(ictx)
     	if err != nil {
             return nil, false, err
     	}
-		v, b, e := a.queryService.FindById(c, req.TenantId, req.Id)
-		return {{.Name}}Assembler.AssFindByIdResponse(ctx, v, b, e)
+		v, b, e := a.queryService.FindById(ctx, req.TenantId, req.Id)
+		return {{.Name}}Assembler.AssFindByIdResponse(ictx, v, b, e)
 	})
 }
 
@@ -68,14 +68,14 @@ func (a *{{.Name}}QueryApi) FindById(ctx iris.Context) {
 // @Failure      404        {object}   string        "按ID找到数据"
 // @Failure      500        {object}   string        "应用错误"
 // @Router       /tenants/{tenantId}/{{.EntityPluralName}}:{{.aggregateMidlineName}}-id/{{.aggregateName}}Id [get]
-func (a *{{.Name}}QueryApi) FindBy{{.AggregateName}}Id(ctx iris.Context, tenantId, {{.aggregateName}}Id string) {
-	_, _, _ = restapp.DoQuery(ctx, func(c context.Context) (interface{}, bool, error) {
-		req, err := {{.Name}}Assembler.AssFindBy{{.AggregateName}}IdRequest(ctx)
+func (a *{{.Name}}QueryApi) FindBy{{.AggregateName}}Id(ictx iris.Context, tenantId, {{.aggregateName}}Id string) {
+	_, _, _ = restapp.DoQuery(ictx, func(ctx context.Context) (interface{}, bool, error) {
+		req, err := {{.Name}}Assembler.AssFindBy{{.AggregateName}}IdRequest(ictx)
     	if err != nil {
     		return nil, false, err
     	}
-		v, b, e := a.queryService.FindBy{{.AggregateName}}Id(c, req.TenantId, req.{{.AggregateName}}Id)
-		return {{.Name}}Assembler.AssFindBy{{.AggregateName}}IdResponse(ctx, v, b, e)
+		v, b, e := a.queryService.FindBy{{.AggregateName}}Id(ctx, req.TenantId, req.{{.AggregateName}}Id)
+		return {{.Name}}Assembler.AssFindBy{{.AggregateName}}IdResponse(ictx, v, b, e)
 	})
 }
 
@@ -89,14 +89,14 @@ func (a *{{.Name}}QueryApi) FindBy{{.AggregateName}}Id(ctx iris.Context, tenantI
 // @Success      200       {object}  dto.UserFindAllResponse
 // @Failure      500       {object}  string          "应用错误"
 // @Router       /tenants/{tenantId}/{{.AggregatePluralName}}:all [get]
-func (a *{{.Name}}QueryApi) FindAll(ctx iris.Context, tenantId string) {
-	_, _, _ = restapp.DoQuery(ctx, func(c context.Context) (interface{}, bool, error) {
-		req, err := {{.Name}}Assembler.AssFindAllRequest(ctx)
+func (a *{{.Name}}QueryApi) FindAll(ictx iris.Context, tenantId string) {
+	_, _, _ = restapp.DoQuery(ictx, func(c context.Context) (interface{}, bool, error) {
+		req, err := {{.Name}}Assembler.AssFindAllRequest(ictx)
     	if err != nil {
     		return nil, false, err
     	}
-		fpr, b, e := a.queryService.FindAll(c, req.TenantId)
-		return {{.Name}}Assembler.AssFindAllResponse(ctx, fpr, b, e)
+		fpr, b, e := a.queryService.FindAll(ctx, req.TenantId)
+		return {{.Name}}Assembler.AssFindAllResponse(ictx, fpr, b, e)
 	})
 }
 
@@ -110,14 +110,14 @@ func (a *{{.Name}}QueryApi) FindAll(ctx iris.Context, tenantId string) {
 // @Success      200        {object}    dto.{{.Name}}FindPagingResponse
 // @Failure      500        {object}    string      "应用错误"
 // @Router       /tenants/{tenantId}/{{.AggregatePluralName}} [get]
-func (a *{{.Name}}QueryApi) FindPaging(ctx iris.Context, tenantId string) {
-	req, err := {{.Name}}Assembler.AssFindPagingRequest(ctx)
-	if err != nil {
-		return
-	}
-	_, _, _ = restapp.DoQuery(ctx, func(c context.Context) (interface{}, bool, error) {
-		fpr, b, e := a.queryService.FindPaging(c, req)
-		return {{.Name}}Assembler.AssFindPagingResponse(ctx, fpr, b, e)
+func (a *{{.Name}}QueryApi) FindPaging(ictx iris.Context, tenantId string) {
+	_, _, _ = restapp.DoQuery(ictx, func(ctx context.Context) (interface{}, bool, error) {
+		req, err := {{.Name}}Assembler.AssFindPagingRequest(ictx)
+    	if err != nil {
+    		return  nil, false, err
+    	}
+		fpr, b, e := a.queryService.FindPaging(ctx, req)
+		return {{.Name}}Assembler.AssFindPagingResponse(ictx, fpr, b, e)
 	})
 }
 
