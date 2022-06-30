@@ -16,7 +16,7 @@ type {{.Name}}Assembler struct {
 
 var {{.Name}} = &{{.Name}}Assembler{}
 
-func (a *{{.Name}}Assembler) AssFindByIdResponse(ctx iris.Context, v *view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindByIdResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindByIdResponse(ictx iris.Context, v *view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindByIdResponse, bool, error) {
 	if findErr != nil || !isFound {
 		return nil, isFound, findErr
 	}
@@ -28,7 +28,7 @@ func (a *{{.Name}}Assembler) AssFindByIdResponse(ctx iris.Context, v *view.{{.Na
 	return res, true, nil
 }
 
-func (a *{{.Name}}Assembler) AssFindPagingResponse(ctx iris.Context, v *ddd_repository.FindPagingResult[*view.{{.Name}}View], isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, v *ddd_repository.FindPagingResult[*view.{{.Name}}View], isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
 	if findErr != nil {
 		return nil, isFound, findErr
 	}
@@ -40,7 +40,7 @@ func (a *{{.Name}}Assembler) AssFindPagingResponse(ctx iris.Context, v *ddd_repo
 	return res, isFound, nil
 }
 
-func (a *{{.Name}}Assembler) AssFindAllResponse(ctx iris.Context, vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindAllResponse(ictx iris.Context, vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
 	if findErr != nil  {
 		return nil, isFound, findErr
 	}

@@ -19,7 +19,7 @@ type {{.Name}}Assembler struct {
 
 var {{.Name}} = &{{.Name}}Assembler{}
 
-func (a *{{.Name}}Assembler) AssFindByIdResponse(ctx iris.Context, v *view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindByIdResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindByIdResponse(ictx iris.Context, v *view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindByIdResponse, bool, error) {
 	if findErr != nil || !isFound {
 		return nil, isFound, findErr
 	}
@@ -31,7 +31,7 @@ func (a *{{.Name}}Assembler) AssFindByIdResponse(ctx iris.Context, v *view.{{.Na
 	return res, true, nil
 }
 
-func (a *{{.Name}}Assembler) AssFindPagingResponse(ctx iris.Context, v *ddd_repository.FindPagingResult[*view.{{.Name}}View], isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, v *ddd_repository.FindPagingResult[*view.{{.Name}}View], isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
     if findErr != nil {
         return nil, isFound, findErr
     }
@@ -43,7 +43,7 @@ func (a *{{.Name}}Assembler) AssFindPagingResponse(ctx iris.Context, v *ddd_repo
 	return response, isFound, nil
 }
 
-func (a *{{.Name}}Assembler) AssFindAllResponse(ctx iris.Context, vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindAllResponse(ictx iris.Context, vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
 	if findErr != nil {
 		return nil, isFound, findErr
 	}
@@ -56,13 +56,13 @@ func (a *{{.Name}}Assembler) AssFindAllResponse(ctx iris.Context, vList *[]*view
 }
 
 
-func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdRequest(ctx iris.Context) (*dto.{{.Name}}FindBy{{.AggregateName}}IdRequest, error) {
-    tenantId, err := a.BaseAssembler.GetTenantId(ctx)
+func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdRequest(ictx iris.Context) (*dto.{{.Name}}FindBy{{.AggregateName}}IdRequest, error) {
+    tenantId, err := a.BaseAssembler.GetTenantId(ictx)
     if err!=nil {
         return nil, err
     }
 
-    {{.aggregateName}}Id, err := a.BaseAssembler.GetIdParam(ctx, "{{.aggregateName}}Id")
+    {{.aggregateName}}Id, err := a.BaseAssembler.GetIdParam(ictx, "{{.aggregateName}}Id")
     if err!=nil {
         return nil, err
     }
@@ -75,7 +75,7 @@ func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdRequest(ctx iris.Conte
 }
 
 
-func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdResponse(ctx iris.Context , vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindBy{{.AggregateName}}IdResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdResponse(ictx iris.Context , vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindBy{{.AggregateName}}IdResponse, bool, error) {
 	if findErr != nil {
 		return nil, isFound, findErr
 	}
