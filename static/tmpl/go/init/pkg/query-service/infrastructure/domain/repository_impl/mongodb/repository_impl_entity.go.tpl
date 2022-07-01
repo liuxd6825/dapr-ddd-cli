@@ -62,3 +62,19 @@ func (r {{.Name}}ViewRepositoryImpl) FindAll(ctx context.Context, tenantId strin
 func (r {{.Name}}ViewRepositoryImpl) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
 	return r.base.FindPaging(ctx, query).Result()
 }
+
+func (r *{{.Name}}ViewRepositoryImpl) CreateMany(ctx context.Context, views *[]*view.{{.Name}}View) error {
+	return r.base.CreateMany(ctx, views)
+}
+
+func (r *{{.Name}}ViewRepositoryImpl) UpdateManyById(ctx context.Context, views *[]*view.{{.Name}}View) error {
+	return r.base.UpdateManyById(ctx, views)
+}
+
+func (r *{{.Name}}ViewRepositoryImpl) UpdateManyByFilter(ctx context.Context, tenantId, filter string, data interface{}) error {
+	return r.base.UpdateManyByFilter(ctx, tenantId, filter, data)
+}
+
+func (r *{{.Name}}ViewRepositoryImpl) DeleteByFilter(ctx context.Context, tenantId, filter string) error {
+	return r.base.DeleteById(ctx, tenantId, filter)
+}

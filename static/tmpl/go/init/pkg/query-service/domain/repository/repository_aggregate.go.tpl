@@ -9,8 +9,15 @@ import (
 type {{.Name}}ViewRepository interface {
 	Create(ctx context.Context, view *view.{{.Name}}View) (*view.{{.Name}}View, error)
 	Update(ctx context.Context, view *view.{{.Name}}View) (*view.{{.Name}}View, error)
+
+    CreateMany(ctx context.Context, views *[]*view.{{.Name}}View) error
+    UpdateManyById(ctx context.Context, views *[]*view.{{.Name}}View) error
+    UpdateManyByFilter(ctx context.Context, tenantId, filter string, data interface{}) error
+    DeleteByFilter(ctx context.Context, tenantId, filter string) error
+
 	DeleteById(ctx context.Context, tenantId string, id string) error
 	DeleteAll(ctx context.Context, tenantId string) error
+
 	FindById(ctx context.Context, tenantId string, id string) (*view.{{.Name}}View, bool, error)
 	FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error)
 	FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)

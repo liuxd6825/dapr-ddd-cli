@@ -42,32 +42,48 @@ func new{{.Name}}QueryDomainService() service.{{.Name}}QueryDomainService {
 	}
 }
 
-func (u *{{.Name}}QueryDomainServiceImpl) Create(ctx context.Context, view *view.{{.Name}}View) error {
-	_, err := u.repos.Create(ctx, view)
+func (s *{{.Name}}QueryDomainServiceImpl) Create(ctx context.Context, view *view.{{.Name}}View) error {
+	_, err := s.repos.Create(ctx, view)
 	return err
 }
 
-func (u *{{.Name}}QueryDomainServiceImpl) Update(ctx context.Context, view *view.{{.Name}}View) error {
-	_, err := u.repos.Update(ctx, view)
+func (s *{{.Name}}QueryDomainServiceImpl) Update(ctx context.Context, view *view.{{.Name}}View) error {
+	_, err := s.repos.Update(ctx, view)
 	return err
 }
 
-func (u *{{.Name}}QueryDomainServiceImpl) DeleteById(ctx context.Context, tenantId string, id string) error {
-	return u.repos.DeleteById(ctx, tenantId, id)
+func (s *{{.Name}}QueryDomainServiceImpl) CreateMany(ctx context.Context, views *[]*view.{{.Name}}View) error {
+	return s.repos.CreateMany(ctx, views)
 }
 
-func (u *{{.Name}}QueryDomainServiceImpl) DeleteAll(ctx context.Context, tenantId string) error {
-	return u.repos.DeleteAll(ctx, tenantId)
+func (s *{{.Name}}QueryDomainServiceImpl) UpdateManyById(ctx context.Context, views *[]*view.{{.Name}}View) error {
+	return s.repos.UpdateManyById(ctx, views)
 }
 
-func (u *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, tenantId, id string) (*view.{{.Name}}View, bool, error) {
-	return u.repos.FindById(ctx, tenantId, id)
+func (s *{{.Name}}QueryDomainServiceImpl) UpdateManyByFilter(ctx context.Context, tenantId, filter string, data interface{}) error {
+	return s.repos.UpdateManyByFilter(ctx, tenantId, filter, data)
 }
 
-func (u *{{.Name}}QueryDomainServiceImpl) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
-	return u.repos.FindAll(ctx, tenantId)
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteByFilter(ctx context.Context, tenantId string, filter string) error {
+	return s.repos.DeleteByFilter(ctx, tenantId, filter)
 }
 
-func (u *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
-	return u.repos.FindPaging(ctx, query)
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteById(ctx context.Context, tenantId string, id string) error {
+	return s.repos.DeleteById(ctx, tenantId, id)
+}
+
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteAll(ctx context.Context, tenantId string) error {
+	return s.repos.DeleteAll(ctx, tenantId)
+}
+
+func (s *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, tenantId, id string) (*view.{{.Name}}View, bool, error) {
+	return s.repos.FindById(ctx, tenantId, id)
+}
+
+func (s *{{.Name}}QueryDomainServiceImpl) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
+	return s.repos.FindAll(ctx, tenantId)
+}
+
+func (s *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error) {
+	return s.repos.FindPaging(ctx, query)
 }
