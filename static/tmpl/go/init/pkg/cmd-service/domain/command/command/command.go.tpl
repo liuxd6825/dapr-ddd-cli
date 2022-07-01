@@ -12,13 +12,13 @@ import (
 // @Description: {{.Description}}
 //
 type {{.ClassName}} struct {
-	CommandId   string    `json:"commandId"     validate:"gt=0"`   // 命令ID
-	IsValidOnly bool      `json:"isValidOnly"   validate:"-"`   // 是否仅验证，不执行
+	CommandId   string    `json:"commandId" validate:"required"`   // 命令ID
+	IsValidOnly bool      `json:"isValidOnly" validate:"-"`   // 是否仅验证，不执行
     {{- if .Command.IsUpdate }}
-	UpdateMask  []string  `json:"updateMask"`                      // 要更新的字段项，空值：更新所有字段
+	UpdateMask  []string  `json:"updateMask" validate:"-"`                      // 要更新的字段项，空值：更新所有字段
     {{- end }}
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
 {{- end}}
 }
 

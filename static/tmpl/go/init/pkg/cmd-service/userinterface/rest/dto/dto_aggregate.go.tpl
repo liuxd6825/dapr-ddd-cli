@@ -16,12 +16,12 @@ import (
 // @param ctx
 //
 type {{$cmd.Name}}Request struct {
-	CommandId   string                `json:"commandId"`     // 命令ID
-	IsValidOnly bool                  `json:"isValidOnly"`   // 是否仅验证，不执行
+	CommandId   string                `json:"commandId"  validate:"required"`     // 命令ID
+	IsValidOnly bool                  `json:"isValidOnly"  validate:"-"`   // 是否仅验证，不执行
     {{- if $cmd.IsUpdate }}
-	UpdateMask  []string              `json:"updateMask"`    // 要更新的字段项，空值：更新所有字段
+	UpdateMask  []string              `json:"updateMask"  validate:"-"`    // 要更新的字段项，空值：更新所有字段
     {{- end }}
-	Data        {{$cmd.Name}}RequestData `json:"data"`
+	Data        {{$cmd.Name}}RequestData `json:"data"  validate:"required"`
 }
 
 //
@@ -33,17 +33,17 @@ type {{$cmd.Name}}Request struct {
 type {{$cmd.Name}}RequestData struct {
 {{- range $name, $property := $cmd.Properties.GetDataFieldProperties}}
     {{- if $property.IsArrayEntityType }}
-    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else if $property.IsEntityType}}
-    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else if $property.IsDateType }}
-    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else if $property.IsTimeType }}
-    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else if $property.IsEnumType }}
-    {{$property.UpperName}} field.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} field.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else }}
-    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- end}}
 {{- end}}
 }
@@ -67,17 +67,17 @@ type {{$cmd.Name}}Response struct {
 type {{.Name}}Dto struct {
 {{- range $name, $property := .Properties}}
     {{- if $property.IsArrayEntityType }}
-    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else if $property.IsEntityType}}
-    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else if $property.IsDateType }}
-    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else if $property.IsTimeType }}
-    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else if $property.IsEnumType }}
-    {{$property.UpperName}} field.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} field.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- else }}
-    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
     {{- end}}
 {{- end}}
 }

@@ -25,11 +25,11 @@ func New{{.Name}}QueryApi() *{{.Name}}QueryApi {
 
 
 func (a *{{.Name}}QueryApi) BeforeActivation(b mvc.BeforeActivation) {
-	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.AggregatePluralName}}/{{.EntityPluralName}}/{id}", "FindById")
+	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.EntityPluralName}}/{id}", "FindById")
 	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.AggregatePluralName}}/{{.ParentId}}/{{.EntityPluralName}}", "FindBy{{.AggregateName}}Id")
-	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.AggregatePluralName}}/{{.EntityPluralName}}:{{.aggregateMidlineName}}-id/{{.EntityPluralName}}", "FindBy{{.AggregateName}}Id")
-	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.AggregatePluralName}}/{{.EntityPluralName}}:all", "FindAll")
-	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.AggregatePluralName}}/{{.EntityPluralName}}", "FindPaging")
+	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.EntityPluralName}}:{{.aggregateMidlineName}}-id/{{.EntityPluralName}}", "FindBy{{.AggregateName}}Id")
+	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.EntityPluralName}}:all", "FindAll")
+	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{.EntityPluralName}}", "FindPaging")
 }
 
 

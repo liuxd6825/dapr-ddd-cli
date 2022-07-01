@@ -10,17 +10,17 @@ import (
 // @Description: {{.Description}}
 //
 type {{.ClassName}} struct {
-    EventId       string           `json:"eventId"`       // 领域事件ID
-    CommandId     string           `json:"commandId"`     // 关联命令ID
-    CreatedTime   time.Time        `json:"time"`          // 事件创建时间
+    EventId       string           `json:"eventId" validate:"required"`       // 领域事件ID
+    CommandId     string           `json:"commandId" validate:"required"`     // 关联命令ID
+    CreatedTime   time.Time        `json:"time" validate:"required"`          // 事件创建时间
     {{- if .Event.IsUpdate }}
-	UpdateMask   []string         `json:"updateMask"`    // 要更新字段
+	UpdateMask   []string         `json:"updateMask" validate:"-"`    // 要更新字段
     {{- end }}
 {{- if .HasDataProperty }}
-    Data      field.{{.FieldName}}  `json:"data"`        // 业务字段项
+    Data      field.{{.FieldName}}  `json:"data" validate:"required"`        // 业务字段项
 {{- else }}
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"{{if $property.HasValidate}} validate:"{{$property.Validate}}"{{- end}}` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}" validate:"{{$property.GetValidate}}"` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
 {{- end}}
 {{- end }}
 }

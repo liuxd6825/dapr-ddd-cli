@@ -29,8 +29,8 @@ func New{{.Name}}FindByIdResponse() *{{.Name}}FindByIdResponse{
 // @Description: {{.Description}}  查询{{.Name}}Id请求体
 //
 type {{.Name}}FindBy{{.AggregateName}}IdRequest struct {
-    TenantId string
-    {{.AggregateName}}Id string
+    TenantId string  `json:"tenantId" validate:"required"`
+    {{.AggregateName}}Id string `json:"{{.aggregateName}}Id" validate:"required"`
 }
 
 func New{{.Name}}FindBy{{.AggregateName}}IdRequest() *{{.Name}}FindBy{{.AggregateName}}IdRequest{
@@ -120,17 +120,17 @@ type {{.Name}}Dto struct {
     base.BaseDto
 {{- range $name, $property := .Properties}}
     {{- if $property.IsArrayEntityType }}
-    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else if $property.IsEntityType}}
-    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else if $property.IsDateType }}
-    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else if $property.IsTimeType }}
-    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else if $property.IsEnumType }}
-    {{$property.UpperName}} view.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} view.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else }}
-    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
+    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- end}}
 {{- end}}
 }

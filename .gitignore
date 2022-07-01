@@ -15,3 +15,5 @@
 # vendor/
 test/init_out
 dist
+/test/init/
+/test/out/
