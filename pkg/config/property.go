@@ -143,9 +143,8 @@ type Property struct {
 
 func NewProperty(name string, dataType string) *Property {
 	return &Property{
-		Name:     name,
-		Type:     dataType,
-		Validate: "-",
+		Name: name,
+		Type: dataType,
 	}
 }
 
@@ -170,9 +169,6 @@ func (p *Property) init(a *Aggregate, c *Config, name string) {
 	p.Name = name
 	p.Aggregate = a
 	p.Config = c
-	if len(p.Validate) == 0 {
-		p.Validate = "-"
-	}
 }
 
 //
@@ -304,5 +300,12 @@ func (p *Property) Entity() *Entity {
 }
 
 func (p *Property) GetValidate() string {
+	if len(p.Validate) == 0 {
+		if strings.HasSuffix(p.Name, "Id") {
+			return "required"
+		} else {
+			return "-"
+		}
+	}
 	return p.Validate
 }
