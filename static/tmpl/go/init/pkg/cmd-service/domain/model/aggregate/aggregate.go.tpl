@@ -77,7 +77,7 @@ func NewAggregate() ddd.Aggregate {
 // @param metadata 元数据
 // @return error 错误
 //
-func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.Name}}, metadata *map[string]string) error {
+func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.Name}}, metadata *map[string]string) (any, error) {
     {{- if $cmd.IsCreateAggregate }}
     return ddd.CreateEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
     {{- else if  $cmd.IsUpdateAggregate }}
