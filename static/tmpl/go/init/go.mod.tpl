@@ -7,10 +7,10 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-alpha9
 	golang.org/x/exp v0.0.0-20220325121720-054d8573a5d8
 
- 	github.com/liuxd6825/go-sdk v1.7.1-1.0-alpha
-    github.com/liuxd6825/dapr v1.7.1-1.0-alpha
-    github.com/liuxd6825/dapr-go-ddd-sdk v1.7.1-1.0-alpha
-    github.com/liuxd6825/components-contrib v1.7.1-1.0-alpha
+ 	github.com/liuxd6825/go-sdk v1.7.1-1.0-alpha2
+    github.com/liuxd6825/dapr v1.7.1-1.0-alpha2
+    github.com/liuxd6825/dapr-go-ddd-sdk v1.7.1-1.0-alpha2
+    github.com/liuxd6825/components-contrib v1.7.1-1.0-alpha2
 )
 
 require (
@@ -97,7 +97,7 @@ require (
 //replace github.com/liuxd6825/dapr-go-ddd-sdk => {{.GoMetadata.DaprSrcPath}}/dapr-go-ddd-sdk
 //replace github.com/liuxd6825/components-contrib => {{.GoMetadata.DaprSrcPath}}/components-contrib
 
-replace github.com/liuxd6825/go-sdk => gitee.com/liuxd6825/go-sdk v1.7.1-1.0-alpha
-replace github.com/liuxd6825/dapr-go-ddd-sdk => gitee.com/liuxd6825/dapr-go-ddd-sdk v1.7.1-1.0-alpha
-replace github.com/liuxd6825/dapr => gitee.com/liuxd6825/dapr v1.7.1-1.0-alpha
-replace github.com/liuxd6825/components-contrib => gitee.com/liuxd6825/components-contrib v1.7.1-1.0-alpha
+replace github.com/liuxd6825/go-sdk => gitee.com/liuxd6825/go-sdk v1.7.1-1.0-alpha2
+replace github.com/liuxd6825/dapr-go-ddd-sdk => gitee.com/liuxd6825/dapr-go-ddd-sdk v1.7.1-1.0-alpha2
+replace github.com/liuxd6825/dapr => gitee.com/liuxd6825/dapr v1.7.1-1.0-alpha2
+replace github.com/liuxd6825/components-contrib => gitee.com/liuxd6825/components-contrib v1.7.1-1.0-alpha2

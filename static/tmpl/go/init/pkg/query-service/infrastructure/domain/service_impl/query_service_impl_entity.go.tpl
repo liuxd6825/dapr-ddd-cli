@@ -46,6 +46,23 @@ func (s *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, tenantId
 	return s.repos.FindById(ctx, tenantId, userId)
 }
 
+
+func (s *{{.Name}}QueryDomainServiceImpl) CreateMany(ctx context.Context, views *[]*view.{{.Name}}View) error {
+	return s.repos.CreateMany(ctx, views)
+}
+
+func (s *{{.Name}}QueryDomainServiceImpl) UpdateManyById(ctx context.Context, views *[]*view.{{.Name}}View) error {
+	return s.repos.UpdateManyById(ctx, views)
+}
+
+func (s *{{.Name}}QueryDomainServiceImpl) UpdateManyByFilter(ctx context.Context, tenantId, filter string, data interface{}) error {
+	return s.repos.UpdateManyByFilter(ctx, tenantId, filter, data)
+}
+
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteByFilter(ctx context.Context, tenantId string, filter string) error {
+	return s.repos.DeleteByFilter(ctx, tenantId, filter)
+}
+
 func (s *{{.Name}}QueryDomainServiceImpl) Create(ctx context.Context, view *view.{{.Name}}View) error {
 	_, err := s.repos.Create(ctx, view)
 	return err
@@ -55,10 +72,6 @@ func (s *{{.Name}}QueryDomainServiceImpl) Update(ctx context.Context, view *view
 	_, err := s.repos.Update(ctx, view)
 	return err
 }
-
-func (s *{{.Name}}QueryDomainServiceImpl) DeleteById(ctx context.Context, tenantId string, id string) error {
-	return s.repos.DeleteById(ctx, tenantId, id)
-
 
 func (s *{{.Name}}QueryDomainServiceImpl) DeleteById(ctx context.Context, tenantId string, id string) error {
 	return s.repos.DeleteById(ctx, tenantId, id)

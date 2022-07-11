@@ -114,7 +114,7 @@ func (a *{{.Name}}QueryApi) FindPaging(ictx iris.Context, tenantId string) {
 	_, _, _ = restapp.DoQuery(ictx, func(ctx context.Context) (interface{}, bool, error) {
 		req, err := {{.Name}}Assembler.AssFindPagingRequest(ictx)
     	if err != nil {
-    		return  nil, false, err
+    		return nil, false, err
     	}
 		fpr, b, e := a.queryService.FindPaging(ctx, req)
 		return {{.Name}}Assembler.AssFindPagingResponse(ictx, fpr, b, e)

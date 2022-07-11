@@ -61,7 +61,7 @@ func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ictx iris.Context) {
 	_ = restapp.DoCmd(ictx, func(ctx context.Context) error {
 	    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ictx)
         if err != nil {
-            return
+			return err
         }
 		return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
 	})
@@ -79,7 +79,7 @@ func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ictx iris.Context) {
 	_ = restapp.Do(ictx, func() error {
         cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ctx)
         if err != nil {
-            return
+			return err
         }
 
         _, _, err = restapp.DoCmdAndQueryOne(ictx, c.service.QueryAppId, cmd, func(ctx context.Context) error {
