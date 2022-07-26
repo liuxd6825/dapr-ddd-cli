@@ -19,12 +19,30 @@ type {{.ClassName}} struct {
     base_service.BaseCommandDomainService
 }
 
+// 单例应用服务
+var {{.name}}CommandDomainService *{{.Name}}CommandDomainService
+
+// 并发安全
+var once{{.Name}} sync.Once
+
+//
+// Get{{.Name}}CommandDomainService
+// @Description: 获取单例领域服务
+// @return service.{{.Name}}QueryDomainService
+//
+func Get{{.Name}}CommandDomainService() *{{.Name}}CommandDomainService {
+    once{{.Name}}.Do(func() {
+        {{.name}}CommandDomainService = new{{.Name}}CommandDomainService()
+    })
+	return {{.name}}CommandDomainService
+}
+
 //
 // New{{.ClassName}}
 // @Description: 创建领域服务
 // @return *{{.ClassName}}
 //
-func New{{.ClassName}}() *{{.ClassName}} {
+func new{{.ClassName}}() *{{.ClassName}} {
     return &{{.ClassName}}{}
 }
 

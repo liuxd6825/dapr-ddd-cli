@@ -3,16 +3,19 @@ package service
 import (
 	"context"
     "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/dto"
-    "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/assembler"
+    "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/executor"
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/model"
-	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/service"
+	domain_service "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/service"
 	query_dto "{{.Namespace}}/pkg/query-service/userinterface/rest/{{.aggregate_name}}/dto"
 	base "{{.Namespace}}/pkg/cmd-service/infrastructure/base/application/service"
 )
 
 type {{.ClassName}} struct {
     base.BaseQueryAppService
-	domainService *service.{{.Aggregate.Name}}CommandDomainService
+    {{- range $i, $cmd := .Commands}}
+    {{$cmd.FirstLowerName}}Executor executor.{{$cmd.Name}}Executor
+    {{- end }}
+    findAggregateByIdExecutor executor.FindAggregateByIdExecutor
 }
 
 //
@@ -22,7 +25,10 @@ type {{.ClassName}} struct {
 //
 func New{{.ClassName}}() *{{.ClassName}} {
 	res := &{{.ClassName}}{
-		domainService: &service.{{.Aggregate.Name}}CommandDomainService{},
+        {{- range $i, $cmd := .Commands}}
+        {{$cmd.FirstLowerName}}Executor: executor.Get{{$cmd.Name}}Executor(),
+        {{- end }}
+        findAggregateByIdExecutor: executor.GetFindAggregateByIdExecutor(),
 	}
     res.Init("{{.QueryServiceName}}", "{{.Aggregate.PluralName}}", "{{.ApiVersion}}")
     return res
@@ -41,12 +47,7 @@ func New{{.ClassName}}() *{{.ClassName}} {
 // @return error
 //
 func (s *{{$ClassName}}) {{$cmd.ServiceFuncName}}(ctx context.Context, cmdDto *dto.{{$cmd.Name}}Dto) error {
-	cmd, err := assembler.Ass{{$cmd.Name}}(ctx, cmdDto)
-	if err != nil {
-		return err
-	}
-	_, err = s.domainService.{{$cmd.ServiceFuncName}}(ctx, cmd)
-	return err
+	return s.{{$cmd.FirstLowerName}}Executor.Execute(ctx, cmdDto)
 }
 {{- end }}
 
@@ -60,7 +61,7 @@ func (s *{{$ClassName}}) {{$cmd.ServiceFuncName}}(ctx context.Context, cmdDto *d
 // @return error
 //
 func (s *{{.ClassName}}) FindAggregateById(ctx context.Context, tenantId string, id string) (*model.{{.Aggregate.Name}}Aggregate, bool, error) {
-	return s.domainService.GetAggregateById(ctx, tenantId, id)
+	return s.findAggregateByIdExecutor.Execute(ctx, tenantId, id)
 }
 
 //

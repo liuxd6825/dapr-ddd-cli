@@ -135,6 +135,10 @@ func (c *Command) SnakeName() string {
 	return utils.SnakeString(c.Name)
 }
 
+func (c *Command) FirstLowerName() string {
+	return utils.FirstLower(c.Name)
+}
+
 func (c *Command) HttpType() string {
 	if c.IsCreate() {
 		return "POST"

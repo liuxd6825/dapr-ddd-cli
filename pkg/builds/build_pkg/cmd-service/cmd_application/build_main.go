@@ -13,13 +13,18 @@ type BuildApplicationLayer struct {
 	outDir    string
 
 	buildCmdAppServiceAggregate *BuildCmdAppServiceAggregate
-	buildCmdAppServiceEntities  []*BuildCmdAppServiceEntity
+	//buildCmdAppServiceEntities  []*BuildCmdAppServiceEntity
 
 	buildQueryAppServiceAggregate *BuildQueryAppServiceAggregate
 	buildQueryAppServiceEntities  []*BuildQueryAppServiceEntity
 
 	buildAssemblerAggregate *BuildAssemblerAggregate
 	buildAssemblerEntities  []*BuildAssemblerEntity
+
+	buildExecutorInit *BuildExecutorInit
+
+	buildFindAggregateByIdExecutor *BuildFindAggregateByIdExecutor
+	buildCommandExecutors          []*BuildCommandExecutor
 
 	buildDtoAggregate *BuildDtoAggregate
 	buildDtoEntities  []*BuildDtoEntity
@@ -45,23 +50,23 @@ func (b *BuildApplicationLayer) init() {
 	outFile := fmt.Sprintf("%s/internals/%s/service/%s_command_app_service.go", b.outDir, aggregateName, aggregateName)
 	b.buildCmdAppServiceAggregate = NewBuildCmdAppServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 
-	b.buildCmdAppServiceEntities = []*BuildCmdAppServiceEntity{}
-	for _, entity := range b.aggregate.Entities {
-		outFile = fmt.Sprintf("%s/internals/%s/service/%s_command_app_service.go", b.outDir, aggregateName, entity.SnakeName())
-		build := NewBuildCmdAppServiceEntity(b.BaseBuild, b.aggregate, entity, outFile)
-		b.buildCmdAppServiceEntities = append(b.buildCmdAppServiceEntities, build)
-	}
+	/*	b.buildCmdAppServiceEntities = []*BuildCmdAppServiceEntity{}
+		for _, entity := range b.aggregate.Entities {
+			outFile = fmt.Sprintf("%s/internals/%s/service/%s_command_app_service.go", b.outDir, aggregateName, entity.SnakeName())
+			build := NewBuildCmdAppServiceEntity(b.BaseBuild, b.aggregate, entity, outFile)
+			b.buildCmdAppServiceEntities = append(b.buildCmdAppServiceEntities, build)
+		}*/
 
 	// query service
 	outFile = fmt.Sprintf("%s/internals/%s/service/%s_query_app_service.go", b.outDir, aggregateName, aggregateName)
 	b.buildQueryAppServiceAggregate = NewBuildQueryAppServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 
-	b.buildQueryAppServiceEntities = []*BuildQueryAppServiceEntity{}
-	for _, entity := range b.aggregate.Entities {
-		outFile = fmt.Sprintf("%s/internals/%s/service/%s_query_app_service.go", b.outDir, aggregateName, entity.SnakeName())
-		build := NewBuildQueryAppServiceEntity(b.BaseBuild, entity, outFile)
-		b.buildQueryAppServiceEntities = append(b.buildQueryAppServiceEntities, build)
-	}
+	/*	b.buildQueryAppServiceEntities = []*BuildQueryAppServiceEntity{}
+		for _, entity := range b.aggregate.Entities {
+			outFile = fmt.Sprintf("%s/internals/%s/service/%s_query_app_service.go", b.outDir, aggregateName, entity.SnakeName())
+			build := NewBuildQueryAppServiceEntity(b.BaseBuild, entity, outFile)
+			b.buildQueryAppServiceEntities = append(b.buildQueryAppServiceEntities, build)
+		}*/
 
 	// dto
 	outFile = fmt.Sprintf("%s/internals/%s/dto/%s_dto.go", b.outDir, aggregateName, aggregateName)
@@ -84,6 +89,18 @@ func (b *BuildApplicationLayer) init() {
 		build := NewBuildAssemblerEntity(b.BaseBuild, b.aggregate, entity, outFile)
 		b.buildAssemblerEntities = append(b.buildAssemblerEntities, build)
 	}
+
+	b.buildCommandExecutors = []*BuildCommandExecutor{}
+	for _, command := range b.aggregate.Commands {
+		outFile = fmt.Sprintf("%s/internals/%s/executor/%s_executor.go", b.outDir, aggregateName, utils.SnakeString(command.Name))
+		build := NewBuildExecutor(b.BaseBuild, b.aggregate, command, outFile)
+		b.buildCommandExecutors = append(b.buildCommandExecutors, build)
+	}
+	outFile = fmt.Sprintf("%s/internals/%s/executor/x_init.go", b.outDir, aggregateName)
+	b.buildExecutorInit = NewBuildExecutorInit(b.BaseBuild, b.aggregate, outFile)
+
+	outFile = fmt.Sprintf("%s/internals/%s/executor/%s_executor.go", b.outDir, aggregateName, "find_aggreage_id")
+	b.buildFindAggregateByIdExecutor = NewBuildFindAggregateByIdExecutor(b.BaseBuild, b.Aggregate, outFile)
 }
 
 func (b *BuildApplicationLayer) Build() error {
@@ -91,15 +108,16 @@ func (b *BuildApplicationLayer) Build() error {
 
 	// command service
 	list = append(list, b.buildCmdAppServiceAggregate)
-	for _, item := range b.buildCmdAppServiceEntities {
+	/*	for _, item := range b.buildCmdAppServiceEntities {
+		list = append(list, item)
+	}*/
+
+	// executor
+	list = append(list, b.buildFindAggregateByIdExecutor)
+	list = append(list, b.buildExecutorInit)
+	for _, item := range b.buildCommandExecutors {
 		list = append(list, item)
 	}
-
-	// query service
-	/*	list = append(list, b.buildQueryAppServiceAggregate)
-		for _, item := range b.buildQueryAppServiceEntities {
-			list = append(list, item)
-		}*/
 
 	// assembler
 	list = append(list, b.buildAssemblerAggregate)

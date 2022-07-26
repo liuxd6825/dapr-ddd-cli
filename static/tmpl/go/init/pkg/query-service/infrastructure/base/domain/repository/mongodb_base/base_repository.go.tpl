@@ -25,6 +25,18 @@ func NewBaseRepository[T ddd.Entity](newFunc func() T, collectionName string, op
 	}
 }
 
+func (u *BaseRepository[T]) CreateMany(ctx context.Context, entity *[]T, opts ...*ddd_repository.SetOptions) error {
+	return u.super.InsertMany(ctx, entity, opts...).GetError()
+}
+
+func (u *BaseRepository[T]) UpdateManyById(ctx context.Context, entity *[]T, opts ...*ddd_repository.SetOptions) error {
+	return u.super.UpdateManyById(ctx, entity, opts...).GetError()
+}
+
+func (u *BaseRepository[T]) UpdateManyByFilter(ctx context.Context,  tenantId, filter string, data interface{}, opts ...*ddd_repository.SetOptions) error {
+	return u.super.UpdateManyByFilter(ctx, tenantId, filter, data, opts...).GetError()
+}
+
 func (u *BaseRepository[T]) Create(ctx context.Context, entity T, opts ...*ddd_repository.SetOptions) (T, error) {
 	return u.super.Insert(ctx, entity, opts...).Result()
 }

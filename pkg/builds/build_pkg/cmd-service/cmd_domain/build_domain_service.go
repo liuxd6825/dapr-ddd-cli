@@ -31,5 +31,7 @@ func (b *BuildDomainService) Values() map[string]interface{} {
 	res["Package"] = fmt.Sprintf("%s_service", b.aggregate.SnakeName())
 	res["CommandPackage"] = fmt.Sprintf("%s_command", b.aggregate.SnakeName())
 	res["ModelPackage"] = fmt.Sprintf("%s_model", b.aggregate.SnakeName())
+	res["name"] = b.aggregate.FirstLowerName()
+	res["Name"] = b.aggregate.FirstUpperName()
 	return res
 }

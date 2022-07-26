@@ -25,7 +25,7 @@ func NewBuildCmdAppServiceAggregate(base builds.BaseBuild, aggregate *config.Agg
 
 func (b *BuildCmdAppServiceAggregate) Values() map[string]interface{} {
 	res := b.BaseBuild.Values()
-	res["Commands"] = b.aggregate.AggregateCommands
+	res["Commands"] = b.aggregate.Commands
 	res["ClassName"] = b.ClassName()
 	return res
 }
