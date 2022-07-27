@@ -1,4 +1,4 @@
-package mongodb
+package neo4j
 
 import (
 	"context"
