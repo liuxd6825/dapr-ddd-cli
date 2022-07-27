@@ -132,6 +132,11 @@ configuration:
           user: ddd
           pwd: 123456
           maxPoolSize: 20
+        Neo4j:
+          host: 192.168.64.4
+          port: 7687
+          user: neo4j
+          pwd: 123456
       Test:
         AppHttpPort: 8080
         DaprHttpPort: 8081
@@ -143,6 +148,11 @@ configuration:
           user: ddd
           pwd: 123456
           maxPoolSize: 20
+        Neo4j:
+          host: 192.168.64.4
+          port: 7687
+          user: neo4j
+          pwd: 123456
       Prod:
         Mongo:
           host: 192.168.64.8:27018, 192.168.64.8:27019, 192.168.64.8:27020
@@ -151,5 +161,10 @@ configuration:
           user: ddd
           pwd: 123456
           maxPoolSize: 20
+        Neo4j:
+          host: 192.168.64.4
+          port: 7687
+          user: neo4j
+          pwd: 123456
 
 
