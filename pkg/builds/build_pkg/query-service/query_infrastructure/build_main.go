@@ -12,11 +12,8 @@ type BuildInfrastructureLayer struct {
 	aggregate *config.Aggregate
 	outDir    string
 
-	buildRepositoryImplAggregate *BuildRepositoryImplAggregate
-	buildRepositoryImplEntities  []*BuildRepositoryImplEntity
-
-	buildQueryServiceImplAggregate *BuildQueryServiceImplAggregate
-	buildQueryServiceImplEntities  []*BuildQueryServiceImplEntity
+	buildRepositoryImpls   []*BuildRepositoryImpl
+	buildQueryServiceImpls []*BuildQueryServiceImpl
 
 	buildRegisterAllEventType   *BuildRegisterEventType
 	buildRegisterAggregateType  *BuildRegisterAggregateType
@@ -45,11 +42,8 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 		outDir:    outDir,
 	}
 
-	res.initRepositoryAggregate()
-	res.initRepositoryEntities()
-
-	res.initQueryServiceAggregate()
-	res.initQueryServiceEntities()
+	res.initRepository()
+	res.initQueryService()
 
 	res.initBuildRepositoryBase()
 	res.initRegisterSubscribe()
@@ -70,34 +64,19 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 func (b *BuildInfrastructureLayer) Build() error {
 	var list []builds2.Build
 
-	// aggregate
-	list = append(list, b.buildRepositoryImplAggregate)
-
-	// registerController
+	// RegisterRestController
 	list = append(list, b.buildRegisterRestController)
 
-	// entityObject
-	buildRepositoryImplEntities := func() []builds2.Build {
-		var res []builds2.Build
-		for _, item := range b.buildRepositoryImplEntities {
-			res = append(res, item)
-		}
-		return res
+	// RepositoryImpl
+	for _, item := range b.buildRepositoryImpls {
+		list = append(list, item)
 	}
-	list = append(list, buildRepositoryImplEntities()...)
 
-	// aggregate
-	list = append(list, b.buildQueryServiceImplAggregate)
-
-	// entityObject
-	buildQueryServiceImplEntities := func() []builds2.Build {
-		var res []builds2.Build
-		for _, item := range b.buildQueryServiceImplEntities {
-			res = append(res, item)
-		}
-		return res
+	// QueryService
+	for _, item := range b.buildQueryServiceImpls {
+		list = append(list, item)
 	}
-	list = append(list, buildQueryServiceImplEntities()...)
+
 	list = append(list, b.buildRepositoryBase)
 	list = append(list, b.buildRegisterSubscribe)
 	list = append(list, b.buildRegisterAggregateType)
@@ -113,32 +92,31 @@ func (b *BuildInfrastructureLayer) Build() error {
 	return b.DoBuild(list...)
 }
 
-func (b *BuildInfrastructureLayer) initRepositoryEntities() {
-	b.buildRepositoryImplEntities = []*BuildRepositoryImplEntity{}
+func (b *BuildInfrastructureLayer) initRepository() {
+	b.buildRepositoryImpls = []*BuildRepositoryImpl{}
+	outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	buildRepository := NewBuildRepositoryImpl(b.BaseBuild, nil, utils.ToLower(outFile))
+	b.buildRepositoryImpls = append(b.buildRepositoryImpls, buildRepository)
+
 	for _, item := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
-		build := NewBuildRepositoryImplEntity(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildRepositoryImplEntities = append(b.buildRepositoryImplEntities, build)
+		build := NewBuildRepositoryImpl(b.BaseBuild, item, utils.ToLower(outFile))
+		b.buildRepositoryImpls = append(b.buildRepositoryImpls, build)
 	}
 }
 
-func (b *BuildInfrastructureLayer) initRepositoryAggregate() {
-	outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	b.buildRepositoryImplAggregate = NewBuildRepositoryImplAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
-}
+func (b *BuildInfrastructureLayer) initQueryService() {
+	b.buildQueryServiceImpls = []*BuildQueryServiceImpl{}
 
-func (b *BuildInfrastructureLayer) initQueryServiceEntities() {
-	b.buildQueryServiceImplEntities = []*BuildQueryServiceImplEntity{}
+	outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	build := NewBuildQueryServiceImpl(b.BaseBuild, nil, utils.ToLower(outFile))
+	b.buildQueryServiceImpls = append(b.buildQueryServiceImpls, build)
+
 	for _, item := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
-		build := NewBuildQueryServiceImplEntity(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildQueryServiceImplEntities = append(b.buildQueryServiceImplEntities, build)
+		build := NewBuildQueryServiceImpl(b.BaseBuild, item, utils.ToLower(outFile))
+		b.buildQueryServiceImpls = append(b.buildQueryServiceImpls, build)
 	}
-}
-
-func (b *BuildInfrastructureLayer) initQueryServiceAggregate() {
-	outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	b.buildQueryServiceImplAggregate = NewBuildQueryServiceImplAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildInfrastructureLayer) initBuildRepositoryBase() {

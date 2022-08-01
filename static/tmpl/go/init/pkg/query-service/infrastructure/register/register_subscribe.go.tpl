@@ -10,9 +10,9 @@ import (
 //
 // GetRegisterSubscribe
 // @Description: 注册领域事件监听器
-// @return *[]restapp.RegisterSubscribe
+// @return []restapp.RegisterSubscribe
 //
-func GetRegisterSubscribe() *[]restapp.RegisterSubscribe {
+func GetRegisterSubscribe() []restapp.RegisterSubscribe {
 	var list []restapp.RegisterSubscribe
 
 	{{- range $aggName, $agg := .Aggregates}}

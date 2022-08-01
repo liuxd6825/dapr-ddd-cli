@@ -40,7 +40,7 @@ func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, v *ddd_rep
 	return res, isFound, nil
 }
 
-func (a *{{.Name}}Assembler) AssFindAllResponse(ictx iris.Context, vList *[]*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindAllResponse(ictx iris.Context, vList []*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
 	if findErr != nil  {
 		return nil, isFound, findErr
 	}

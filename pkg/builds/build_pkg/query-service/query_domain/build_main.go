@@ -15,15 +15,14 @@ type BuildDomainLayer struct {
 	buildProjectionAggregate *BuildProjectionAggregate
 	buildProjectionEntities  []*BuildProjectionEntity
 
-	buildQueryServiceAggregate *BuildQueryServiceAggregate
-	buildQueryServiceEntities  []*BuildQueryServiceEntity
-
-	buildRepositoryAggregate *BuildRepositoryAggregate
-	buildRepositoryEntities  []*BuildRepositoryEntity
+	buildQueryServices []*BuildQueryService
+	buildRepositories  []*BuildRepository
 
 	buildFactoryAggregate *BuildFactoryAggregate
 	buildFactoryEntities  []*BuildFactoryEntity
 	buildEnumObjects      []*BuildEnumObject
+
+	buildCommands []*BuildCommand
 }
 
 func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildDomainLayer {
@@ -41,16 +40,15 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 	res.initProjectionAggregate()
 	res.initProjectionEntities()
 
-	res.initRepositoryAggregate()
-	res.initRepositoryEntities()
+	res.initRepository()
 
-	res.initQueryServiceAggregate()
-	res.initQueryServiceEntities()
+	res.initQueryServices()
 
 	res.initFactoryEntities()
 	res.initFactoryAggregate()
 
 	res.initEnumObjects()
+	res.initCommands()
 	return res
 }
 
@@ -81,16 +79,14 @@ func (b *BuildDomainLayer) Build() error {
 		list = append(list, buildFieldsObjects()...)*/
 
 	// repository
-	for _, item := range b.buildRepositoryEntities {
+	for _, item := range b.buildRepositories {
 		list = append(list, item)
 	}
-	list = append(list, b.buildRepositoryAggregate)
 
 	// query_service
-	for _, item := range b.buildQueryServiceEntities {
+	for _, item := range b.buildQueryServices {
 		list = append(list, item)
 	}
-	list = append(list, b.buildQueryServiceAggregate)
 
 	// factory
 	for _, item := range b.buildFactoryEntities {
@@ -103,6 +99,10 @@ func (b *BuildDomainLayer) Build() error {
 		list = append(list, item)
 	}
 
+	// command
+	for _, item := range b.buildCommands {
+		list = append(list, item)
+	}
 	return b.DoBuild(list...)
 }
 
@@ -114,31 +114,31 @@ func (b *BuildDomainLayer) initFields() {
 	}
 }
 
-func (b *BuildDomainLayer) initQueryServiceAggregate() {
-	outFile := fmt.Sprintf("%s/%s/service/%s_query_service.go", b.outDir, b.Aggregate.FileName(), b.aggregate.FileName())
-	b.buildQueryServiceAggregate = NewBuildQueryServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
-}
+func (b *BuildDomainLayer) initQueryServices() {
+	b.buildQueryServices = []*BuildQueryService{}
 
-func (b *BuildDomainLayer) initQueryServiceEntities() {
-	b.buildQueryServiceEntities = []*BuildQueryServiceEntity{}
+	outFile := fmt.Sprintf("%s/%s/service/%s_query_service.go", b.outDir, b.Aggregate.FileName(), b.aggregate.FileName())
+	buildQuery := NewBuildQueryService(b.BaseBuild, nil, utils.ToLower(outFile))
+	b.buildQueryServices = append(b.buildQueryServices, buildQuery)
+
 	for _, item := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/%s/service/%s_query_service.go", b.outDir, b.Aggregate.FileName(), item.FileName())
-		buildEntityObject := NewBuildQueryServiceEntity(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildQueryServiceEntities = append(b.buildQueryServiceEntities, buildEntityObject)
+		buildEntityObject := NewBuildQueryService(b.BaseBuild, item, utils.ToLower(outFile))
+		b.buildQueryServices = append(b.buildQueryServices, buildEntityObject)
 	}
 }
 
-func (b *BuildDomainLayer) initRepositoryAggregate() {
-	outFile := fmt.Sprintf("%s/%s/repository/%s_view_repository.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
-	b.buildRepositoryAggregate = NewBuildRepositoryAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
-}
+func (b *BuildDomainLayer) initRepository() {
+	b.buildRepositories = []*BuildRepository{}
 
-func (b *BuildDomainLayer) initRepositoryEntities() {
-	b.buildRepositoryEntities = []*BuildRepositoryEntity{}
+	outFile := fmt.Sprintf("%s/%s/repository/%s_view_repository.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
+	buildRepository := NewBuildRepository(b.BaseBuild, nil, utils.ToLower(outFile))
+	b.buildRepositories = append(b.buildRepositories, buildRepository)
+
 	for _, item := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/%s/repository/%s_view_repository.go", b.outDir, b.Aggregate.FileName(), utils.SnakeString(item.Name))
-		buildEntityObject := NewBuildRepositoryEntity(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildRepositoryEntities = append(b.buildRepositoryEntities, buildEntityObject)
+		buildRepository := NewBuildRepository(b.BaseBuild, item, utils.ToLower(outFile))
+		b.buildRepositories = append(b.buildRepositories, buildRepository)
 	}
 }
 
@@ -178,5 +178,19 @@ func (b *BuildDomainLayer) initEnumObjects() {
 			buildEnumObject := NewBuildEnumObject(b.BaseBuild, item, utils.ToLower(outFile))
 			b.buildEnumObjects = append(b.buildEnumObjects, buildEnumObject)
 		}
+	}
+}
+
+func (b *BuildDomainLayer) initCommands() {
+	b.buildCommands = []*BuildCommand{}
+
+	outFile := fmt.Sprintf("%s/%s/command/%s_query.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(b.aggregate.Name))
+	buildCommand := NewBuildCommand(b.BaseBuild, b.aggregate, nil, utils.ToLower(outFile))
+	b.buildCommands = append(b.buildCommands, buildCommand)
+
+	for _, item := range b.aggregate.Entities {
+		outFile := fmt.Sprintf("%s/%s/command/%s_query.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
+		buildCommand := NewBuildCommand(b.BaseBuild, nil, item, utils.ToLower(outFile))
+		b.buildCommands = append(b.buildCommands, buildCommand)
 	}
 }

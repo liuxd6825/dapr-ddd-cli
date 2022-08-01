@@ -131,11 +131,11 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 // @receiver a
 // @param ctx 上下文
 // @param tenantId string 租户ID
-// @return *[]*view.{{.Name}}View
+// @return []*view.{{.Name}}View
 // @return bool 是否查询到数据
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) (*[]*view.{{.Name}}View, bool, error) {
+func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) ([]*view.{{.Name}}View, bool, error) {
 	return a.{{.name}}DomainService.FindAll(ctx, tenantId)
 }
 
@@ -151,7 +151,7 @@ func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string)
 // @return bool 是否查询到数据
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) (*[]*view.{{.Name}}View, bool, error) {
+func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error) {
 	return a.{{.name}}DomainService.FindBy{{.AggregateName}}Id(ctx, tenantId, {{.aggregateName}}Id)
 }
 

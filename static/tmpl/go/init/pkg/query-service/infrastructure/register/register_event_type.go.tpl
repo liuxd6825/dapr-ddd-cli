@@ -8,9 +8,9 @@ import (
 //
 // GetRegisterEventType
 // @Description: 获取所有注册事件类型
-// @return *[]restapp.RegisterEventType
+// @return []restapp.RegisterEventType
 //
-func GetRegisterEventType() *[]restapp.RegisterEventType {
+func GetRegisterEventType() []restapp.RegisterEventType {
     return register.GetRegisterEventType()
 }
 

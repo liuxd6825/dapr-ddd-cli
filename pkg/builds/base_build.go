@@ -105,8 +105,23 @@ func (b *BaseBuild) Values() map[string]interface{} {
 		res["AggregateModelPackage"] = fmt.Sprintf("%s/model", aggregateName)
 		res["AggregateFactoryPackage"] = fmt.Sprintf("%s/factory", aggregateName)
 		res["AggregateServicePackage"] = fmt.Sprintf("%s/service", aggregateName)
+
+		res["Name"] = b.Aggregate.Name
+		res["name"] = b.Aggregate.FirstLowerName()
 	}
 
+	return res
+}
+
+func (b *BaseBuild) ValuesOfEntity(entity *config.Entity) map[string]interface{} {
+	res := b.Values()
+	if entity != nil {
+		res["IsEntity"] = true
+		res["name"] = utils.FirstLower(entity.Name)
+		res["Name"] = utils.FirstUpper(entity.Name)
+		res["Description"] = entity.Description
+		res["Properties"] = entity.Properties
+	}
 	return res
 }
 

@@ -5,25 +5,22 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 )
 
-type BuildQueryServiceImplEntity struct {
+type BuildQueryServiceImpl struct {
 	builds.BaseBuild
 	entity *config.Entity
 }
 
-func NewBuildQueryServiceImplEntity(base builds.BaseBuild, entity *config.Entity, outFile string) *BuildQueryServiceImplEntity {
-	res := &BuildQueryServiceImplEntity{
+func NewBuildQueryServiceImpl(base builds.BaseBuild, entity *config.Entity, outFile string) *BuildQueryServiceImpl {
+	res := &BuildQueryServiceImpl{
 		BaseBuild: base,
 		entity:    entity,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/domain/service_impl/query_service_impl_entity.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/domain/service_impl/query_service_impl.go.tpl"
 	res.OutFile = outFile
 	return res
 }
 
-func (b *BuildQueryServiceImplEntity) Values() map[string]interface{} {
-	res := b.BaseBuild.Values()
-	res["Name"] = b.entity.Name
-	res["name"] = b.entity.FirstLowerName()
-	return res
+func (b *BuildQueryServiceImpl) Values() map[string]interface{} {
+	return b.BaseBuild.ValuesOfEntity(b.entity)
 }

@@ -10,9 +10,9 @@ import (
 //
 // GetRegisterController
 // @Description: 注册的控制器
-// @return *[]restapp.Controller
+// @return []restapp.Controller
 //
-func GetRegisterController() *[]restapp.Controller {
+func GetRegisterController() []restapp.Controller {
 	var list []restapp.Controller
 
 	{{- range $aggName, $agg := .Aggregates}}

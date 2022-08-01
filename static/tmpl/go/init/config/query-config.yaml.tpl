@@ -21,12 +21,12 @@ envs:
         user: {{.Metadata.QueryService.Dev.Mongo.user}}
         pwd: {{.Metadata.QueryService.Dev.Mongo.pwd}}
         maxPoolSize: {{.Metadata.QueryService.Dev.Mongo.maxPoolSize}}
-      neo4j:
-        default:
-          host: {{.Metadata.QueryService.Dev.Neoj4.host}}
-          port: {{.Metadata.QueryService.Dev.Neoj4.port}}
-          user: {{.Metadata.QueryService.Dev.Neoj4.user}}
-          pwd: {{.Metadata.QueryService.Dev.Neoj4.pwd}}
+    neo4j:
+      default:
+        host: {{.Metadata.QueryService.Dev.Neoj4.host}}
+        port: {{.Metadata.QueryService.Dev.Neoj4.port}}
+        user: {{.Metadata.QueryService.Dev.Neoj4.user}}
+        pwd: {{.Metadata.QueryService.Dev.Neoj4.pwd}}
   test:
     app:
       id: {{.QueryServiceName}}

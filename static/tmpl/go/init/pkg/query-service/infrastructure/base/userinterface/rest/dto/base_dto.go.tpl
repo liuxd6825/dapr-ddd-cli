@@ -41,7 +41,7 @@ func (q *FindPagingRequest) SetFields(value string)   { q.Fields = value }
 // @Description: FindPagingResponse
 //
 type FindPagingResponse[T any] struct {
-	Data       *[]T   `json:"data"`
+	Data       []T   `json:"data"`
 	TotalRows  int64  `json:"totalRows"`
 	TotalPages int64  `json:"totalPages"`
 	PageNum    int64  `json:"pageNum"`

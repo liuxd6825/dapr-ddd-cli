@@ -8,17 +8,16 @@ import (
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
-
 type Dao[T ddd.Entity] struct {
-	dao *ddd_mongodb.Repository[T]
+	dao *ddd_mongodb.Dao[T]
 }
 
-func newDao[T ddd.Entity](newFunc func() T, collectionName string, opts ...*DaoOptions) *Dao[T] {
-	options := NewDaoOptions()
+func newDao[T ddd.Entity](collectionName string, opts ...*RepositoryOptions) *Dao[T] {
+	options := NewRepositoryOptions()
 	options.Merge(opts...)
 	coll := options.mongoDB.GetCollection(collectionName)
 	return &Dao[T]{
-		dao: ddd_mongodb.NewRepository[T](newFunc, options.mongoDB, coll),
+		dao: ddd_mongodb.NewDao[T](options.mongoDB, coll),
 	}
 }
 
@@ -26,7 +25,7 @@ func (d *Dao[T]) Insert(ctx context.Context, entity T, opts ...*ddd_repository.S
 	return d.dao.Insert(ctx, entity, opts...).Result()
 }
 
-func (d *Dao[T]) InsertMany(ctx context.Context, entity *[]T, opts ...*ddd_repository.SetOptions) error {
+func (d *Dao[T]) InsertMany(ctx context.Context, entity []T, opts ...*ddd_repository.SetOptions) error {
 	return d.dao.InsertMany(ctx, entity, opts...).GetError()
 }
 
@@ -34,11 +33,11 @@ func (d *Dao[T]) Update(ctx context.Context, entity T, opts ...*ddd_repository.S
 	return d.dao.Update(ctx, entity, opts...).Result()
 }
 
-func (d *Dao[T]) UpdateManyById(ctx context.Context, entity []T, opts ...*ddd_repository.SetOptions) error {
+func (d *Dao[T]) UpdateMany(ctx context.Context, entity []T, opts ...*ddd_repository.SetOptions) error {
 	return d.dao.UpdateManyById(ctx, entity, opts...).GetError()
 }
 
-func (d *Dao[T]) UpdateManyByFilter(ctx context.Context,  tenantId, filter string, data interface{}, opts ...*ddd_repository.SetOptions) error {
+func (d *Dao[T]) UpdateManyByFilter(ctx context.Context, tenantId, filter string, data interface{}, opts ...*ddd_repository.SetOptions) error {
 	return d.dao.UpdateManyByFilter(ctx, tenantId, filter, data, opts...).GetError()
 }
 
@@ -46,10 +45,17 @@ func (d *Dao[T]) DeleteById(ctx context.Context, tenantId string, id string, opt
 	return d.dao.DeleteById(ctx, tenantId, id, opts...).GetError()
 }
 
+func (d *Dao[T]) DeleteByIds(ctx context.Context, tenantId string, ids []string, opts ...*ddd_repository.SetOptions) error {
+	return d.dao.DeleteByIds(ctx, tenantId, ids, opts...)
+}
+
 func (d *Dao[T]) DeleteAll(ctx context.Context, tenantId string, opts ...*ddd_repository.SetOptions) error {
 	return d.dao.DeleteAll(ctx, tenantId, opts...).GetError()
 }
 
+func (d *Dao[T]) DeleteByFilter(ctx context.Context, tenantId string, filter string, opts ...*ddd_repository.SetOptions) error {
+	return d.dao.DeleteByFilter(ctx, tenantId, filter, opts...)
+}
 func (d *Dao[T]) DeleteByMap(ctx context.Context, tenantId string, filterMap map[string]interface{}, opts ...*ddd_repository.SetOptions) error {
 	return d.dao.DeleteByMap(ctx, tenantId, filterMap, opts...).GetError()
 }
@@ -70,20 +76,20 @@ func (d *Dao[T]) FindPaging(ctx context.Context, query ddd_repository.FindPaging
 	return d.dao.FindPaging(ctx, query, opts...)
 }
 
-type DaoOptions struct {
+type RepositoryOptions struct {
 	mongoDB *ddd_mongodb.MongoDB
 }
 
-func NewDaoOptions() *DaoOptions {
-	return &DaoOptions{}
+func NewRepositoryOptions() *RepositoryOptions {
+	return &RepositoryOptions{}
 }
 
-func (o *DaoOptions) SetMongoDB(mongoDB *ddd_mongodb.MongoDB) *DaoOptions {
+func (o *RepositoryOptions) SetMongoDB(mongoDB *ddd_mongodb.MongoDB) *RepositoryOptions {
 	o.mongoDB = mongoDB
 	return o
 }
 
-func (o *DaoOptions) Merge(opts ...*DaoOptions) {
+func (o *RepositoryOptions) Merge(opts ...*RepositoryOptions) *RepositoryOptions {
 	if opts != nil {
 		for _, item := range opts {
 			if item.mongoDB != nil {
@@ -92,6 +98,11 @@ func (o *DaoOptions) Merge(opts ...*DaoOptions) {
 		}
 	}
 	if o.mongoDB == nil {
-		o.mongoDB = restapp.GetMongoDB()
+		o.mongoDB = GetMongoDB()
 	}
+	return o
+}
+
+func GetMongoDB() *ddd_mongodb.MongoDB {
+	return restapp.GetMongoDB()
 }
