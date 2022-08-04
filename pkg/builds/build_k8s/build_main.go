@@ -18,15 +18,13 @@ func NewBuildK8sLayer(cfg *config.Config, outDir string) *BuildK8sLayer {
 		},
 		outDir: outDir,
 	}
+	res.init()
 	return res
 }
 
-func (b *BuildK8sLayer) Build() error {
-	var list []builds.Build
+func (b *BuildK8sLayer) init() {
 	values := b.Values()
-
 	outDir := b.outDir
-	list = append(list, b.NewFileBuild("/k8s/cmd-service.yaml.tpl", outDir+"/cmd-service.yaml", values))
-	list = append(list, b.NewFileBuild("/k8s/query-service.yaml.tpl", outDir+"/query-service.yaml", values))
-	return b.DoBuild(list...)
+	b.AddBuild(b.NewFileBuild("/k8s/cmd-service.yaml.tpl", outDir+"/cmd-service.yaml", values))
+	b.AddBuild(b.NewFileBuild("/k8s/query-service.yaml.tpl", outDir+"/query-service.yaml", values))
 }

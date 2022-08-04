@@ -63,6 +63,7 @@ func (c *{{$ClassName}}) FindAggregateById(ictx iris.Context, tenantId string, i
 	})
 }
 
+
 {{- range $i, $cmd := .Commands}}
 {{- if $cmd.IsAggregate }}
 

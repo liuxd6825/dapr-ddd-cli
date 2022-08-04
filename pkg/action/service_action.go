@@ -40,22 +40,22 @@ func serviceBuild(modelPath string, lang string, outPath string, services []stri
 	for _, agg := range cfg.Aggregates {
 		if hasName(services, agg.Name) {
 			buildDomain := cmd_domain.NewBuildDomainLayer(cfg, agg, cmdDir+"/domain")
-			if err := buildDomain.Build(); err != nil {
+			if err := buildDomain.Builds(); err != nil {
 				panic(err)
 			}
 
 			buildInfra := cmd_infrastructure.NewBuildInfrastructureLayer(cfg, agg, cmdDir+"/infrastructure")
-			if err := buildInfra.Build(); err != nil {
+			if err := buildInfra.Builds(); err != nil {
 				panic(err)
 			}
 
 			buildApplication := cmd_application.NewBuildApplicationLayer(cfg, agg, cmdDir+"/application")
-			if err := buildApplication.Build(); err != nil {
+			if err := buildApplication.Builds(); err != nil {
 				panic(err)
 			}
 
 			buildUserInterface := cmd_userinterface.NewBuildRestControllerLayer(cfg, agg, cmdDir+"/userinterface")
-			if err := buildUserInterface.Build(); err != nil {
+			if err := buildUserInterface.Builds(); err != nil {
 				panic(err)
 			}
 		}
@@ -65,22 +65,22 @@ func serviceBuild(modelPath string, lang string, outPath string, services []stri
 	for _, agg := range cfg.Aggregates {
 		if hasName(services, agg.Name) {
 			buildDomain := query_domain.NewBuildDomainLayer(cfg, agg, queryDir+"/domain")
-			if err := buildDomain.Build(); err != nil {
+			if err := buildDomain.Builds(); err != nil {
 				panic(err)
 			}
 
 			buildInfra := query_infrastructure.NewBuildInfrastructureLayer(cfg, agg, queryDir+"/infrastructure")
-			if err := buildInfra.Build(); err != nil {
+			if err := buildInfra.Builds(); err != nil {
 				panic(err)
 			}
 
 			buildApplication := query_application.NewBuildApplicationLayer(cfg, agg, queryDir+"/application")
-			if err := buildApplication.Build(); err != nil {
+			if err := buildApplication.Builds(); err != nil {
 				panic(err)
 			}
 
 			buildUserInterface := query_userinterface.NewBuildUserInterfaceLayer(cfg, agg, queryDir+"/userinterface")
-			if err := buildUserInterface.Build(); err != nil {
+			if err := buildUserInterface.Builds(); err != nil {
 				panic(err)
 			}
 		}

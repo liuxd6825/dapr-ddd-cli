@@ -1,6 +1,7 @@
 package builds
 
 import (
+	"errors"
 	"fmt"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
@@ -19,6 +20,7 @@ type BaseBuild struct {
 	TmplFile   string
 	OutFile    string
 	ValuesFunc func() map[string]interface{}
+	builds     []Build
 }
 
 func NewBaseBuild(config *config.Config, aggregate *config.Aggregate) *BaseBuild {
@@ -28,6 +30,10 @@ func NewBaseBuild(config *config.Config, aggregate *config.Aggregate) *BaseBuild
 	}
 	res.ValuesFunc = res.Values
 	return res
+}
+
+func (b *BaseBuild) AddBuild(build Build) {
+	b.builds = append(b.builds, build)
 }
 
 func (b *BaseBuild) AggregateName() string {
@@ -50,13 +56,13 @@ func (b *BaseBuild) Namespace() string {
 	return b.Config.Configuration.GetNamespace()
 }
 
-func (b *BaseBuild) Build() error {
+func (b *BaseBuild) Build() (resErr error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
-				println(err)
-			} else {
-				println(rec)
+				resErr = err
+			} else if msg, ok := rec.(string); ok {
+				resErr = errors.New(msg)
 			}
 		}
 	}()
@@ -64,6 +70,24 @@ func (b *BaseBuild) Build() error {
 		return utils.RunTemplate(b.TmplFile, b.ValuesFunc(), b.OutFile)
 	}
 	return utils.RunTemplate(b.TmplFile, nil, b.OutFile)
+}
+
+func (b *BaseBuild) Builds() (resErr error) {
+	defer func() {
+		if rec := recover(); rec != nil {
+			if err, ok := rec.(error); ok {
+				resErr = err
+			} else if msg, ok := rec.(string); ok {
+				resErr = errors.New(msg)
+			}
+		}
+	}()
+	for _, build := range b.builds {
+		if err := build.Build(); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (b *BaseBuild) Values() map[string]interface{} {
@@ -129,11 +153,11 @@ func (b *BaseBuild) NewFileBuild(tmplFile, outFile string, values map[string]int
 	return NewBuildAnyFile(*b, values, "static/tmpl/go/init"+tmplFile, outFile)
 }
 
-func (b *BaseBuild) DoBuild(builds ...Build) error {
-	if builds == nil {
+func (b *BaseBuild) DoBuild() error {
+	if b.builds == nil {
 		return nil
 	}
-	for _, build := range builds {
+	for _, build := range b.builds {
 		println("building: " + build.GetOutFile())
 		if err := build.Build(); err != nil {
 			return err

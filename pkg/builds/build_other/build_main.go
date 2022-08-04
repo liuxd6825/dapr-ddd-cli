@@ -17,16 +17,15 @@ func NewBuildMakefile(cfg *config.Config, outDir string) *BuildMakefile {
 		},
 		outDir: outDir,
 	}
+	res.init()
 	return res
 }
 
-func (b *BuildMakefile) Build() error {
-	var list []builds.Build
+func (b *BuildMakefile) init() {
 	values := b.BaseBuild.Values()
 	outDir := b.outDir
-	list = append(list, b.NewFileBuild("/Makefile.tpl", outDir+"/Makefile", values))
-	list = append(list, b.NewFileBuild("/go.mod.tpl", outDir+"/go.mod", values))
-	list = append(list, b.NewFileBuild("/go.sum.tpl", outDir+"/go.sum", values))
-	list = append(list, b.NewFileBuild("/README.md.tpl", outDir+"/README.md", values))
-	return b.DoBuild(list...)
+	b.AddBuild(b.NewFileBuild("/Makefile.tpl", outDir+"/Makefile", values))
+	b.AddBuild(b.NewFileBuild("/go.mod.tpl", outDir+"/go.mod", values))
+	b.AddBuild(b.NewFileBuild("/go.sum.tpl", outDir+"/go.sum", values))
+	b.AddBuild(b.NewFileBuild("/README.md.tpl", outDir+"/README.md", values))
 }

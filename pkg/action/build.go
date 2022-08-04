@@ -37,27 +37,27 @@ func BuildProject(modelPath string, lang string, out string, aggregates []string
 
 	if isLayers("other", layers, buildType) {
 		buildMain := build_cmd.NewMainLayer(cfg, out+"/cmd")
-		if err := buildMain.Build(); err != nil {
+		if err := buildMain.Builds(); err != nil {
 			panic(err)
 		}
 
 		buildConfig := build_config.NewBuildConfigLayer(cfg, out+"/config")
-		if err := buildConfig.Build(); err != nil {
+		if err := buildConfig.Builds(); err != nil {
 			panic(err)
 		}
 
 		buildDocker := build_docker.NewBuildDockerLayer(cfg, out+"/docker")
-		if err := buildDocker.Build(); err != nil {
+		if err := buildDocker.Builds(); err != nil {
 			panic(err)
 		}
 
 		buildK8s := build_k8s.NewBuildK8sLayer(cfg, out+"/k8s")
-		if err := buildK8s.Build(); err != nil {
+		if err := buildK8s.Builds(); err != nil {
 			panic(err)
 		}
 
 		buildMakefile := build_other.NewBuildMakefile(cfg, out)
-		if err := buildMakefile.Build(); err != nil {
+		if err := buildMakefile.Builds(); err != nil {
 			panic(err)
 		}
 
@@ -70,28 +70,28 @@ func BuildProject(modelPath string, lang string, out string, aggregates []string
 
 				if isLayers("domain", layers, buildType) {
 					buildDomain := cmd_domain.NewBuildDomainLayer(cfg, agg, cmdDir+"/domain")
-					if err := buildDomain.Build(); err != nil {
+					if err := buildDomain.Builds(); err != nil {
 						panic(err)
 					}
 				}
 
 				if isLayers("infra", layers, buildType) {
 					buildInfra := cmd_infrastructure.NewBuildInfrastructureLayer(cfg, agg, cmdDir+"/infrastructure")
-					if err := buildInfra.Build(); err != nil {
+					if err := buildInfra.Builds(); err != nil {
 						panic(err)
 					}
 				}
 
 				if isLayers("app", layers, buildType) {
 					buildApplication := cmd_application.NewBuildApplicationLayer(cfg, agg, cmdDir+"/application")
-					if err := buildApplication.Build(); err != nil {
+					if err := buildApplication.Builds(); err != nil {
 						panic(err)
 					}
 				}
 
 				if isLayers("ui", layers, buildType) {
 					buildUserInterface := cmd_userinterface.NewBuildRestControllerLayer(cfg, agg, cmdDir+"/userinterface")
-					if err := buildUserInterface.Build(); err != nil {
+					if err := buildUserInterface.Builds(); err != nil {
 						panic(err)
 					}
 				}
@@ -105,28 +105,28 @@ func BuildProject(modelPath string, lang string, out string, aggregates []string
 			if isUpdateAggregate(agg.Name, aggregates, buildType) {
 				if isLayers("domain", layers, buildType) {
 					buildDomain := query_domain.NewBuildDomainLayer(cfg, agg, queryDir+"/domain")
-					if err := buildDomain.Build(); err != nil {
+					if err := buildDomain.Builds(); err != nil {
 						panic(err)
 					}
 				}
 
 				if isLayers("infra", layers, buildType) {
 					buildInfra := query_infrastructure.NewBuildInfrastructureLayer(cfg, agg, queryDir+"/infrastructure")
-					if err := buildInfra.Build(); err != nil {
+					if err := buildInfra.Builds(); err != nil {
 						panic(err)
 					}
 				}
 
 				if isLayers("app", layers, buildType) {
 					buildApplication := query_application.NewBuildApplicationLayer(cfg, agg, queryDir+"/application")
-					if err := buildApplication.Build(); err != nil {
+					if err := buildApplication.Builds(); err != nil {
 						panic(err)
 					}
 				}
 
 				if isLayers("ui", layers, buildType) {
 					buildUserInterface := query_userinterface.NewBuildUserInterfaceLayer(cfg, agg, queryDir+"/userinterface")
-					if err := buildUserInterface.Build(); err != nil {
+					if err := buildUserInterface.Builds(); err != nil {
 						panic(err)
 					}
 				}

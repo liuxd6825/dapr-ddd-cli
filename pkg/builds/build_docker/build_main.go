@@ -18,15 +18,14 @@ func NewBuildDockerLayer(cfg *config.Config, outDir string) *BuildDockerLayer {
 		},
 		outDir: outDir,
 	}
+	res.init()
 	return res
 }
 
-func (b *BuildDockerLayer) Build() error {
-	var list []builds.Build
+func (b *BuildDockerLayer) init() {
 	values := b.Values()
 	outDir := b.outDir
-	list = append(list, b.NewFileBuild("/docker/docker.mk.tpl", outDir+"/docker.mk", values))
-	list = append(list, b.NewFileBuild("/docker/cmd/Dockerfile.tpl", outDir+"/cmd/Dockerfile", values))
-	list = append(list, b.NewFileBuild("/docker/query/Dockerfile.tpl", outDir+"/query/Dockerfile", values))
-	return b.DoBuild(list...)
+	b.AddBuild(b.NewFileBuild("/docker/docker.mk.tpl", outDir+"/docker.mk", values))
+	b.AddBuild(b.NewFileBuild("/docker/cmd/Dockerfile.tpl", outDir+"/cmd/Dockerfile", values))
+	b.AddBuild(b.NewFileBuild("/docker/query/Dockerfile.tpl", outDir+"/query/Dockerfile", values))
 }

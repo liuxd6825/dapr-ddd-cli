@@ -33,17 +33,17 @@ type {{$cmd.Name}}Request struct {
 type {{$cmd.Name}}RequestData struct {
 {{- range $name, $property := $cmd.Properties.GetDataFieldProperties}}
     {{- if $property.IsArrayEntityType }}
-    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEntityType}}
-    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsDateType }}
-    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsTimeType }}
-    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEnumType }}
-    {{$property.UpperName}} field.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} field.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else }}
-    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} {{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- end}}
 {{- end}}
 }
@@ -67,17 +67,17 @@ type {{$cmd.Name}}Response struct {
 type {{.Name}}Dto struct {
 {{- range $name, $property := .Properties}}
     {{- if $property.IsArrayEntityType }}
-    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEntityType}}
-    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsDateType }}
-    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsTimeType }}
-    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEnumType }}
-    {{$property.UpperName}} field.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} field.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else }}
-    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}`  // {{$property.Description}}
+    {{$property.UpperName}} {{$property.LanType}}  `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- end}}
 {{- end}}
 }
