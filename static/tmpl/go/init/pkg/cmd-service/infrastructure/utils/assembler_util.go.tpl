@@ -2,7 +2,7 @@ package utils
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_errors"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/errors"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
 )
@@ -39,7 +39,7 @@ func AssemblerRequestBodyAfter(ctx iris.Context, requestDto interface{}, command
 //
 func AssemblerRequestBodyOption(ctx iris.Context, requestDto interface{}, dto interface{}, mapperFunc func() error, afterFunc func() error) (err error) {
 	defer func() {
-		if e := ddd_errors.GetRecoverError(recover()); e != nil {
+		if e := errors.GetRecoverError(recover()); e != nil {
 			err = e
 		}
 	}()

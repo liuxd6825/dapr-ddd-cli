@@ -45,7 +45,7 @@ type {{.Name}}FindBy{{.AggregateName}}IdQuery struct {
     {{.AggregateName}}Id  string `json:"{{.aggregateName}}Id"`
 }
 
-func New{{.Name}}FindBy{{.AggregateName}}IdQuery() *{{.Name}}FindBy{{.AggregateName}}IdQuery {
+func New{{.Name}}FindBy{{.AggregateName}}IdQuery() *{{.Name}}1111FindBy{{.AggregateName}}IdQuery {
     return &{{.Name}}FindBy{{.AggregateName}}IdQuery{}
 }
 {{- end }}

@@ -62,7 +62,7 @@ func (r *FindPagingResponse[T]) Init() {
 
 func (r *FindPagingResponse[T]) InitData() {
 	data := make([]T, 0)
-	r.Data = &data
+	r.Data = data
 }
 
 type BaseDto struct {

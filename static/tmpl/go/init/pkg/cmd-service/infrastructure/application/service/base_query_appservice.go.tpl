@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/daprclient"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_errors"
+	"github.com/liuxd6825/dapr-go-ddd-sdk/errors"
 )
 
 type BaseQueryAppService struct {
@@ -25,7 +25,7 @@ func (s *BaseQueryAppService) QueryById(ctx context.Context, tenantId, id string
 
 func (s *BaseQueryAppService) QueryData(ctx context.Context, tenantId, methodName string, resData interface{}) (isFound bool, err error) {
 	defer func() {
-		if e := ddd_errors.GetRecoverError(recover()); e != nil {
+		if e := errors.GetRecoverError(recover()); e != nil {
 			err = e
 		}
 	}()

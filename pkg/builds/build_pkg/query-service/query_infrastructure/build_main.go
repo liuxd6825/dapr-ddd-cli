@@ -11,25 +11,7 @@ type BuildInfrastructureLayer struct {
 	builds2.BaseBuild
 	aggregate *config.Aggregate
 	outDir    string
-
-	buildRepositoryImpls   []*BuildRepositoryImpl
-	buildQueryServiceImpls []*BuildQueryServiceImpl
-
-	buildRegisterAllEventType   *BuildRegisterEventType
-	buildRegisterAggregateType  *BuildRegisterAggregateType
-	buildRegisterRestController *BuildRegisterRestApi
-
-	buildRepositoryBase    *BuildBaseRepository
-	buildRegisterSubscribe *BuildRegisterSubscribe
-
-	buildDtoBase *builds2.BuildAnyFile
-	buildTypes   *BuildTypes
-
-	buildBaseApi       *BuildBaseApi
-	buildBaseAssembler *BuildBaseAssembler
-	buildUtils         *BuildUtils
-	buildBaseView      *BuildBaseView
-	buildBaseDto       *BuildBaseDto
+	builds    []builds2.Build
 }
 
 func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate, outDir string) *BuildInfrastructureLayer {
@@ -44,139 +26,115 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 
 	res.initRepository()
 	res.initQueryService()
-
-	res.initBuildRepositoryBase()
 	res.initRegisterSubscribe()
-
 	res.initRegisterEventType()
 	res.initRegisterAggregateType()
 	res.initRegisterRestController()
-	res.initDtoBase()
 	res.initTypes()
 	res.initUtils()
 	res.initBaseApi()
 	res.initBaseAssembler()
 	res.initBaseView()
 	res.initBaseDto()
+	res.initBaseDao()
+
 	return res
 }
 
 func (b *BuildInfrastructureLayer) Build() error {
-	var list []builds2.Build
+	return b.DoBuild(b.builds...)
+}
 
-	// RegisterRestController
-	list = append(list, b.buildRegisterRestController)
+func (b *BuildInfrastructureLayer) initBaseDao() {
+	mongoOutFile := fmt.Sprintf("%s/base/domain/dao/mongo_dao/dao.go", b.outDir)
+	buildMongoDao := NewBuildBaseDao(b.BaseBuild, b.aggregate, mongoOutFile, "mongo_dao")
+	b.builds = append(b.builds, buildMongoDao)
 
-	// RepositoryImpl
-	for _, item := range b.buildRepositoryImpls {
-		list = append(list, item)
-	}
-
-	// QueryService
-	for _, item := range b.buildQueryServiceImpls {
-		list = append(list, item)
-	}
-
-	list = append(list, b.buildRepositoryBase)
-	list = append(list, b.buildRegisterSubscribe)
-	list = append(list, b.buildRegisterAggregateType)
-	list = append(list, b.buildRegisterAllEventType)
-	list = append(list, b.buildDtoBase)
-	list = append(list, b.buildTypes)
-	list = append(list, b.buildUtils)
-	list = append(list, b.buildBaseApi)
-	list = append(list, b.buildBaseAssembler)
-	list = append(list, b.buildBaseView)
-	list = append(list, b.buildBaseDto)
-
-	return b.DoBuild(list...)
+	neo4jOutFile := fmt.Sprintf("%s/base/domain/dao/neo4j_dao/dao.go", b.outDir)
+	buildNeo4jDao := NewBuildBaseDao(b.BaseBuild, b.aggregate, neo4jOutFile, "neo4j_dao")
+	b.builds = append(b.builds, buildNeo4jDao)
 }
 
 func (b *BuildInfrastructureLayer) initRepository() {
-	b.buildRepositoryImpls = []*BuildRepositoryImpl{}
 	outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	buildRepository := NewBuildRepositoryImpl(b.BaseBuild, nil, utils.ToLower(outFile))
-	b.buildRepositoryImpls = append(b.buildRepositoryImpls, buildRepository)
+	b.builds = append(b.builds, buildRepository)
 
 	for _, item := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildRepositoryImpl(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildRepositoryImpls = append(b.buildRepositoryImpls, build)
+		b.builds = append(b.builds, build)
 	}
 }
 
 func (b *BuildInfrastructureLayer) initQueryService() {
-	b.buildQueryServiceImpls = []*BuildQueryServiceImpl{}
-
 	outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	build := NewBuildQueryServiceImpl(b.BaseBuild, nil, utils.ToLower(outFile))
-	b.buildQueryServiceImpls = append(b.buildQueryServiceImpls, build)
+	b.builds = append(b.builds, build)
 
 	for _, item := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildQueryServiceImpl(b.BaseBuild, item, utils.ToLower(outFile))
-		b.buildQueryServiceImpls = append(b.buildQueryServiceImpls, build)
+		b.builds = append(b.builds, build)
 	}
-}
-
-func (b *BuildInfrastructureLayer) initBuildRepositoryBase() {
-	outFile := fmt.Sprintf("%s/base/domain/repository/mongodb_base/base_repository.go", b.outDir)
-	b.buildRepositoryBase = NewBuildRepositoryBase(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 }
 
 func (b *BuildInfrastructureLayer) initRegisterSubscribe() {
 	outFile := fmt.Sprintf("%s/register/register_subscribe.go", b.outDir)
-	b.buildRegisterSubscribe = NewBuildRegisterSubscribe(b.BaseBuild, outFile)
+	buildRegisterSubscribe := NewBuildRegisterSubscribe(b.BaseBuild, outFile)
+	b.builds = append(b.builds, buildRegisterSubscribe)
 }
 
 func (b *BuildInfrastructureLayer) initRegisterEventType() {
 	outFile := fmt.Sprintf("%s/register/register_event_type.go", b.outDir)
-	b.buildRegisterAllEventType = NewBuildRegisterEventType(b.BaseBuild, utils.ToLower(outFile))
+	buildRegisterAllEventType := NewBuildRegisterEventType(b.BaseBuild, utils.ToLower(outFile))
+	b.builds = append(b.builds, buildRegisterAllEventType)
 }
 
 func (b *BuildInfrastructureLayer) initRegisterAggregateType() {
 	outFile := fmt.Sprintf("%s/register/register_aggregate_type.go", b.outDir)
-	b.buildRegisterAggregateType = NewBuildRegisterAggregateType(b.BaseBuild, utils.ToLower(outFile))
+	buildRegisterAggregateType := NewBuildRegisterAggregateType(b.BaseBuild, utils.ToLower(outFile))
+	b.builds = append(b.builds, buildRegisterAggregateType)
 }
 
 func (b *BuildInfrastructureLayer) initRegisterRestController() {
 	outFile := fmt.Sprintf("%s/register/register_rest_api.go", b.outDir)
-	b.buildRegisterRestController = NewBuildRegisterRestApi(b.BaseBuild, outFile)
-}
-
-func (b *BuildInfrastructureLayer) initDtoBase() {
-	values := b.BaseBuild.Values()
-	outFile := fmt.Sprintf("%s/base/userinterface/rest/dto/base_dto.go", b.outDir)
-	tmplFile := "static/tmpl/go/init/pkg/query-service/infrastructure/base/userinterface/rest/dto/base_dto.go.tpl"
-	b.buildDtoBase = builds2.NewBuildAnyFile(b.BaseBuild, values, tmplFile, outFile)
+	buildRegisterRestController := NewBuildRegisterRestApi(b.BaseBuild, outFile)
+	b.builds = append(b.builds, buildRegisterRestController)
 }
 
 func (b *BuildInfrastructureLayer) initTypes() {
 	outFile := fmt.Sprintf("%s/types/types.go", b.outDir)
-	b.buildTypes = NewBuildTypes(b.BaseBuild, outFile)
+	buildTypes := NewBuildTypes(b.BaseBuild, outFile)
+	b.builds = append(b.builds, buildTypes)
 }
 
 func (b *BuildInfrastructureLayer) initUtils() {
 	outFile := fmt.Sprintf("%s/utils/utils.go", b.outDir)
-	b.buildUtils = NewBuildUtils(b.BaseBuild, outFile)
+	buildUtils := NewBuildUtils(b.BaseBuild, outFile)
+	b.builds = append(b.builds, buildUtils)
 }
 
 func (b *BuildInfrastructureLayer) initBaseApi() {
 	outFile := fmt.Sprintf("%s/base/userinterface/rest/facade/base_api.go", b.outDir)
-	b.buildBaseApi = NewBuildBaseApi(b.BaseBuild, outFile)
+	buildBaseApi := NewBuildBaseApi(b.BaseBuild, outFile)
+	b.builds = append(b.builds, buildBaseApi)
 }
 
 func (b *BuildInfrastructureLayer) initBaseAssembler() {
 	outFile := fmt.Sprintf("%s/base/userinterface/rest/assembler/base_assembler.go", b.outDir)
-	b.buildBaseAssembler = NewBuildBaseAssembler(b.BaseBuild, outFile)
+	buildBaseAssembler := NewBuildBaseAssembler(b.BaseBuild, outFile)
+	b.builds = append(b.builds, buildBaseAssembler)
 }
 
 func (b *BuildInfrastructureLayer) initBaseView() {
 	outFile := fmt.Sprintf("%s/base/domain/view/base_view.go", b.outDir)
-	b.buildBaseView = NewBuildBaseView(b.BaseBuild, b.aggregate, outFile)
+	buildBaseView := NewBuildBaseView(b.BaseBuild, b.aggregate, outFile)
+	b.builds = append(b.builds, buildBaseView)
 }
 
 func (b *BuildInfrastructureLayer) initBaseDto() {
 	outFile := fmt.Sprintf("%s/base/userinterface/rest/dto/base_dto.go", b.outDir)
-	b.buildBaseDto = NewBuildBaseDto(b.BaseBuild, b.aggregate, outFile)
+	buildBaseDto := NewBuildBaseDto(b.BaseBuild, b.aggregate, outFile)
+	b.builds = append(b.builds, buildBaseDto)
 }

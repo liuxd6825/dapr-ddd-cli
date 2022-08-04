@@ -52,10 +52,10 @@ configuration:
       Remarks:
         type: string
         description: "备注"
-      CreaterId:
+      CreatorId:
         type: string
         description: "创建人ID"
-      CreaterName:
+      CreatorName:
         type: string
         description: "创建人名称"
       CreatedTime:

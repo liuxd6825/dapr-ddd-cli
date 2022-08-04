@@ -4,17 +4,17 @@ import (
 	"context"
  	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/repository"
-	"{{.Namespace}}/pkg/query-service/infrastructure/base/domain/repository/mongodb_base"
+    "{{.Namespace}}/pkg/query-service/infrastructure/base/domain/dao/mongo_dao"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 type {{.Name}}ViewRepositoryImpl struct {
-	dao *Dao[*view.{{.Name}}View]
+	dao *mongo_dao.Dao[*view.{{.Name}}View]
 }
 
-func New{{.Name}}ViewRepository(opts ...*RepositoryOptions) repository.{{.Name}}ViewRepository {
+func New{{.Name}}ViewRepository() repository.{{.Name}}ViewRepository {
 	return &{{.Name}}ViewRepositoryImpl{
-		dao: newDao[*view.{{.Name}}View]("{{.aggregate_name}}", opts...),
+		dao: mongo_dao.NewDao[*view.{{.Name}}View]("{{.aggregate_name}}"),
 	}
 }
 
