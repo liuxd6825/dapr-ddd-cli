@@ -60,9 +60,9 @@ func (b *BaseBuild) Build() (resErr error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			if err, ok := rec.(error); ok {
-				resErr = err
+				resErr = errors.New("tmpl:" + b.TmplFile + " err:" + err.Error())
 			} else if msg, ok := rec.(string); ok {
-				resErr = errors.New(msg)
+				resErr = errors.New("tmpl:" + b.TmplFile + " err:" + msg)
 			}
 		}
 	}()
@@ -122,6 +122,7 @@ func (b *BaseBuild) Values() map[string]interface{} {
 		res["AggregateName"] = b.AggregateName()
 		res["aggregateName"] = b.aggregateName()
 		res["aggregateMidlineName"] = b.Aggregate.MidlineName()
+		res["AggregatePluralName"] = b.Aggregate.PluralName()
 		res["aggregate_name"] = aggregateName
 		res["AggregateCommandPackage"] = fmt.Sprintf("%s/command", aggregateName)
 		res["AggregateEventPackage"] = fmt.Sprintf("%s/event", aggregateName)
@@ -141,12 +142,55 @@ func (b *BaseBuild) ValuesOfEntity(entity *config.Entity) map[string]interface{}
 	res := b.Values()
 	if entity != nil {
 		res["IsEntity"] = true
+		res["IsAggregate"] = false
 		res["name"] = utils.FirstLower(entity.Name)
 		res["Name"] = utils.FirstUpper(entity.Name)
 		res["Description"] = entity.Description
 		res["Properties"] = entity.Properties
+	} else {
+		res["IsEntity"] = false
+		res["IsAggregate"] = true
 	}
 	return res
+}
+
+func (b *BaseBuild) ValuesOfEvent(event *config.Event) map[string]interface{} {
+	res := b.Values()
+	if event != nil {
+		res["Name"] = event.FirstUpperName()
+		res["name"] = event.FirstLowerName()
+		res["Version"] = strings.ToLower(event.Version)
+		res["Properties"] = event.Properties
+		res["Package"] = fmt.Sprintf("%s_event", b.Aggregate.SnakeName())
+		res["FieldPackage"] = fmt.Sprintf("%s_field", b.Aggregate.SnakeName())
+		res["Aggregate"] = b.Aggregate
+		res["AggregateName"] = b.Aggregate.Name
+		res["ServiceName"] = b.Config.Configuration.ServiceName
+		res["EventType"] = event.EventType
+		res["EventName"] = event.Name
+		res["Event"] = event
+		res["HasDataProperty"] = event.HasDataProperty()
+		res["Description"] = event.Description
+	} else {
+		res["IsEntity"] = false
+		res["IsAggregate"] = true
+	}
+	return res
+}
+
+func (b *BaseBuild) AddTimePackageValue(values map[string]interface{}, ps *config.Properties) {
+	if ps == nil || values == nil {
+		return
+	}
+	str := `"time"`
+	if ps.HasTimeType() || ps.HasDateTimeType() {
+		values["time"] = str
+		return
+	}
+	if _, ok := values["time"]; !ok {
+		values["time"] = ""
+	}
+
 }
 
 func (b *BaseBuild) NewFileBuild(tmplFile, outFile string, values map[string]interface{}) *BuildAnyFile {

@@ -12,8 +12,6 @@ import (
 //
 // {{$cmd.Name}}Request
 // @Description: {{$cmd.Description}}
-// @receiver c
-// @param ctx
 //
 type {{$cmd.Name}}Request struct {
 	CommandId   string                `json:"commandId"  validate:"required"`     // 命令ID
@@ -27,8 +25,6 @@ type {{$cmd.Name}}Request struct {
 //
 // {{$cmd.Name}}RequestData
 // @Description: {{$cmd.Description}}
-// @receiver c
-// @param ctx
 //
 type {{$cmd.Name}}RequestData struct {
 {{- range $name, $property := $cmd.Properties.GetDataFieldProperties}}
@@ -51,9 +47,6 @@ type {{$cmd.Name}}RequestData struct {
 //
 // {{$cmd.Name}}Response
 // @Description: {{$cmd.Description}}
-// @receiver c
-// @param ctx
-//
 type {{$cmd.Name}}Response struct {
 }
 

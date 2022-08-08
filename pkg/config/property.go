@@ -74,7 +74,7 @@ func (p *Properties) HasType(typeName string) bool {
 	return false
 }
 
-func (p *Properties) HasDataTimeType() bool {
+func (p *Properties) HasDateTimeType() bool {
 	return p.HasType("dateTime")
 }
 
@@ -188,6 +188,12 @@ func (p *Property) LanType() string {
 		dataType = p.Aggregate.Config.GetType(p.Type)
 	} else {
 		dataType = p.Type
+	}
+
+	if p.Aggregate != nil {
+		if v, ok := p.Aggregate.FieldsObjects.Find(dataType); ok {
+			return "field." + v.Name
+		}
 	}
 	/*	if p.IsArray && p.Config.lanType == Go {
 		return fmt.Sprintf("[]*%s", dataType)

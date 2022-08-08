@@ -165,6 +165,9 @@ func (e *Event) MethodName() string {
 	return methodName
 }
 
+func (e *Event) FirstUpperName() string {
+	return utils.FirstUpper(e.Name)
+}
 func (e *Event) FirstLowerName() string {
 	return utils.FirstLower(e.Name)
 }

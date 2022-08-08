@@ -33,34 +33,34 @@ func (b *BuildRestControllerLayer) init() {
 	b.Mkdir(dirs...)
 
 	outFile := fmt.Sprintf("%s/rest/%s/facade/%s_api.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	buildRestAggregateApi := NewBuildRestApiAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	buildRestAggregateApi := NewBuildRestApi(b.BaseBuild, nil, utils.ToLower(outFile))
 	b.AddBuild(buildRestAggregateApi)
 
 	for _, entity := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/rest/%s/facade/%s_api.go", b.outDir, b.aggregate.FileName(), entity.FileName())
-		entityApi := NewBuildRestApiEntity(b.BaseBuild, b.aggregate, entity, utils.ToLower(outFile))
+		entityApi := NewBuildRestApi(b.BaseBuild, entity, utils.ToLower(outFile))
 		b.AddBuild(entityApi)
 	}
 
 	// dto
 	outFile = fmt.Sprintf("%s/rest/%s/dto/%s_dto.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	buildDtoAggregate := NewBuildDtoAggregate(b.BaseBuild, b.aggregate, outFile)
+	buildDtoAggregate := NewBuildDto(b.BaseBuild, nil, outFile)
 	b.AddBuild(buildDtoAggregate)
 
 	for _, entity := range b.aggregate.Entities {
 		outFile = fmt.Sprintf("%s/rest/%s/dto/%s_dto.go", b.outDir, b.aggregate.FileName(), entity.FileName())
-		buildDtoEntity := NewBuildDtoCommand(b.BaseBuild, b.aggregate, entity, utils.ToLower(outFile))
+		buildDtoEntity := NewBuildDto(b.BaseBuild, entity, utils.ToLower(outFile))
 		b.AddBuild(buildDtoEntity)
 	}
 
 	// assembler
 	outFile = fmt.Sprintf("%s/rest/%s/assembler/%s_assembler.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	buildAssemblerAggregate := NewBuildAssemblerAggregate(b.BaseBuild, b.aggregate, outFile)
+	buildAssemblerAggregate := NewBuildAssembler(b.BaseBuild, nil, outFile)
 	b.AddBuild(buildAssemblerAggregate)
 
 	for _, entity := range b.aggregate.Entities {
 		outFile = fmt.Sprintf("%s/rest/%s/assembler/%s_assembler.go", b.outDir, b.aggregate.FileName(), entity.FileName())
-		buildAssemblerEntity := NewBuildAssemblerEntity(b.BaseBuild, b.aggregate, entity, utils.ToLower(outFile))
+		buildAssemblerEntity := NewBuildAssembler(b.BaseBuild, entity, utils.ToLower(outFile))
 		b.AddBuild(buildAssemblerEntity)
 	}
 

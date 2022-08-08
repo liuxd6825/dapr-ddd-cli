@@ -22,6 +22,15 @@ func (f *FieldsObjects) init(a *Aggregate) {
 	}
 }
 
+func (f *FieldsObjects) Find(name string) (*Fields, bool) {
+	if f == nil {
+		return nil, false
+	}
+	m := *f
+	v, ok := m[name]
+	return v, ok
+}
+
 func (e *Fields) init(a *Aggregate, name string) {
 	if e.Properties == nil {
 		e.Properties = make(Properties)

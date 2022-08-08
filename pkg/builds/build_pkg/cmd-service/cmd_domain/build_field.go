@@ -37,5 +37,7 @@ func (b *BuildField) Values() map[string]interface{} {
 	res["Description"] = b.fields.Description
 	res["Fields"] = b.fields
 	res["IsEntity"] = !strings.Contains(b.fields.Name, b.AggregateName())
+	b.AddTimePackageValue(res, defaultProperties)
+	b.AddTimePackageValue(res, &b.fields.Properties)
 	return res
 }

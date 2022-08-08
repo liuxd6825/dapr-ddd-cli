@@ -37,6 +37,8 @@ aggregates:
           Contacts:
             type: Contact
             isArray: true
+          Birthday:
+            type: dateTime
       UserDeleteFields:
         properties:
           Id:
