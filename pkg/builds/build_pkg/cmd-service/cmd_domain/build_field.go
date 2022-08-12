@@ -27,17 +27,20 @@ func NewBuildField(base builds.BaseBuild, name string, field *config.Fields, out
 }
 
 func (b *BuildField) Values() map[string]interface{} {
-	res := b.BaseBuild.Values()
 	defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultFieldProperties(), &b.fields.Properties)
-	res["DefaultProperties"] = defaultProperties
-	res["name"] = utils.FirstLower(b.fields.Name)
-	res["Name"] = utils.FirstUpper(b.fields.Name)
-	res["ClassName"] = utils.FirstUpper(b.fields.Name)
-	res["Properties"] = b.fields.Properties
-	res["Description"] = b.fields.Description
-	res["Fields"] = b.fields
-	res["IsEntity"] = !strings.Contains(b.fields.Name, b.AggregateName())
-	b.AddTimePackageValue(res, defaultProperties)
-	b.AddTimePackageValue(res, &b.fields.Properties)
-	return res
+
+	values := b.BaseBuild.Values()
+	values["DefaultProperties"] = defaultProperties
+	values["name"] = utils.FirstLower(b.fields.Name)
+	values["Name"] = utils.FirstUpper(b.fields.Name)
+	values["ClassName"] = utils.FirstUpper(b.fields.Name)
+	values["Properties"] = b.fields.Properties
+	values["Description"] = b.fields.Description
+	values["Fields"] = b.fields
+	values["IsItems"] = b.fields.Properties.IsItems()
+	values["IsEntity"] = !strings.Contains(b.fields.Name, b.AggregateName())
+
+	b.AddTimePackageValue(values, defaultProperties)
+	b.AddTimePackageValue(values, &b.fields.Properties)
+	return values
 }

@@ -15,7 +15,7 @@ import (
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 )
 
-var {{.aggregateName}}Assembler = assembler.{{$AggregateName}}
+var {{.aggregateName}}Assembler = assembler.{{$AggregateName}}Assembler{}
 
 type {{$ClassName}} struct {
     service *service.{{$AggregateName}}CommandAppService
@@ -107,18 +107,18 @@ func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ictx iris.Context) {
 //
 func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ictx iris.Context) {
 	_ = restapp.Do(ictx, func() error {
-		cmd, err := scanTableAssembler.AssScanTableCreateCommandDto(ictx)
+		cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ictx)
         if err != nil {
             return err
     	}
 
-        _, _, err = restapi.DoCmdAndQueryOne(ictx, c.service.QueryAppId, cmd, func(ctx context.Context) error {
+        _, _, err = restapp.DoCmdAndQueryOne(ictx, c.service.QueryAppId, cmd, func(ctx context.Context) error {
             return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
         }, func(ctx context.Context) (interface{}, bool, error) {
             return c.service.QueryById(ctx, cmd.GetTenantId(), cmd.Data.Id)
         })
         return err
-    }
+    })
 }
 {{- end }}
 {{- end }}

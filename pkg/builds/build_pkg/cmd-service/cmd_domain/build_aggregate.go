@@ -25,22 +25,23 @@ func NewBuildAggregate(base builds.BaseBuild, aggregate *config.Aggregate, outFi
 }
 
 func (b *BuildAggregate) Values() map[string]interface{} {
-	res := b.BaseBuild.Values()
-	res["ClassName"] = b.ClassName()
-	res["AggregateType"] = b.AggregateType()
-	res["Properties"] = b.aggregate.Properties
-	res["Events"] = b.aggregate.Events
-	res["Commands"] = b.aggregate.Commands
-	res["Description"] = b.aggregate.Description
-	res["EnumObjects"] = b.aggregate.EnumObjects
-	res["Id"] = b.aggregate.Id
-	res["FieldsObjects"] = b.aggregate.FieldsObjects
-	res["Aggregate"] = b.aggregate
-	res["CommandPackage"] = fmt.Sprintf("%s_command", b.aggregate.SnakeName())
-	res["EventPackage"] = fmt.Sprintf("%s_event", b.aggregate.SnakeName())
-	res["Package"] = fmt.Sprintf("%s_model", b.aggregate.SnakeName())
-	res["Version"] = b.aggregate.Version
-	return res
+	values := b.BaseBuild.Values()
+	values["ClassName"] = b.ClassName()
+	values["AggregateType"] = b.AggregateType()
+	values["Properties"] = b.aggregate.Properties
+	values["Events"] = b.aggregate.Events
+	values["Commands"] = b.aggregate.Commands
+	values["Description"] = b.aggregate.Description
+	values["EnumObjects"] = b.aggregate.EnumObjects
+	values["Id"] = b.aggregate.Id
+	values["FieldsObjects"] = b.aggregate.FieldsObjects
+	values["Aggregate"] = b.aggregate
+	values["CommandPackage"] = fmt.Sprintf("%s_command", b.aggregate.SnakeName())
+	values["EventPackage"] = fmt.Sprintf("%s_event", b.aggregate.SnakeName())
+	values["Package"] = fmt.Sprintf("%s_model", b.aggregate.SnakeName())
+	values["Version"] = b.aggregate.Version
+	b.AddTimePackageValue(values, &b.aggregate.Properties)
+	return values
 }
 
 func (b *BuildAggregate) ClassName() string {

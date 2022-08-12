@@ -48,7 +48,6 @@ func NewConfigWidthFile(fileName string) (*Config, error) {
 }
 
 func NewConfigWithDir(dirName string, lang string) (*Config, error) {
-
 	configs := make([]*Config, 0)
 	fileInfos, err := ioutil.ReadDir(dirName)
 	if err != nil {

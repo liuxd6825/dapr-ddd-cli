@@ -16,6 +16,7 @@ type Configuration struct {
 	ApiVersion                string                     `yaml:"apiVersion"`                // API 版本号
 	Description               string                     `yaml:"description"`               // 领域上下文说明
 	DefaultReservedProperties *DefaultReservedProperties `yaml:"defaultReservedProperties"` // 系统中固定的字段
+	Database                  Database                   `yaml:"database"`                  // 支持数据库类型
 	Metadata                  Metadata                   `yaml:"metadata"`                  // 领域元数据
 	CSharpMetadata            Metadata                   `yaml:"c#"`                        // C# 元数据
 	JavaMetadata              Metadata                   `yaml:"java"`                      // Java 元数据

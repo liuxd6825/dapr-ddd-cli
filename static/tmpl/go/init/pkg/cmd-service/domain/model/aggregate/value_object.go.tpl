@@ -1,9 +1,7 @@
 package model
 
 import (
-    {{- if .Properties.HasDateTimeType }}
-    "time"
-    {{- end}}
+    {{.time}}
 )
 
 //

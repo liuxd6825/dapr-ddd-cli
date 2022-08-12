@@ -17,7 +17,7 @@ func NewBuildCommand(base builds.BaseBuild, command *config.Command, outFile str
 		BaseBuild: base,
 		command:   command,
 	}
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/command/command/command.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/command/command.go.tpl"
 	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res

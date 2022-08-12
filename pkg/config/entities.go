@@ -31,6 +31,14 @@ func (e *Entities) init(a *Aggregate) {
 	}
 }
 
+func (e *Entities) Count() int {
+	return len(*e)
+}
+
+func (e *Entities) Empty() bool {
+	return e.Count() == 0
+}
+
 func (e *Entity) int(a *Aggregate, name string) {
 	if e == nil {
 		return

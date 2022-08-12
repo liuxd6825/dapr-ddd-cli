@@ -10,13 +10,13 @@ type BuildRepositoryImpl struct {
 	entity *config.Entity
 }
 
-func NewBuildRepositoryImpl(base builds.BaseBuild, entity *config.Entity, outFile string) *BuildRepositoryImpl {
+func NewBuildRepositoryImpl(base builds.BaseBuild, entity *config.Entity, dbType, outFile string) *BuildRepositoryImpl {
 	res := &BuildRepositoryImpl{
 		BaseBuild: base,
 		entity:    entity,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/domain/repository_impl/mongodb/repository_impl.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/infrastructure/domain/repository_impl/" + dbType + "/repository_impl.go.tpl"
 	res.OutFile = outFile
 	return res
 }

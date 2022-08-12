@@ -27,13 +27,14 @@ func NewBuildEntityObject(base builds.BaseBuild, Entity *config.Entity, outFile 
 }
 
 func (b *BuildEntityObject) Values() map[string]interface{} {
-	res := b.BaseBuild.Values()
-	res["name"] = utils.FirstLower(b.entity.Name)
-	res["Name"] = utils.FirstUpper(b.entity.Name)
-	res["Package"] = fmt.Sprintf("%s_model", b.entity.Aggregate.SnakeName())
-	res["ClassName"] = fmt.Sprintf("%s", b.entity.Name)
-	res["Properties"] = b.entity.Properties
-	res["Description"] = b.entity.Description
-	res["Fields"] = b.entity
-	return res
+	values := b.BaseBuild.Values()
+	values["name"] = utils.FirstLower(b.entity.Name)
+	values["Name"] = utils.FirstUpper(b.entity.Name)
+	values["Package"] = fmt.Sprintf("%s_model", b.entity.Aggregate.SnakeName())
+	values["ClassName"] = fmt.Sprintf("%s", b.entity.Name)
+	values["Properties"] = b.entity.Properties
+	values["Description"] = b.entity.Description
+	values["Fields"] = b.entity
+	b.AddTimePackageValue(values, &b.entity.Properties)
+	return values
 }

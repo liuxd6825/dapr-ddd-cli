@@ -1,7 +1,8 @@
 package model
 
 import (
-    "time"
+    {{.time}}
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
 )
 
 //

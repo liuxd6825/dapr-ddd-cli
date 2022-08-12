@@ -34,7 +34,6 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 }
 {{- $factoryPackage := .AggregateFactoryPackage}}
 {{- range $eventName, $event := .Events}}
-
 //
 // On{{$event.Name}}
 // @Description: {{$event.Name}}事件处理器
@@ -51,15 +50,34 @@ func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, eve
         if err != nil {
             return err
         }
-		return h.service.Create(ctx, v)
+        {{- if $event.DataIsItems }}
+        return h.service.CreateMany(ctx, v)
+        {{- else }}
+        return h.service.Create(ctx, v)
+        {{- end }}
+
 		{{- else if $event.IsEntityUpdateEvent }}
         v, err := factory.{{$entityName}}View.NewBy{{$event.Name}}(ctx, event)
         if err != nil {
             return err
         }
+        {{- if $event.DataIsItems }}
+        return h.service.UpdateMany(ctx, v)
+        {{- else }}
         return h.service.Update(ctx, v)
+        {{- end }}
+
         {{- else if $event.IsEntityDeleteByIdEvent }}
+        {{- if $event.DataIsItems }}
+        v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
+        if err != nil {
+            return err
+        }
+        return h.service.DeleteMany(ctx, event.GetTenantId(), v)
+        {{- else }}
         return h.service.DeleteById(ctx, event.GetTenantId(), event.Data.Id)
+        {{- end }}
+
         {{- else }}
         return h.service.{{$event.MethodName}}(ctx, v)
         {{- end }}

@@ -22,5 +22,6 @@ func NewBuildQueryServiceImpl(base builds.BaseBuild, entity *config.Entity, outF
 }
 
 func (b *BuildQueryServiceImpl) Values() map[string]interface{} {
-	return b.BaseBuild.ValuesOfEntity(b.entity)
+	values := b.BaseBuild.ValuesOfEntity(b.entity)
+	return values
 }

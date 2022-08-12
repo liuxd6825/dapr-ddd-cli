@@ -9,7 +9,7 @@ import (
 	"{{.Namespace}}/pkg/cmd-service/domain/{{$aggregate_name}}/event"
 	"{{.Namespace}}/pkg/query-service/domain/{{$aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/infrastructure/utils"
-
+    "github.com/liuxd6825/dapr-go-ddd-sdk/errors"
 )
 
 type {{.name}}ViewFactory struct {

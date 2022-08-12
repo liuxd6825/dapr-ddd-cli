@@ -6,23 +6,6 @@ import (
 	"strings"
 )
 
-type Event struct {
-	Name                string     // 事件名称
-	AggregateId         string     `yaml:"aggregateId"` // 聚合id属性名称
-	EventType           string     `yaml:"eventType"`   // 事件类型
-	Action              string     `yaml:"action"`      // 活动类型: create, update, delete
-	Version             string     `yaml:"version"`     // 版本号， 默认：V1
-	To                  string     `yaml:"to"`          // 事件所应用到对象类型
-	Description         string     `yaml:"description"` // 事件说明
-	Properties          Properties `yaml:"properties"`  // 属性
-	hasDataProperty     bool
-	DataProperty        *Property   // 关联的数据属性
-	DataFields          *Fields     // 关联的数据字段
-	DataFieldProperties *Properties // 关联的数据字段
-	Aggregate           *Aggregate  // 聚合
-	Route               string      // dapr消息监听的web地址
-}
-
 type Events map[string]*Event
 
 func (e *Events) isNil() bool {
@@ -39,6 +22,15 @@ func (e *Events) init(a *Aggregate) {
 		}
 		event.init(a, name)
 	}
+}
+
+func (e *Events) Find(name string) (*Event, bool) {
+	if e == nil {
+		return nil, false
+	}
+	m := *e
+	v, ok := m[name]
+	return v, ok
 }
 
 func (e *Events) GetEventTypes() *[]string {
@@ -88,9 +80,27 @@ func (e *Events) GetEntityEvents(entityName string) []*Event {
 	return events
 }
 
+type Event struct {
+	Name                string     // 事件名称
+	AggregateId         string     `yaml:"aggregateId"` // 聚合id属性名称
+	EventType           string     `yaml:"eventType"`   // 事件类型
+	Action              string     `yaml:"action"`      // 活动类型: create, update, delete
+	Version             string     `yaml:"version"`     // 版本号， 默认：V1.0
+	To                  string     `yaml:"to"`          // 事件所应用到对象类型
+	Description         string     `yaml:"description"` // 事件说明
+	Properties          Properties `yaml:"properties"`  // 属性
+	hasDataProperty     bool
+	DataProperty        *Property   // 关联的数据属性
+	DataFields          *Fields     // 关联的数据字段
+	DataFieldProperties *Properties // 关联的数据字段
+	ItemFieldProperties *Properties
+	Aggregate           *Aggregate // 聚合
+	Route               string     // dapr消息监听的web地址
+}
+
 func (e *Event) init(a *Aggregate, name string) {
 	if len(e.Version) == 0 {
-		e.Version = "v1"
+		e.Version = "v1.0"
 	}
 	e.Aggregate = a
 	e.Name = name
@@ -112,6 +122,11 @@ func (e *Event) init(a *Aggregate, name string) {
 			if fields != nil {
 				e.DataFields = fields
 				e.DataFieldProperties = &fields.Properties
+
+				if itemsProperty, ok := fields.Properties.Find("Items"); ok {
+					fieldItem := a.FieldsObjects[itemsProperty.Type]
+					e.ItemFieldProperties = &fieldItem.Properties
+				}
 			}
 		}
 	}
@@ -248,6 +263,11 @@ func (e *Event) SnakeName() string {
 //
 func (e *Event) ToPluralName() string {
 	return utils.FirstUpper(utils.Plural(e.To))
+}
+
+func (e *Event) DataIsItems() bool {
+	b := e.DataFieldProperties.IsItems()
+	return b
 }
 
 func (e *Event) IsAggregateDeleteByIdEvent() bool {

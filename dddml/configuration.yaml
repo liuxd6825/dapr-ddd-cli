@@ -99,6 +99,9 @@ configuration:
   metadata:
     HttpServicesAuthorizationEnalbled: false
     SpringSecurityEnalbeld: true
+  database:
+    mongo: true
+    neo4j: true
   # K8S扩展点
   k8s:
     namespace: "dapr-ddd-demo"

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 	"strings"
 )
@@ -16,8 +17,10 @@ type Command struct {
 	Properties         Properties `yaml:"properties"`
 	Description        string     `yaml:"description"`
 	IsAggregateCommand *bool      `yaml:"isAggregateCommand"`
+	Fields             *Fields    `yaml:"fields"`
 	Aggregate          *Aggregate
 	event              *Event
+	utils              CommandUtils
 }
 
 func (c *Command) Event() *Event {
@@ -52,8 +55,64 @@ func (c *Command) init(a *Aggregate, name string) {
 		c.IsAggregateCommand = &f
 	}
 
-	if c.EventName != "" {
-		c.event = c.Aggregate.Events[c.EventName]
+	if len(c.EventName) == 0 {
+		c.EventName = c.utils.getEventName(c.Name)
+	}
+
+	if c.Fields != nil {
+		if len(c.Fields.Name) == 0 {
+			c.Fields.Name = c.utils.getFieldsName(c.Name)
+		}
+		if len(c.Fields.Description) == 0 {
+			c.Fields.Description = c.Description
+		}
+
+		if !*c.IsAggregateCommand {
+			aggIdName := c.Aggregate.Name + "Id"
+			if _, ok := c.Fields.Properties[aggIdName]; !ok {
+				aggIdProp := NewProperty(aggIdName, "string")
+				c.Fields.Properties.Add(aggIdProp)
+				aggIdProp.init(c.Aggregate, c.Aggregate.Config, aggIdName)
+			}
+		}
+	}
+
+	c.event = c.Aggregate.Events[c.EventName]
+	if len(c.Action) == 0 {
+		c.Action = c.utils.getAction(c.Name)
+	}
+
+	if c.event == nil {
+		fieldsName := c.utils.getFieldsName(c.Name)
+		eventName := c.utils.getEventName(c.Name)
+
+		data := NewProperty("Data", fieldsName)
+		data.Config = a.Config
+		data.Aggregate = c.Aggregate
+		data.Description = "业务数据"
+
+		props := *NewProperties(c.Aggregate, nil, nil)
+		props["Data"] = data
+
+		toName := c.utils.getTo(c)
+		event := &Event{
+			Name:        eventName,
+			EventType:   eventName,
+			AggregateId: "Data.Id",
+			Version:     "V1.0",
+			Description: "领域事件",
+			Properties:  props,
+			Action:      c.Action,
+			To:          toName,
+		}
+
+		if event.To != c.Aggregate.Name {
+			event.AggregateId = fmt.Sprintf("Data.%vId", c.Aggregate.Name)
+		}
+
+		event.init(c.Aggregate, event.Name)
+		c.Aggregate.Events[event.Name] = event
+		c.event = event
 	}
 
 	if c.Properties == nil {
@@ -64,6 +123,18 @@ func (c *Command) init(a *Aggregate, name string) {
 	if len(c.Properties) == 0 && c.event != nil && c.event.DataProperty != nil {
 		c.Properties.Add(c.event.DataProperty)
 	}
+
+	if _, ok := c.Properties["Data"]; !ok {
+		typeName := strings.ReplaceAll(name, "Command", "Event")
+		data := NewProperty("Data", typeName)
+		data.Description = "业务数据"
+		c.Properties["Data"] = data
+	}
+
+	if len(c.AggregateId) == 0 {
+		c.AggregateId = c.event.AggregateId
+	}
+
 	c.Properties.Init(a, a.Config)
 }
 

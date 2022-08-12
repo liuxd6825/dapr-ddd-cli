@@ -2,19 +2,12 @@ package config
 
 type ValueObjects map[string]*ValueObject
 
-type ValueObject struct {
-	Name        string
-	Aggregate   *Aggregate
-	Description string     `yaml:"description"`
-	Properties  Properties `yaml:"properties"`
-}
-
-func (v *ValueObjects) init(a *Aggregate) {
-	if v == nil {
+func (vs *ValueObjects) init(a *Aggregate) {
+	if vs == nil {
 		return
 	}
 
-	valueObjects := *v
+	valueObjects := *vs
 	props := a.Config.GetDefaultEntityProperties()
 	for _, value := range valueObjects {
 		if value.Properties == nil {
@@ -22,9 +15,25 @@ func (v *ValueObjects) init(a *Aggregate) {
 		}
 		value.Properties.Adds(props)
 	}
-	for name, item := range *v {
+	for name, item := range *vs {
 		item.init(a, name)
 	}
+}
+
+func (vs *ValueObjects) Find(name string) (*ValueObject, bool) {
+	if vs == nil {
+		return nil, false
+	}
+	m := *vs
+	v, ok := m[name]
+	return v, ok
+}
+
+type ValueObject struct {
+	Name        string
+	Aggregate   *Aggregate
+	Description string     `yaml:"description"`
+	Properties  Properties `yaml:"properties"`
 }
 
 func (v *ValueObject) init(a *Aggregate, name string) {

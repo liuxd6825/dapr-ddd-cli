@@ -10,10 +10,11 @@ import (
 //
 type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `json:"{{$property.JsonName}}"  validate:"{{$property.GetValidate}}"` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
+    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.GoLanType}} `json:"{{$property.JsonName}}"  validate:"{{$property.GetValidate}}"` {{if $property.HasDescription }}// {{$property.Description}}{{ end }}
 {{- end}}
 }
 
+{{- if not .IsItems }}
 func (f *{{.ClassName}}) GetId() string {
     return f.Id
 }
@@ -21,3 +22,4 @@ func (f *{{.ClassName}}) GetId() string {
 func (f *{{.ClassName}}) GetTenantId() string {
     return f.TenantId
 }
+{{- end }}

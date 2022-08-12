@@ -35,5 +35,6 @@ func (b *BuildValueObject) Values() map[string]interface{} {
 	res["Properties"] = b.valueObject.Properties
 	res["Description"] = b.valueObject.Description
 	res["Fields"] = b.valueObject
+	b.AddTimePackageValue(res, &b.valueObject.Properties)
 	return res
 }

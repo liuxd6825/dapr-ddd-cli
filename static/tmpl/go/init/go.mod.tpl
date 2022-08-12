@@ -92,12 +92,12 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-//replace github.com/liuxd6825/go-sdk => {{.GoMetadata.DaprSrcPath}}/go-sdk
-//replace github.com/liuxd6825/dapr => {{.GoMetadata.DaprSrcPath}}/dapr
-//replace github.com/liuxd6825/dapr-go-ddd-sdk => {{.GoMetadata.DaprSrcPath}}/dapr-go-ddd-sdk
-//replace github.com/liuxd6825/components-contrib => {{.GoMetadata.DaprSrcPath}}/components-contrib
+replace github.com/liuxd6825/go-sdk => {{.GoMetadata.DaprSrcPath}}/go-sdk
+replace github.com/liuxd6825/dapr => {{.GoMetadata.DaprSrcPath}}/dapr
+replace github.com/liuxd6825/dapr-go-ddd-sdk => {{.GoMetadata.DaprSrcPath}}/dapr-go-ddd-sdk
+replace github.com/liuxd6825/components-contrib => {{.GoMetadata.DaprSrcPath}}/components-contrib
 
-replace github.com/liuxd6825/go-sdk => gitee.com/liuxd6825/go-sdk v1.7.1-1.0-alpha2
-replace github.com/liuxd6825/dapr-go-ddd-sdk => gitee.com/liuxd6825/dapr-go-ddd-sdk v1.7.1-1.0-alpha2
-replace github.com/liuxd6825/dapr => gitee.com/liuxd6825/dapr v1.7.1-1.0-alpha2
-replace github.com/liuxd6825/components-contrib => gitee.com/liuxd6825/components-contrib v1.7.1-1.0-alpha2
+//replace github.com/liuxd6825/go-sdk => gitee.com/liuxd6825/go-sdk v1.7.1-1.0-alpha2
+//replace github.com/liuxd6825/dapr-go-ddd-sdk => gitee.com/liuxd6825/dapr-go-ddd-sdk v1.7.1-1.0-alpha2
+//replace github.com/liuxd6825/dapr => gitee.com/liuxd6825/dapr v1.7.1-1.0-alpha2
+//replace github.com/liuxd6825/components-contrib => gitee.com/liuxd6825/components-contrib v1.7.1-1.0-alpha2

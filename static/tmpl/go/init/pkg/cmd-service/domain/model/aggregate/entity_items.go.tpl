@@ -1,6 +1,7 @@
 package model
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
 )

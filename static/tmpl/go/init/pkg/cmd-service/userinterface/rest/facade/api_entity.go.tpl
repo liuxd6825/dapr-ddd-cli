@@ -77,7 +77,7 @@ func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ictx iris.Context) {
 //
 func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ictx iris.Context) {
 	_ = restapp.Do(ictx, func() error {
-        cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ctx)
+        cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ictx)
         if err != nil {
 			return err
         }
@@ -89,7 +89,7 @@ func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ictx iris.Context) {
         })
 
         return err
-	}
+	})
 }
 
 {{- end }}

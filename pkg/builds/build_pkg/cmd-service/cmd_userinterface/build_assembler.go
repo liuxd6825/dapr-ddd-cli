@@ -26,8 +26,8 @@ func (b *BuildAssembler) Values() map[string]interface{} {
 	values := b.BaseBuild.ValuesOfEntity(b.entity)
 	if b.entity != nil {
 		defaultProperties := config.NewProperties(b.Aggregate, b.Config.GetDefaultEntityProperties(), &b.entity.Properties)
-		values["DefaultProperties"] = defaultProperties
 		values["Commands"] = b.entity.GetCommands()
+		values["DefaultProperties"] = defaultProperties
 	} else {
 		values["Commands"] = b.Aggregate.AggregateCommands
 		values["DefaultProperties"] = b.Aggregate.Properties

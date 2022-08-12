@@ -8,7 +8,7 @@ import (
 type FieldsObjects map[string]*Fields
 
 type Fields struct {
-	Name        string
+	Name        string     `yaml:"name"`
 	Description string     `yaml:"description"`
 	Properties  Properties `yaml:"properties"`
 }
@@ -17,7 +17,14 @@ func (f *FieldsObjects) init(a *Aggregate) {
 	if f == nil || *f == nil {
 		return
 	}
-	for name, fields := range *f {
+	mf := *f
+	for _, cmd := range a.Commands {
+		if cmd.Fields != nil {
+			mf[cmd.Fields.Name] = cmd.Fields
+		}
+	}
+
+	for name, fields := range mf {
 		fields.init(a, name)
 	}
 }
@@ -38,9 +45,12 @@ func (e *Fields) init(a *Aggregate, name string) {
 
 	e.Name = name
 	e.Properties.Init(a, a.Config)
-	e.Properties.Adds(a.Config.GetDefaultFieldProperties())
+	isItems := e.Properties.IsItems()
+	if !isItems {
+		e.Properties.Adds(a.Config.GetDefaultFieldProperties())
+	}
 
-	if !strings.Contains(name, a.Name) {
+	if !strings.Contains(name, a.Name) && !isItems {
 		aggregateId := a.Name + "Id"
 		_, ok := e.Properties[aggregateId]
 		if !ok {

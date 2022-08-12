@@ -5,7 +5,7 @@ package model
 
 import (
     "context"
-    "time"
+    {{.time}}
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"

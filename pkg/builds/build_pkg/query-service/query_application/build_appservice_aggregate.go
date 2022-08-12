@@ -12,10 +12,9 @@ type BuildAppServiceAggregate struct {
 	aggregate *config.Aggregate
 }
 
-func NewBuildAppServiceAggregate(base builds.BaseBuild, aggregate *config.Aggregate, outFile string) *BuildAppServiceAggregate {
+func NewBuildAppServiceAggregate(base builds.BaseBuild, entity *config.Entity, outFile string) *BuildAppServiceAggregate {
 	res := &BuildAppServiceAggregate{
 		BaseBuild: base,
-		aggregate: aggregate,
 	}
 	res.ValuesFunc = res.Values
 	res.TmplFile = "static/tmpl/go/init/pkg/query-service/application/internals/service/app_service_aggregate.go.tpl"

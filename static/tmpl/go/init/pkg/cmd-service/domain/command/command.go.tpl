@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/google/uuid"
+    "time"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
@@ -13,12 +13,12 @@ import (
 //
 type {{.ClassName}} struct {
 	CommandId   string    `json:"commandId" validate:"required"`   // 命令ID
-	IsValidOnly bool      `json:"isValidOnly" validate:"-"`   // 是否仅验证，不执行
-    {{- if .Command.IsUpdate }}
-	UpdateMask  []string  `json:"updateMask" validate:"-"`                      // 要更新的字段项，空值：更新所有字段
+	IsValidOnly bool      `json:"isValidOnly" validate:"-"`        // 是否仅验证，不执行
+    {{- if .IsUpdate }}
+	UpdateMask  []string  `json:"updateMask" validate:"-"`         // 要更新的字段项，空值：更新所有字段
     {{- end }}
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsData }} field.{{ end }}{{$property.LanType}}   `json:"{{$property.LowerName}}" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{$property.UpperName}} {{if $property.IsData }} {{end}} {{$property.LanType}} `json:"{{$property.LowerName}}" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
 {{- end}}
 }
 
@@ -28,10 +28,10 @@ type {{.ClassName}} struct {
 //
 func (c *{{.ClassName}}) NewDomainEvent() ddd.DomainEvent {
     return &event.{{.EventName}}{
-        EventId:    uuid.New().String(),
+        EventId:    c.CommandId+"_{{.EventName}}",
         CommandId:  c.CommandId,
         CreatedTime: time.Now(),
-        {{- if .Command.IsUpdate }}
+        {{- if .IsUpdate }}
         UpdateMask: c.UpdateMask,
         {{- end }}
         Data:       c.Data,

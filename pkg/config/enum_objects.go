@@ -2,13 +2,6 @@ package config
 
 type EnumObjects map[string]*EnumObject
 
-type EnumObject struct {
-	Name        string
-	EnumValues  EnumValues `yaml:"values"`
-	Description string     `yaml:"description"`
-	Aggregate   *Aggregate
-}
-
 func (e *EnumObjects) init(a *Aggregate) {
 	if e == nil {
 		return
@@ -16,6 +9,22 @@ func (e *EnumObjects) init(a *Aggregate) {
 	for name, enumObjects := range *e {
 		enumObjects.init(a, name)
 	}
+}
+
+func (e *EnumObjects) Find(name string) (*EnumObject, bool) {
+	if e == nil {
+		return nil, false
+	}
+	m := *e
+	v, ok := m[name]
+	return v, ok
+}
+
+type EnumObject struct {
+	Name        string
+	EnumValues  EnumValues `yaml:"values"`
+	Description string     `yaml:"description"`
+	Aggregate   *Aggregate
 }
 
 func (e *EnumObject) init(a *Aggregate, name string) {

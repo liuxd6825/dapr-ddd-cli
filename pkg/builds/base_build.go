@@ -135,6 +135,9 @@ func (b *BaseBuild) Values() map[string]interface{} {
 		res["name"] = b.Aggregate.FirstLowerName()
 	}
 
+	database := b.Config.Configuration.Database
+	res["IsMongo"] = database.Mongo
+	res["IsNeo4j"] = database.Neo4j
 	return res
 }
 

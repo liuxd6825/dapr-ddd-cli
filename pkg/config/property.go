@@ -9,6 +9,24 @@ type Properties map[string]*Property
 
 const TenantId = "TenantId"
 
+func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Properties {
+	res := &Properties{}
+	if properties != nil {
+		res.Adds(properties)
+	}
+
+	if delProperties != nil {
+		m := *res
+		for k := range *delProperties {
+			if _, ok := m[k]; ok {
+				delete(*res, k)
+			}
+		}
+	}
+	res.Init(agg, agg.Config)
+	return res
+}
+
 func (p *Properties) IsNull() bool {
 	return p == nil || *p == nil
 }
@@ -20,6 +38,20 @@ func (p *Properties) Init(a *Aggregate, c *Config) {
 	for name, property := range *p {
 		property.init(a, c, name)
 	}
+}
+
+func (p *Properties) Find(name string) (*Property, bool) {
+	if p == nil {
+		return nil, false
+	}
+	m := *p
+	v, ok := m[name]
+	return v, ok
+}
+
+func (p *Properties) IsItems() bool {
+	_, ok := p.Find("Items")
+	return ok
 }
 
 func (p *Properties) Adds(sources *Properties) {
@@ -109,21 +141,6 @@ func (p *Properties) NewViewProject(config *Config) *Properties {
 	return properties
 }
 
-func NewProperties(agg *Aggregate, properties, delProperties *Properties) *Properties {
-	res := &Properties{}
-	res.Adds(properties)
-	if delProperties != nil {
-		m := *res
-		for k := range *delProperties {
-			if _, ok := m[k]; ok {
-				delete(*res, k)
-			}
-		}
-	}
-	res.Init(agg, agg.Config)
-	return res
-}
-
 type Property struct {
 	Name          string            ``                     // 属性名称
 	Type          string            `yaml:"type"`          // 数据类型
@@ -169,6 +186,11 @@ func (p *Property) init(a *Aggregate, c *Config, name string) {
 	p.Name = name
 	p.Aggregate = a
 	p.Config = c
+	if len(p.Type) == 0 {
+		p.Type = "string"
+	}
+	p.Json = utils.FirstLower(name)
+	p.Bson = utils.FirstLower(name)
 }
 
 //
@@ -178,6 +200,14 @@ func (p *Property) init(a *Aggregate, c *Config, name string) {
 // @return string
 //
 func (p *Property) LanType() string {
+	return p.lanType(true)
+}
+
+func (p *Property) GoLanType() string {
+	return p.lanType(false)
+}
+
+func (p *Property) lanType(field bool) string {
 	dataType := ""
 	if p == nil {
 		return ""
@@ -190,11 +220,18 @@ func (p *Property) LanType() string {
 		dataType = p.Type
 	}
 
-	if p.Aggregate != nil {
+	if p.Aggregate != nil && field {
 		if v, ok := p.Aggregate.FieldsObjects.Find(dataType); ok {
 			return "field." + v.Name
 		}
+		if v, ok := p.Aggregate.EnumObjects.Find(dataType); ok {
+			return "field." + v.Name
+		}
+		if v, ok := p.Aggregate.ValueObjects.Find(dataType); ok {
+			return "field." + v.Name
+		}
 	}
+
 	/*	if p.IsArray && p.Config.lanType == Go {
 		return fmt.Sprintf("[]*%s", dataType)
 	}*/

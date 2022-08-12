@@ -1,3 +1,4 @@
+{{- $AggregateName := .AggregateName}}
 package assembler
 
 import (
@@ -7,7 +8,12 @@ import (
 	"{{.Namespace}}/pkg/cmd-service/userinterface/rest/{{.aggregate_name}}/dto"
 )
 
-{{- $AggregateName := .AggregateName}}
+{{- if .IsAggregate }}
+type {{$AggregateName}}Assembler struct {
+}
+{{- end }}
+
+
 {{- range $cmdName, $cmd := .Commands}}
 
 //

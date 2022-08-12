@@ -58,22 +58,44 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 //
 func (h *{{$AggregateName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
 	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
-
 		{{- if $event.IsAggregateCreateEvent }}
         v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
         if err != nil {
             return err
         }
-		return h.service.Create(ctx, v)
+        {{- if $event.DataIsItems }}
+        return h.service.CreateMany(ctx, v)
+        {{- else }}
+        return h.service.Create(ctx, v)
+        {{- end }}
+
 		{{- else if $event.IsAggregateUpdateEvent }}
         v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
         if err != nil {
             return err
         }
-        return h.service.Update(ctx, v)
-        {{- else if $event.IsAggregateDeleteByIdEvent }}
-        return h.service.DeleteById(ctx, event.GetTenantId(), event.Data.Id)
+        {{- if $event.DataIsItems }}
+        return h.service.UpdateMany(ctx, v)
         {{- else }}
+        return h.service.Update(ctx, v)
+        {{- end }}
+
+        {{- else if $event.IsAggregateDeleteByIdEvent }}
+        {{- if $event.DataIsItems }}
+        v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
+        if err != nil {
+            return err
+        }
+        return h.service.DeleteMany(ctx, event.GetTenantId(), v)
+        {{- else }}
+        return h.service.DeleteById(ctx, event.GetTenantId(), event.Data.Id)
+        {{- end }}
+
+        {{- else }}
+        v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
+        if err != nil {
+            return err
+        }
         return h.service.{{$event.MethodName}}(ctx, v)
         {{- end }}
 	})

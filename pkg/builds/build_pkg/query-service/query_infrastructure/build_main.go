@@ -22,8 +22,13 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 		aggregate: aggregate,
 		outDir:    outDir,
 	}
-
-	res.initRepository()
+	database := cfg.Configuration.Database
+	if database.Mongo {
+		res.initRepositoryImpl("mongodb")
+	}
+	if database.Neo4j {
+		res.initRepositoryImpl("neo4j")
+	}
 	res.initQueryService()
 	res.initRegisterSubscribe()
 	res.initRegisterEventType()
@@ -35,40 +40,54 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initBaseAssembler()
 	res.initBaseView()
 	res.initBaseDto()
-	res.initBaseDao()
-
+	res.initDb(database)
 	return res
 }
 
-func (b *BuildInfrastructureLayer) initBaseDao() {
-	mongoOutFile := fmt.Sprintf("%s/base/domain/dao/mongo_dao/dao.go", b.outDir)
-	buildMongoDao := NewBuildBaseDao(b.BaseBuild, b.aggregate, mongoOutFile, "mongo_dao")
-	b.AddBuild(buildMongoDao)
+func (b *BuildInfrastructureLayer) initDb(database config.Database) {
+	if database.Mongo {
+		mongoOutFile := fmt.Sprintf("%s/db/dao/mongo_dao/dao.go", b.outDir)
+		buildMongoDao := NewBuildDbDao(b.BaseBuild, b.aggregate, mongoOutFile, "mongo_dao")
+		b.AddBuild(buildMongoDao)
+	}
 
-	neo4jOutFile := fmt.Sprintf("%s/base/domain/dao/neo4j_dao/dao.go", b.outDir)
-	buildNeo4jDao := NewBuildBaseDao(b.BaseBuild, b.aggregate, neo4jOutFile, "neo4j_dao")
-	b.AddBuild(buildNeo4jDao)
+	if database.Neo4j {
+		neo4jOutFile := fmt.Sprintf("%s/db/dao/neo4j_dao/dao.go", b.outDir)
+		buildNeo4jDao := NewBuildDbDao(b.BaseBuild, b.aggregate, neo4jOutFile, "neo4j_dao")
+		b.AddBuild(buildNeo4jDao)
+	}
+
+	if database.HaveDb() {
+		sessionFile := fmt.Sprintf("%s/db/session/session.go", b.outDir)
+		buildSession := NewBuildDbSession(b.BaseBuild, sessionFile)
+		b.AddBuild(buildSession)
+	}
+
 }
 
-func (b *BuildInfrastructureLayer) initRepository() {
-	outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	buildRepository := NewBuildRepositoryImpl(b.BaseBuild, nil, utils.ToLower(outFile))
+func (b *BuildInfrastructureLayer) initRepositoryImpl(dbType string) {
+	outFile := fmt.Sprintf("%s/domain_impl/%s/repository_impl/%s/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), dbType, b.aggregate.FileName())
+	buildRepository := NewBuildRepositoryImpl(b.BaseBuild, nil, dbType, utils.ToLower(outFile))
 	b.AddBuild(buildRepository)
 
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/domain/%s/repository_impl/mongodb/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
-		build := NewBuildRepositoryImpl(b.BaseBuild, item, utils.ToLower(outFile))
+		outFile := fmt.Sprintf("%s/domain_impl/%s/repository_impl/%s/%s_view_repository_impl.go", b.outDir, b.aggregate.FileName(), dbType, item.FileName())
+		build := NewBuildRepositoryImpl(b.BaseBuild, item, dbType, utils.ToLower(outFile))
 		b.AddBuild(build)
 	}
 }
 
 func (b *BuildInfrastructureLayer) initQueryService() {
-	outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	build := NewBuildQueryServiceImpl(b.BaseBuild, nil, utils.ToLower(outFile))
-	b.AddBuild(build)
+	outFile := fmt.Sprintf("%s/domain_impl/%s/service_impl/x_options.go", b.outDir, b.aggregate.FileName())
+	buildOptions := NewBuildQueryServiceOptionsImpl(b.BaseBuild, utils.ToLower(outFile))
+	b.AddBuild(buildOptions)
+
+	outFile = fmt.Sprintf("%s/domain_impl/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	buildService := NewBuildQueryServiceImpl(b.BaseBuild, nil, utils.ToLower(outFile))
+	b.AddBuild(buildService)
 
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/domain/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
+		outFile := fmt.Sprintf("%s/domain_impl/%s/service_impl/%s_query_service_impl.go", b.outDir, b.aggregate.FileName(), item.FileName())
 		build := NewBuildQueryServiceImpl(b.BaseBuild, item, utils.ToLower(outFile))
 		b.AddBuild(build)
 	}

@@ -37,36 +37,52 @@ type Aggregate struct {
 
 func (a *Aggregate) init() {
 	a.initId()
+	if a.FieldsObjects == nil {
+		a.FieldsObjects = FieldsObjects{}
+	}
 	if a.Version == "" {
 		a.Version = "v1.0"
 	}
 	if a.Properties == nil {
 		a.Properties = make(Properties)
 	}
+	if a.Entities == nil {
+		a.Entities = make(Entities)
+	}
+	if a.Commands == nil {
+		a.Commands = Commands{}
+	}
+	if a.ValueObjects == nil {
+		a.ValueObjects = make(ValueObjects)
+	}
+	if a.FieldsObjects == nil {
+		a.FieldsObjects = FieldsObjects{}
+	}
+	if a.EnumObjects == nil {
+		a.EnumObjects = EnumObjects{}
+	}
+	if a.Factory == nil {
+		a.Factory = Factory{}
+	}
+	if a.Events == nil {
+		a.Events = Events{}
+	}
+
 	// 添加聚合默认属性
 	if a.Config != nil && a.Config.Configuration != nil && a.Config.Configuration.DefaultReservedProperties != nil {
 		aggregateProperties := a.Config.Configuration.DefaultReservedProperties.AggregateProperties
 		a.Properties.Adds(&aggregateProperties)
 	}
-	a.Properties.Init(a, a.Config)
-
-	if a.Entities == nil {
-		a.Entities = make(Entities)
-	}
-	a.Entities.init(a)
-
-	if a.ValueObjects == nil {
-		a.ValueObjects = make(ValueObjects)
-	}
-	a.ValueObjects.init(a)
-
-	a.Events.init(a)
 	a.Commands.init(a)
+	a.Properties.Init(a, a.Config)
 	a.FieldsObjects.init(a)
 	a.EnumObjects.init(a)
+	a.ValueObjects.init(a)
+	a.Entities.init(a)
+
+	a.Events.init(a)
 	a.Factory.init(a)
 	a.AggregateCommands = a.getAggregateCommands()
-
 }
 
 func (a *Aggregate) initId() *Property {
@@ -118,7 +134,9 @@ func (a *Aggregate) getAggregateCommands() *[]Command {
 	for _, event := range a.Events {
 		if event.To == "" || event.To == a.Name {
 			command := a.Commands.GetByEventName(event.Name)
-			commands = append(commands, *command)
+			if command != nil {
+				commands = append(commands, *command)
+			}
 		}
 	}
 	return &commands

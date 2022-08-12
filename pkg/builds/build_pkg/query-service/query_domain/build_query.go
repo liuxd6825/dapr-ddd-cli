@@ -17,7 +17,7 @@ func NewBuildCommand(base builds.BaseBuild, agg *config.Aggregate, entity *confi
 		entity:    entity,
 		aggregate: agg,
 	}
-	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/command/query.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/query-service/domain/query/query.go.tpl"
 	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	res.entity = entity

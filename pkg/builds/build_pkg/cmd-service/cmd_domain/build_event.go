@@ -27,11 +27,15 @@ func NewBuildEvent(base builds.BaseBuild, name string, event *config.Event, outF
 }
 
 func (b *BuildEvent) Values() map[string]interface{} {
-	res := b.BaseBuild.ValuesOfEvent(b.event)
-	res["Namespace"] = b.Namespace()
-	res["ClassName"] = b.ClassName()
-	res["Name"] = b.name
-	return res
+	values := b.BaseBuild.ValuesOfEvent(b.event)
+	values["Namespace"] = b.Namespace()
+	values["ClassName"] = b.ClassName()
+	values["Name"] = b.name
+	if b.event.DataProperty != nil {
+		values["FieldName"] = b.event.DataProperty.Type
+	}
+	b.AddTimePackageValue(values, &b.event.Properties)
+	return values
 }
 
 func (b *BuildEvent) ClassName() string {

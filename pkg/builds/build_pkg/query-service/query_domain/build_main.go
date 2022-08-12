@@ -24,19 +24,13 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 	}
 
 	res.initFields()
-
 	res.initProjectionAggregate()
 	res.initProjectionEntities()
-
 	res.initRepository()
-
 	res.initQueryServices()
-
-	res.initFactoryEntities()
-	res.initFactoryAggregate()
-
-	res.initEnumObjects()
-	res.initCommands()
+	res.initFactory()
+	res.initEnum()
+	res.initQuery()
 	return res
 }
 
@@ -49,7 +43,6 @@ func (b *BuildDomainLayer) initFields() {
 }
 
 func (b *BuildDomainLayer) initQueryServices() {
-
 	outFile := fmt.Sprintf("%s/%s/service/%s_query_service.go", b.outDir, b.Aggregate.FileName(), b.aggregate.FileName())
 	build := NewBuildQueryService(b.BaseBuild, nil, utils.ToLower(outFile))
 	b.AddBuild(build)
@@ -86,21 +79,19 @@ func (b *BuildDomainLayer) initProjectionEntities() {
 	}
 }
 
-func (b *BuildDomainLayer) initFactoryEntities() {
+func (b *BuildDomainLayer) initFactory() {
+	outFile := fmt.Sprintf("%s/%s/factory/%s_factory.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
+	build := NewBuildFactory(b.BaseBuild, nil, utils.ToLower(outFile))
+	b.AddBuild(build)
+
 	for _, item := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/%s/factory/%s_factory.go", b.outDir, b.Aggregate.FileName(), item.FileName())
-		build := NewBuildFactoryEntity(b.BaseBuild, b.aggregate, item, utils.ToLower(outFile))
+		build := NewBuildFactory(b.BaseBuild, item, utils.ToLower(outFile))
 		b.AddBuild(build)
 	}
 }
 
-func (b *BuildDomainLayer) initFactoryAggregate() {
-	outFile := fmt.Sprintf("%s/%s/factory/%s_factory.go", b.outDir, b.Aggregate.FileName(), b.Aggregate.FileName())
-	build := NewBuildFactoryAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
-	b.AddBuild(build)
-}
-
-func (b *BuildDomainLayer) initEnumObjects() {
+func (b *BuildDomainLayer) initEnum() {
 	if b.aggregate.EnumObjects != nil {
 		for _, item := range b.aggregate.EnumObjects {
 			outFile := fmt.Sprintf("%s/%s/view/%s_enum.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
@@ -110,13 +101,13 @@ func (b *BuildDomainLayer) initEnumObjects() {
 	}
 }
 
-func (b *BuildDomainLayer) initCommands() {
-	outFile := fmt.Sprintf("%s/%s/command/%s_query.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(b.aggregate.Name))
+func (b *BuildDomainLayer) initQuery() {
+	outFile := fmt.Sprintf("%s/%s/query/%s_query.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(b.aggregate.Name))
 	build := NewBuildCommand(b.BaseBuild, b.aggregate, nil, utils.ToLower(outFile))
 	b.AddBuild(build)
 
 	for _, item := range b.aggregate.Entities {
-		outFile := fmt.Sprintf("%s/%s/command/%s_query.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
+		outFile := fmt.Sprintf("%s/%s/query/%s_query.go", b.outDir, b.aggregate.FileName(), utils.SnakeString(item.Name))
 		build := NewBuildCommand(b.BaseBuild, nil, item, utils.ToLower(outFile))
 		b.AddBuild(build)
 	}

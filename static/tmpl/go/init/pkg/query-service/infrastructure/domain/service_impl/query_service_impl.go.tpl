@@ -4,9 +4,14 @@ import (
     "sync"
 	"context"
     "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
+    "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/query"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/service"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/repository"
-    "{{.Namespace}}/pkg/query-service/infrastructure/domain/{{.aggregate_name}}/repository_impl/mongodb"
+	{{- if .IsMongo}}
+    repos_impl "{{.Namespace}}/pkg/query-service/infrastructure/domain_impl/{{.aggregate_name}}/repository_impl/mongodb"
+    {{- else if .IsNeo4j}}
+    repos_impl "{{.Namespace}}/pkg/query-service/infrastructure/domain_impl/{{.aggregate_name}}/repository_impl/neo4j"
+    {{- end }}
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
@@ -38,74 +43,88 @@ func Get{{.Name}}QueryDomainService() service.{{.Name}}QueryDomainService {
 
 func new{{.Name}}QueryDomainService() service.{{.Name}}QueryDomainService {
 	return &{{.Name}}QueryDomainServiceImpl{
-		repos: mongodb.New{{.Name}}ViewRepository(),
+		repos: repos_impl.New{{.Name}}ViewRepository(),
 	}
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) Create(ctx context.Context, view *view.{{.Name}}View) error {
-	return s.repos.Create(ctx, view)
+func (s *{{.Name}}QueryDomainServiceImpl) Create(ctx context.Context, view *view.{{.Name}}View, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.Create(ctx, view, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) CreateMany(ctx context.Context, views []*view.{{.Name}}View) error {
-	return s.repos.CreateMany(ctx, views)
+func (s *{{.Name}}QueryDomainServiceImpl) CreateMany(ctx context.Context, views []*view.{{.Name}}View, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.CreateMany(ctx, views, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) Update(ctx context.Context, view *view.{{.Name}}View) error {
-	return s.repos.Update(ctx, view)
+func (s *{{.Name}}QueryDomainServiceImpl) Update(ctx context.Context, view *view.{{.Name}}View, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.Update(ctx, view, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) UpdateMany(ctx context.Context, views []*view.{{.Name}}View) error {
-	return s.repos.UpdateMany(ctx, views)
+func (s *{{.Name}}QueryDomainServiceImpl) UpdateMany(ctx context.Context, views []*view.{{.Name}}View, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.UpdateMany(ctx, views, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) Delete(ctx context.Context, view *view.{{.Name}}View) error {
-	return s.repos.Delete(ctx, view)
+func (s *{{.Name}}QueryDomainServiceImpl) Delete(ctx context.Context, view *view.{{.Name}}View, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.Delete(ctx, view, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) DeleteMany(ctx context.Context, tenantId string, views []*view.{{.Name}}View) error {
-	return s.repos.DeleteMany(ctx, tenantId, views)
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteMany(ctx context.Context, tenantId string, views []*view.{{.Name}}View, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.DeleteMany(ctx, tenantId, views, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) DeleteById(ctx context.Context, tenantId string, id string) error {
-	return s.repos.DeleteById(ctx, tenantId, id)
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteById(ctx context.Context, tenantId string, id string, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.DeleteById(ctx, tenantId, id, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) DeleteByIds(ctx context.Context, tenantId string, ids []string) error {
-	return s.repos.DeleteByIds(ctx, tenantId, ids)
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteByIds(ctx context.Context, tenantId string, ids []string, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.DeleteByIds(ctx, tenantId, ids, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) DeleteByFilter(ctx context.Context, tenantId, filter string) error {
-	return s.repos.DeleteByFilter(ctx, tenantId, filter)
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteByFilter(ctx context.Context, tenantId, filter string, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.DeleteByFilter(ctx, tenantId, filter, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) DeleteAll(ctx context.Context, tenantId string) error {
-	return s.repos.DeleteAll(ctx, tenantId)
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteAll(ctx context.Context, tenantId string, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+	return s.repos.DeleteAll(ctx, tenantId, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, query *command.{{.Name}}FindByIdQuery) (*view.{{.Name}}View, bool, error) {
-	return s.repos.FindById(ctx, query.TenantId, query.Id)
+func (s *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, qry *query.FindByIdQuery, opts ...service.Options) (*view.{{.Name}}View, bool, error) {
+    opt := MergeOptions(opts...)
+	return s.repos.FindById(ctx, qry.TenantId, qry.Id, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) FindByIds(ctx context.Context, query *command.{{.Name}}FindByIdsQuery) ([]*view.{{.Name}}View, bool, error) {
-	return s.repos.FindByIds(ctx, query.TenantId, query.Ids)
+func (s *{{.Name}}QueryDomainServiceImpl) FindByIds(ctx context.Context, qry *query.FindByIdsQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
+    opt := MergeOptions(opts...)
+	return s.repos.FindByIds(ctx, qry.TenantId, qry.Ids, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) FindAll(ctx context.Context, query *command.{{.Name}}FindAllQuery) ([]*view.{{.Name}}View, bool, error) {
-	return s.repos.FindAll(ctx, query.TenantId)
+func (s *{{.Name}}QueryDomainServiceImpl) FindAll(ctx context.Context, qry *query.FindAllQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
+    opt := MergeOptions(opts...)
+	return s.repos.FindAll(ctx, qry.TenantId, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, query *command.{{.Name}}FindPagingQuery) (*command.{{.Name}}FindPagingResult, bool, error) {
+func (s *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, qry *query.FindPagingQuery, opts ...service.Options) (*query.FindPagingResult, bool, error) {
 	q := ddd_repository.NewFindPagingQuery()
-	q.SetTenantId(query.TenantId)
-	q.SetFilter(query.Filter)
-	q.SetPageNum(query.PageNum)
-	q.SetFields(query.Fields)
-	q.SetSort(query.Sort)
-	q.SetPageSize(query.PageSize)
+	q.SetTenantId(qry.TenantId)
+	q.SetFilter(qry.Filter)
+	q.SetPageNum(qry.PageNum)
+	q.SetFields(qry.Fields)
+	q.SetSort(qry.Sort)
+	q.SetPageSize(qry.PageSize)
 
-	data, _, _ := s.repos.FindPaging(ctx, q)
+    opt := MergeOptions(opts...)
+	data, _, _ := s.repos.FindPaging(ctx, q, opt)
 
-	res := command.New{{.Name}}FindPagingResult()
+	res := query.NewFindPagingResult()
 	res.Data = data.GetData()
 	res.TotalRows = data.GetTotalRows()
 	res.TotalPages = data.GetTotalPages()
@@ -121,7 +140,8 @@ func (s *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, query 
 
 
 {{- if .IsEntity }}
-func (s *{{.Name}}QueryDomainServiceImpl) FindByGraphId(ctx context.Context, query *command.{{.Name}}FindByGraphIdQuery) ([]*view.{{.Name}}View, bool, error) {
-	return s.repos.FindByGraphId(ctx, query.TenantId, query.GraphId)
+func (s *{{.Name}}QueryDomainServiceImpl) FindBy{{.AggregateName}}Id(ctx context.Context, qry *query.FindBy{{.AggregateName}}IdQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
+    opt := MergeOptions(opts...)
+	return s.repos.FindByGraphId(ctx, qry.TenantId, qry.{{.AggregateName}}Id, opt)
 }
 {{- end }}

@@ -22,26 +22,19 @@ func NewBuildApplicationLayer(cfg *config.Config, aggregate *config.Aggregate, o
 		aggregate: aggregate,
 		outDir:    outDir,
 	}
-
-	res.initAppServiceAggregate()
-	res.initAppServiceEntities()
-
+	res.initQueryAppService()
 	res.initQueryHandlerAggregate()
 	res.initQueryHandlerEntities()
-
 	return res
 }
 
-func (b *BuildApplicationLayer) initAppServiceAggregate() {
+func (b *BuildApplicationLayer) initQueryAppService() {
 	outFile := fmt.Sprintf("%s/internals/%s/service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
-	build := NewBuildAppServiceAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	build := NewBuildAppService(b.BaseBuild, nil, utils.ToLower(outFile))
 	b.AddBuild(build)
-}
-
-func (b *BuildApplicationLayer) initAppServiceEntities() {
 	for _, item := range b.aggregate.Entities {
 		outFile := fmt.Sprintf("%s/internals/%s/service/%s_query_appservice.go", b.outDir, b.aggregate.FileName(), item.FileName())
-		build := NewBuildRestControllerEntity(b.BaseBuild, item, utils.ToLower(outFile))
+		build := NewBuildAppService(b.BaseBuild, item, utils.ToLower(outFile))
 		b.AddBuild(build)
 	}
 }
