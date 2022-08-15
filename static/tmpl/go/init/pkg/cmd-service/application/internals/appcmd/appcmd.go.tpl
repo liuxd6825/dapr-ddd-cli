@@ -1,4 +1,4 @@
-package dto
+package appcmd
 
 import (
 	domain "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
@@ -6,10 +6,10 @@ import (
 {{- range $i, $cmd := .Commands}}
 
 //
-// {{$cmd.Name}}Dto
-// @Description:  {{$cmd.Description}}传输对象
+// {{$cmd.AppName}}
+// @Description: 应用服务层命令, {{$cmd.Description}}
 //
-type {{$cmd.Name}}Dto struct {
+type {{$cmd.AppName}} struct {
 	domain.{{$cmd.Name}}
 }
 {{- end }}

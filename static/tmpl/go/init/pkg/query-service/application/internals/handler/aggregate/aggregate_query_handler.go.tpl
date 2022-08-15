@@ -8,13 +8,14 @@ import (
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/factory"
 	"{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/service"
+	"{{.Namespace}}/pkg/query-service/infrastructure/base/application/handler"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 )
 
 type {{.Name}}QueryHandler struct {
 	service *service.{{.Name}}QueryAppService
-	restapp.BaseQueryHandler
+	handler.BaseQueryHandler
 }
 
 {{- $serviceName := .ServiceName}}
@@ -57,7 +58,7 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 // @return error 错误
 //
 func (h *{{$AggregateName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
-	return h.DoSession(ctx, h.GetStructName, event, func(ctx context.Context) error {
+	return h.DoSession(ctx, h, event, func(ctx context.Context) error {
 		{{- if $event.IsAggregateCreateEvent }}
         v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
         if err != nil {

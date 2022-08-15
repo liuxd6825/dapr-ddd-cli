@@ -5,16 +5,14 @@ import (
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
 )
 
-type BuildAssemblerEntity struct {
+type BuildAssembler struct {
 	builds.BaseBuild
-	aggregate *config.Aggregate
-	entity    *config.Entity
+	entity *config.Entity
 }
 
-func NewBuildAssemblerEntity(base builds.BaseBuild, aggregate *config.Aggregate, entity *config.Entity, outFile string) *BuildAssemblerEntity {
-	res := &BuildAssemblerEntity{
+func NewBuildAssembler(base builds.BaseBuild, entity *config.Entity, outFile string) *BuildAssembler {
+	res := &BuildAssembler{
 		BaseBuild: base,
-		aggregate: aggregate,
 		entity:    entity,
 	}
 	res.ValuesFunc = res.Values
@@ -22,8 +20,12 @@ func NewBuildAssemblerEntity(base builds.BaseBuild, aggregate *config.Aggregate,
 	res.OutFile = outFile
 	return res
 }
-func (b *BuildAssemblerEntity) Values() map[string]interface{} {
-	res := b.BaseBuild.Values()
-	res["Commands"] = b.entity.GetCommands()
+func (b *BuildAssembler) Values() map[string]interface{} {
+	res := b.BaseBuild.ValuesOfEntity(b.entity)
+	if b.entity != nil {
+		res["Commands"] = b.entity.GetCommands()
+	} else {
+		res["Commands"] = b.Aggregate.AggregateCommands
+	}
 	return res
 }

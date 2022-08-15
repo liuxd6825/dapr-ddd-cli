@@ -22,16 +22,16 @@ func main() {
 }
 
 // 注册消息监听器
-func subscribes() *[]restapp.RegisterSubscribe {
-	return &[]restapp.RegisterSubscribe{}
+func subscribes() []restapp.RegisterSubscribe {
+	return []restapp.RegisterSubscribe{}
 }
 
 // 注册Http控制器
-func controllers() *[]restapp.Controller {
+func controllers() []restapp.Controller {
 	return register.GetRegisterController()
 }
 
 // 注册领域事件
-func events() *[]restapp.RegisterEventType {
+func events() []restapp.RegisterEventType {
 	return register.GetRegisterEventType()
 }

@@ -6,8 +6,6 @@ var (
 	commandNames = []string{"CreateCommand", "UpdateCommand", "DeleteCommand", "ManyCreateCommand", "ManyUpdateCommand", "ManyDeleteCommand"}
 )
 
-const ()
-
 type CommandUtils struct {
 }
 

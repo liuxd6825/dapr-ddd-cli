@@ -2,11 +2,8 @@ package executor
 
 import (
 	"context"
-	"{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/assembler"
-	"{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/dto"
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/model"
 	domain_service "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/service"
-	"sync"
 )
 
 type FindAggregateByIdExecutor interface {

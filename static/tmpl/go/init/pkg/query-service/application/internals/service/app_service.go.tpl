@@ -78,9 +78,9 @@ func (a *{{.Name}}QueryAppService) Create(ctx context.Context, v *view.{{.Name}}
 // @return []*view.{{.Name}}View  {{.Name}}实体对象切片
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) CreateMany(ctx context.Context, v []*view.{{.Name}}View) error {
+func (a *{{.Name}}QueryAppService) CreateMany(ctx context.Context, vList []*view.{{.Name}}View) error {
 	return session.StartSession(ctx, func(ctx context.Context) error {
-	    return a.{{.name}}DomainService.CreateMany(ctx, v)
+	    return a.{{.name}}DomainService.CreateMany(ctx, vList)
 	})
 
 }
@@ -107,9 +107,9 @@ func (a *{{.Name}}QueryAppService) Update(ctx context.Context, v *view.{{.Name}}
 // @return []*view.{{.Name}}View  {{.Name}}实体对象切片
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) UpdateMany(ctx context.Context, v []*view.{{.Name}}View) error {
+func (a *{{.Name}}QueryAppService) UpdateMany(ctx context.Context, vList []*view.{{.Name}}View) error {
 	return session.StartSession(ctx, func(ctx context.Context) error {
-	    return a.{{.name}}DomainService.UpdateMany(ctx, v)
+	    return a.{{.name}}DomainService.UpdateMany(ctx, vList)
 	})
 }
 
@@ -142,11 +142,11 @@ func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id 
 // @param []*view.{{.Name}}View  {{.Name}}实体对象切片
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) DeleteMany(ctx context.Context, tenantId string, v []*view.{{.Name}}View) error {
+func (a *{{.Name}}QueryAppService) DeleteMany(ctx context.Context, tenantId string, vList []*view.{{.Name}}View) error {
 	return session.StartSession(ctx, func(ctx context.Context) error {
         {{- if .IsAggregate }}
         {{- if not .Aggregate.Entities.Empty }}
-        for _, item := range v {
+        for _, item := range vList {
             {{- range $entityName, $entity := .Aggregate.Entities}}
             if err:= a.{{$entity.FirstLowerName}}DomainService.DeleteBy{{$AggregateName}}Id(ctx, tenantId, item.Id); err!=nil {
                 return err
@@ -191,7 +191,7 @@ func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId strin
 // @return error
 //
 func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string, id string) (*view.{{.Name}}View, bool, error) {
-	qry := query.NewFindByIdQuery(tenantId, id)
+	qry := query.New{{.Name}}FindByIdQuery(tenantId, id)
 	return a.{{.name}}DomainService.FindById(ctx, qry)
 }
 
@@ -207,7 +207,7 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) ([]*view.{{.Name}}View, bool, error) {
-	qry := query.NewFindAllQuery(tenantId)
+	qry := query.New{{.Name}}FindAllQuery(tenantId)
 	return a.{{.name}}DomainService.FindAll(ctx, qry)
 }
 
@@ -222,7 +222,7 @@ func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string)
 // @return bool 是否查询到数据
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, qry *query.FindPagingQuery) (*query.FindPagingResult, bool, error) {
+func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, qry *query.{{.Name}}FindPagingQuery) (*query.{{.Name}}FindPagingResult, bool, error) {
 	return a.{{.name}}DomainService.FindPaging(ctx, qry)
 }
 
@@ -240,7 +240,7 @@ func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, qry *query.Fi
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error) {
-	qry := query.NewFindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
+	qry := query.New{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
 	return a.{{.name}}DomainService.FindBy{{.AggregateName}}Id(ctx, qry)
 }
 {{- end }}

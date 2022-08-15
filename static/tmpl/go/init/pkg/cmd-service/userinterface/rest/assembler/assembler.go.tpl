@@ -3,7 +3,7 @@ package assembler
 
 import (
 	"github.com/kataras/iris/v12"
-	adto "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/dto"
+	"{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/appcmd"
 	"{{.Namespace}}/pkg/cmd-service/infrastructure/utils"
 	"{{.Namespace}}/pkg/cmd-service/userinterface/rest/{{.aggregate_name}}/dto"
 )
@@ -13,7 +13,6 @@ type {{$AggregateName}}Assembler struct {
 }
 {{- end }}
 
-
 {{- range $cmdName, $cmd := .Commands}}
 
 //
@@ -21,19 +20,16 @@ type {{$AggregateName}}Assembler struct {
 // @Description: {{$cmd.Description}}
 // @receiver a
 // @param ictx
-// @return *adto.{{$cmd.Name}}Dto {{$cmd.Description}} 应用层DTO对象
+// @return *appcmd.{{$cmd.AppName}} {{$cmd.Description}} 应用层DTO对象
 // @return error 错误
 //
-func (a *{{$AggregateName}}Assembler) Ass{{$cmd.Name}}Dto(ictx iris.Context) (*adto.{{$cmd.Name}}Dto, error) {
+func (a *{{$AggregateName}}Assembler) Ass{{$cmd.AppName}}(ictx iris.Context) (*appcmd.{{$cmd.AppName}}, error) {
 	var request dto.{{$cmd.Name}}Request
-	var cmd adto.{{$cmd.Name}}Dto
-	if err := utils.AssemblerRequestBody(ictx, &request, &cmd); err != nil {
+	var appCmd appcmd.{{$cmd.AppName}}
+	if err := utils.AssemblerRequestBody(ictx, &request, &appCmd); err != nil {
 		return nil, err
 	}
-	if err := cmd.Validate(); err != nil {
-		return nil, err
-	}
-	return &cmd, nil
+	return &appCmd, nil
 }
 
 {{- end }}

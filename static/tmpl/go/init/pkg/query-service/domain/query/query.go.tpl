@@ -4,41 +4,41 @@ import (
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 )
 
-type FindByIdQuery struct {
+type {{.Name}}FindByIdQuery struct {
 	TenantId string `json:"tenantId"`
 	Id       string `json:"id"`
 }
 
-func NewFindByIdQuery(tenantId, id string) *FindByIdQuery  {
-    return &FindByIdQuery{
+func New{{.Name}}FindByIdQuery(tenantId, id string) *{{.Name}}FindByIdQuery  {
+    return &{{.Name}}FindByIdQuery{
         TenantId: tenantId,
         Id: id,
     }
 }
 
-type FindByIdsQuery struct {
+type {{.Name}}FindByIdsQuery struct {
 	TenantId  string `json:"tenantId"`
 	Ids       []string `json:"ids"`
 }
 
-func NewFindByIdsQuery(tenantId string, ids []string) *FindByIdsQuery  {
-    return &FindByIdsQuery{
+func New{{.Name}}FindByIdsQuery(tenantId string, ids []string) *{{.Name}}FindByIdsQuery  {
+    return &{{.Name}}FindByIdsQuery{
         TenantId: tenantId,
         Ids: ids,
     }
 }
 
-type FindAllQuery struct {
+type {{.Name}}FindAllQuery struct {
 	TenantId string `json:"tenantId"`
 }
 
-func NewFindAllQuery(tenantId string) *FindAllQuery  {
-    return &FindAllQuery{
+func New{{.Name}}FindAllQuery(tenantId string) *{{.Name}}FindAllQuery  {
+    return &{{.Name}}FindAllQuery{
         TenantId: tenantId,
     }
 }
 
-type FindPagingQuery struct {
+type {{.Name}}FindPagingQuery struct {
 	TenantId string `json:"tenantId"`
 	Fields   string `json:"fields"`
 	Filter   string `json:"filter"`
@@ -47,8 +47,8 @@ type FindPagingQuery struct {
 	PageSize int64  `json:"pageSize"`
 }
 
-func NewFindPagingQuery(tenantId string, fields string, filter string, sort string, pageNum int64, pageSize int64) *FindPagingQuery  {
-    return &FindPagingQuery{
+func New{{.Name}}FindPagingQuery(tenantId string, fields string, filter string, sort string, pageNum int64, pageSize int64) *{{.Name}}FindPagingQuery  {
+    return &{{.Name}}FindPagingQuery{
         TenantId : tenantId,
         Fields   : fields,
         Filter   : filter,
@@ -58,45 +58,45 @@ func NewFindPagingQuery(tenantId string, fields string, filter string, sort stri
     }
 }
 
-func (q *FindPagingQuery) GetTenantId() string {
+func (q *{{.Name}}FindPagingQuery) GetTenantId() string {
 	return q.TenantId
 }
 
-func (q *FindPagingQuery) GetFields() string {
+func (q *{{.Name}}FindPagingQuery) GetFields() string {
 	return q.Fields
 }
 
-func (q *FindPagingQuery) GetFilter() string {
+func (q *{{.Name}}FindPagingQuery) GetFilter() string {
 	return q.Filter
 }
 
-func (q *FindPagingQuery) GetSort() string {
+func (q *{{.Name}}FindPagingQuery) GetSort() string {
 	return q.Sort
 }
 
-func (q *FindPagingQuery) GetPageNum() int64 {
+func (q *{{.Name}}FindPagingQuery) GetPageNum() int64 {
 	return q.PageNum
 }
 
-func (q *FindPagingQuery) GetPageSize() int64 {
+func (q *{{.Name}}FindPagingQuery) GetPageSize() int64 {
 	return q.PageSize
 }
 
 {{- if .IsEntity }}
-type FindBy{{.AggregateName}}IdQuery struct {
+type {{.Name}}FindBy{{.AggregateName}}IdQuery struct {
     TenantId string `json:"tenantId"`
     {{.AggregateName}}Id  string `json:"{{.aggregateName}}Id"`
 }
 
-func NewFindBy{{.AggregateName}}IdQuery(tenantId string, {{.aggregateName}}Id string) *FindBy{{.AggregateName}}IdQuery {
-    return &FindBy{{.AggregateName}}IdQuery{
+func New{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId string, {{.aggregateName}}Id string) *{{.Name}}FindBy{{.AggregateName}}IdQuery {
+    return &{{.Name}}FindBy{{.AggregateName}}IdQuery{
         TenantId: tenantId,
         {{.AggregateName}}Id: {{.aggregateName}}Id,
     }
 }
 {{- end }}
 
-type FindPagingResult struct {
+type {{.Name}}FindPagingResult struct {
 	Data       []*view.{{.Name}}View `json:"data"`
 	TotalRows  int64                `json:"totalRows"`
 	TotalPages int64                `json:"totalPages"`
@@ -108,6 +108,6 @@ type FindPagingResult struct {
 	IsFound    bool                 `json:"-"`
 }
 
-func NewFindPagingResult() *FindPagingResult {
-	return &FindPagingResult{}
+func New{{.Name}}FindPagingResult() *{{.Name}}FindPagingResult {
+	return &{{.Name}}FindPagingResult{}
 }

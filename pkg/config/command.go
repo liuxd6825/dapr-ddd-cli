@@ -142,6 +142,10 @@ func (c *Command) FileName() string {
 	return utils.SnakeString(c.Name)
 }
 
+func (c *Command) AppName() string {
+	return strings.ReplaceAll(c.Name, "Command", "AppCmd")
+}
+
 func (c *Command) ServiceFuncName() string {
 	if strings.HasSuffix(c.Name, "Command") {
 		return c.Name[0 : len(c.Name)-len("Command")]

@@ -11,8 +11,6 @@ import (
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 	"{{.Namespace}}/pkg/cmd-service/userinterface/rest/{{.aggregate_name}}/assembler"
     "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/service"
-	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
-	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 )
 
 var {{.aggregateName}}Assembler = assembler.{{$AggregateName}}Assembler{}
@@ -82,11 +80,11 @@ func (c *{{$ClassName}}) FindAggregateById(ictx iris.Context, tenantId string, i
 //
 func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ictx iris.Context) {
 	_ = restapp.DoCmd(ictx, func(ctx context.Context) error {
-	    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ictx)
+	    appCmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.AppName}}(ictx)
         if err != nil {
             return err
         }
-		return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
+		return c.service.{{$cmd.ServiceFuncName}}(ctx, appCmd)
 	})
 }
 
@@ -107,15 +105,15 @@ func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ictx iris.Context) {
 //
 func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ictx iris.Context) {
 	_ = restapp.Do(ictx, func() error {
-		cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ictx)
+		appCmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.AppName}}(ictx)
         if err != nil {
             return err
     	}
 
-        _, _, err = restapp.DoCmdAndQueryOne(ictx, c.service.QueryAppId, cmd, func(ctx context.Context) error {
-            return c.service.{{$cmd.ServiceFuncName}}(ctx, cmd)
+        _, _, err = restapp.DoCmdAndQueryOne(ictx, c.service.QueryAppId, appCmd, func(ctx context.Context) error {
+            return c.service.{{$cmd.ServiceFuncName}}(ctx, appCmd)
         }, func(ctx context.Context) (interface{}, bool, error) {
-            return c.service.QueryById(ctx, cmd.GetTenantId(), cmd.Data.Id)
+            return c.service.QueryById(ctx, appCmd.GetTenantId(), appCmd.Data.Id)
         })
         return err
     })

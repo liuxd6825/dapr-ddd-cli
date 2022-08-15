@@ -31,14 +31,6 @@ func (e *Entities) init(a *Aggregate) {
 	}
 }
 
-func (e *Entities) Count() int {
-	return len(*e)
-}
-
-func (e *Entities) Empty() bool {
-	return e.Count() == 0
-}
-
 func (e *Entity) int(a *Aggregate, name string) {
 	if e == nil {
 		return
@@ -55,6 +47,14 @@ func (e *Entity) int(a *Aggregate, name string) {
 		e.Properties[aggregateId] = aidProp
 		aidProp.Validate = "gt=0"
 	}
+}
+
+func (e *Entities) Count() int {
+	return len(*e)
+}
+
+func (e *Entities) Empty() bool {
+	return e.Count() == 0
 }
 
 //
@@ -77,6 +77,12 @@ func (e *Entity) FirstUpperName() string {
 	return utils.FirstUpper(e.Name)
 }
 
+//
+// FileName
+// @Description: 源代码文件名
+// @receiver e
+// @return string
+//
 func (e *Entity) FileName() string {
 	return utils.SnakeString(e.Name)
 }

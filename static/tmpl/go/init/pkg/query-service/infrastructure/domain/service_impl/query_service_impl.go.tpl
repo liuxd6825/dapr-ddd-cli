@@ -97,22 +97,22 @@ func (s *{{.Name}}QueryDomainServiceImpl) DeleteAll(ctx context.Context, tenantI
 	return s.repos.DeleteAll(ctx, tenantId, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, qry *query.FindByIdQuery, opts ...service.Options) (*view.{{.Name}}View, bool, error) {
+func (s *{{.Name}}QueryDomainServiceImpl) FindById(ctx context.Context, qry *query.{{.Name}}FindByIdQuery, opts ...service.Options) (*view.{{.Name}}View, bool, error) {
     opt := MergeOptions(opts...)
 	return s.repos.FindById(ctx, qry.TenantId, qry.Id, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) FindByIds(ctx context.Context, qry *query.FindByIdsQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
+func (s *{{.Name}}QueryDomainServiceImpl) FindByIds(ctx context.Context, qry *query.{{.Name}}FindByIdsQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
     opt := MergeOptions(opts...)
 	return s.repos.FindByIds(ctx, qry.TenantId, qry.Ids, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) FindAll(ctx context.Context, qry *query.FindAllQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
+func (s *{{.Name}}QueryDomainServiceImpl) FindAll(ctx context.Context, qry *query.{{.Name}}FindAllQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
     opt := MergeOptions(opts...)
 	return s.repos.FindAll(ctx, qry.TenantId, opt)
 }
 
-func (s *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, qry *query.FindPagingQuery, opts ...service.Options) (*query.FindPagingResult, bool, error) {
+func (s *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, qry *query.{{.Name}}FindPagingQuery, opts ...service.Options) (*query.{{.Name}}FindPagingResult, bool, error) {
 	q := ddd_repository.NewFindPagingQuery()
 	q.SetTenantId(qry.TenantId)
 	q.SetFilter(qry.Filter)
@@ -124,7 +124,7 @@ func (s *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, qry *q
     opt := MergeOptions(opts...)
 	data, _, _ := s.repos.FindPaging(ctx, q, opt)
 
-	res := query.NewFindPagingResult()
+	res := query.New{{.Name}}FindPagingResult()
 	res.Data = data.GetData()
 	res.TotalRows = data.GetTotalRows()
 	res.TotalPages = data.GetTotalPages()
@@ -140,8 +140,8 @@ func (s *{{.Name}}QueryDomainServiceImpl) FindPaging(ctx context.Context, qry *q
 
 
 {{- if .IsEntity }}
-func (s *{{.Name}}QueryDomainServiceImpl) FindBy{{.AggregateName}}Id(ctx context.Context, qry *query.FindBy{{.AggregateName}}IdQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
+func (s *{{.Name}}QueryDomainServiceImpl) FindBy{{.AggregateName}}Id(ctx context.Context, qry *query.{{.Name}}FindBy{{.AggregateName}}IdQuery, opts ...service.Options) ([]*view.{{.Name}}View, bool, error) {
     opt := MergeOptions(opts...)
-	return s.repos.FindByGraphId(ctx, qry.TenantId, qry.{{.AggregateName}}Id, opt)
+	return s.repos.FindBy{{.AggregateName}}Id(ctx, qry.TenantId, qry.{{.AggregateName}}Id, opt)
 }
 {{- end }}

@@ -41,6 +41,7 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initBaseView()
 	res.initBaseDto()
 	res.initDb(database)
+	res.initBaseQueryHandler()
 	return res
 }
 
@@ -91,6 +92,12 @@ func (b *BuildInfrastructureLayer) initQueryService() {
 		build := NewBuildQueryServiceImpl(b.BaseBuild, item, utils.ToLower(outFile))
 		b.AddBuild(build)
 	}
+}
+
+func (b *BuildInfrastructureLayer) initBaseQueryHandler() {
+	outFile := fmt.Sprintf("%s/base/application/handler/base_query_handler.go", b.outDir)
+	buildBaseQueryHandler := NewBuildBaseQueryHandler(b.BaseBuild, outFile)
+	b.AddBuild(buildBaseQueryHandler)
 }
 
 func (b *BuildInfrastructureLayer) initRegisterSubscribe() {

@@ -35,24 +35,24 @@ func (b *BuildApplicationLayer) init() {
 	b.AddBuild(buildCmdAppService)
 
 	// dto
-	outFile = fmt.Sprintf("%s/internals/%s/dto/%s_dto.go", b.outDir, aggregateName, aggregateName)
-	buildDtoAggregate := NewBuildDtoAggregate(b.BaseBuild, b.aggregate, outFile)
+	outFile = fmt.Sprintf("%s/internals/%s/appcmd/%s_appcmd.go", b.outDir, aggregateName, aggregateName)
+	buildDtoAggregate := NewBuildAppCmd(b.BaseBuild, nil, outFile)
 	b.AddBuild(buildDtoAggregate)
 
 	for _, entity := range b.aggregate.Entities {
-		outFile = fmt.Sprintf("%s/internals/%s/dto/%s_dto.go", b.outDir, aggregateName, entity.SnakeName())
-		build := NewBuildDtoEntity(b.BaseBuild, b.aggregate, entity, outFile)
+		outFile = fmt.Sprintf("%s/internals/%s/appcmd/%s_appcmd.go", b.outDir, aggregateName, entity.SnakeName())
+		build := NewBuildAppCmd(b.BaseBuild, entity, outFile)
 		b.AddBuild(build)
 	}
 
 	// assembler
 	outFile = fmt.Sprintf("%s/internals/%s/assembler/%s_assembler.go", b.outDir, aggregateName, aggregateName)
-	buildAssemblerAggregate := NewBuildAssemblerAggregate(b.BaseBuild, b.aggregate, outFile)
+	buildAssemblerAggregate := NewBuildAssembler(b.BaseBuild, nil, outFile)
 	b.AddBuild(buildAssemblerAggregate)
 
 	for _, entity := range b.aggregate.Entities {
 		outFile = fmt.Sprintf("%s/internals/%s/assembler/%s_assembler.go", b.outDir, aggregateName, entity.SnakeName())
-		build := NewBuildAssemblerEntity(b.BaseBuild, b.aggregate, entity, outFile)
+		build := NewBuildAssembler(b.BaseBuild, entity, outFile)
 		b.AddBuild(build)
 	}
 

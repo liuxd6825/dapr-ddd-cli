@@ -30,5 +30,7 @@ func (b *BuildCommandExecutor) Values() map[string]interface{} {
 	res["ClassName"] = utils.FirstUpper(b.command.Name + "Executor")
 	res["Name"] = utils.FirstUpper(b.command.Name)
 	res["name"] = utils.FirstLower(b.command.Name)
+	res["AppName"] = b.command.AppName()
+	res["Description"] = b.command.Description
 	return res
 }

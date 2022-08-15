@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-    "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/dto"
+    "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/appcmd"
     "{{.Namespace}}/pkg/cmd-service/application/internals/{{.aggregate_name}}/executor"
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/model"
 	domain_service "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/service"
@@ -46,8 +46,8 @@ func New{{.ClassName}}() *{{.ClassName}} {
 // @param cmd {{$cmd.Description}}命令DTO对象
 // @return error
 //
-func (s *{{$ClassName}}) {{$cmd.ServiceFuncName}}(ctx context.Context, cmdDto *dto.{{$cmd.Name}}Dto) error {
-	return s.{{$cmd.FirstLowerName}}Executor.Execute(ctx, cmdDto)
+func (s *{{$ClassName}}) {{$cmd.ServiceFuncName}}(ctx context.Context, appCmd *appcmd.{{$cmd.AppName}}) error {
+	return s.{{$cmd.FirstLowerName}}Executor.Execute(ctx, appCmd)
 }
 {{- end }}
 
