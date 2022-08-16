@@ -31,12 +31,26 @@ func (a *{{.Name}}Assembler) AssFindByIdResponse(ictx iris.Context, v *view.{{.N
 	return res, true, nil
 }
 
-func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, v *ddd_repository.FindPagingResult[*view.{{.Name}}View], isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindPagingRequest(ctx iris.Context) (*appquery.{{.Name}}FindPagingAppQuery, error) {
+	fpr, err := a.BaseAssembler.AssFindPagingRequest(ctx)
+	if err != nil {
+		return nil, err
+	}
+	query := &appquery.{{.Name}}FindPagingAppQuery{}
+	query.Filter = fpr.Filter
+	query.TenantId = fpr.TenantId
+	query.Sort = fpr.Sort
+	query.PageSize = fpr.PageSize
+	query.PageNum = fpr.PageNum
+	return query, nil
+}
+
+func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, fpr *appquery.GraphFindPagingResult, isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
     if findErr != nil {
         return nil, isFound, findErr
     }
 	response := dto.New{{.Name}}FindPagingResponse()
-	err := utils.Mapper(v, response)
+	err := utils.Mapper(fpr, response)
 	if err != nil {
 		return nil, false, err
 	}
@@ -73,7 +87,6 @@ func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdRequest(ictx iris.Cont
 
 	return res, nil
 }
-
 
 func (a *{{.Name}}Assembler) AssFindBy{{.AggregateName}}IdResponse(ictx iris.Context , vList []*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindBy{{.AggregateName}}IdResponse, bool, error) {
 	if findErr != nil {

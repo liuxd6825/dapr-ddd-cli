@@ -18,7 +18,7 @@ type {{.ClassName}} struct {
 	UpdateMask  []string  `json:"updateMask" validate:"-"`         // 要更新的字段项，空值：更新所有字段
     {{- end }}
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsData }} {{end}} {{$property.LanType}} `json:"{{$property.LowerName}}" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{$property.UpperName}} {{if $property.IsData }} {{end}} {{$property.GoLanType}} `json:"{{$property.LowerName}}" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
 {{- end}}
 }
 

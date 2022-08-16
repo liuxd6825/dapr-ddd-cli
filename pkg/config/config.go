@@ -100,7 +100,36 @@ func (c *Config) merge(source *Config) {
 	if source.Aggregates != nil && len(source.Aggregates) > 0 {
 		for k, v := range source.Aggregates {
 			v.Name = k
-			c.Aggregates[k] = v
+			v.initValues()
+			agg, ok := c.Aggregates[k]
+			if !ok {
+				c.Aggregates[k] = v
+			} else {
+				if agg.Id == nil {
+					agg.Id = v.Id
+				}
+				if len(agg.Name) == 0 {
+					agg.Name = v.Name
+				}
+				if len(agg.Description) == 0 {
+					agg.Description = v.Description
+				}
+				if len(v.Properties) > 0 {
+					agg.Properties.Adds(&v.Properties)
+				}
+				if len(v.Entities) > 0 {
+					agg.Entities.Adds(v.Entities)
+				}
+				if len(v.Commands) > 0 {
+					agg.Commands.Adds(v.Commands)
+				}
+				if len(v.FieldsObjects) > 0 {
+					agg.FieldsObjects.Adds(v.FieldsObjects)
+				}
+				if len(v.EnumObjects) > 0 {
+					agg.EnumObjects.Adds(v.EnumObjects)
+				}
+			}
 		}
 	}
 	if source.TypeDefinitions != nil && len(source.TypeDefinitions) > 0 {

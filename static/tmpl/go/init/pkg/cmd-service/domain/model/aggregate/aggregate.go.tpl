@@ -20,11 +20,11 @@ import (
 type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
     {{- if $property.IsArrayEntityType }}
-    {{$property.UpperName}} *{{$property.LanType}}Items `json:"{{$property.JsonName}}" copier:"-" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
+    {{$property.UpperName}} *{{$property.GoLanType}}Items `json:"{{$property.JsonName}}" copier:"-" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else if  $property.IsArray }}
-    {{$property.UpperName}} []{{$property.LanType}} `json:"{{$property.JsonName}}" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
+    {{$property.UpperName}} []{{$property.GoLanType}} `json:"{{$property.JsonName}}" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else }}
-    {{$property.UpperName}} {{$property.LanType}} `json:"{{$property.JsonName}}" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
+    {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.JsonName}}" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- end }}
 {{- end}}
 }

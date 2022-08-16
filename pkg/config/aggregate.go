@@ -37,37 +37,10 @@ type Aggregate struct {
 
 func (a *Aggregate) init() {
 	a.initId()
-	if a.FieldsObjects == nil {
-		a.FieldsObjects = FieldsObjects{}
-	}
+	a.initValues()
 	if a.Version == "" {
 		a.Version = "v1.0"
 	}
-	if a.Properties == nil {
-		a.Properties = make(Properties)
-	}
-	if a.Entities == nil {
-		a.Entities = make(Entities)
-	}
-	if a.Commands == nil {
-		a.Commands = Commands{}
-	}
-	if a.ValueObjects == nil {
-		a.ValueObjects = make(ValueObjects)
-	}
-	if a.FieldsObjects == nil {
-		a.FieldsObjects = FieldsObjects{}
-	}
-	if a.EnumObjects == nil {
-		a.EnumObjects = EnumObjects{}
-	}
-	if a.Factory == nil {
-		a.Factory = Factory{}
-	}
-	if a.Events == nil {
-		a.Events = Events{}
-	}
-
 	// 添加聚合默认属性
 	if a.Config != nil && a.Config.Configuration != nil && a.Config.Configuration.DefaultReservedProperties != nil {
 		aggregateProperties := a.Config.Configuration.DefaultReservedProperties.AggregateProperties
@@ -99,6 +72,36 @@ func (a *Aggregate) initId() *Property {
 	}
 	a.Id = NewProperty("Id", "string")
 	return nil
+}
+
+func (a *Aggregate) initValues() {
+	if a.FieldsObjects == nil {
+		a.FieldsObjects = FieldsObjects{}
+	}
+	if a.Properties == nil {
+		a.Properties = Properties{}
+	}
+	if a.Entities == nil {
+		a.Entities = Entities{}
+	}
+	if a.Commands == nil {
+		a.Commands = Commands{}
+	}
+	if a.ValueObjects == nil {
+		a.ValueObjects = ValueObjects{}
+	}
+	if a.FieldsObjects == nil {
+		a.FieldsObjects = FieldsObjects{}
+	}
+	if a.EnumObjects == nil {
+		a.EnumObjects = EnumObjects{}
+	}
+	if a.Factory == nil {
+		a.Factory = Factory{}
+	}
+	if a.Events == nil {
+		a.Events = Events{}
+	}
 }
 
 func (a *Aggregate) LowerName() string {

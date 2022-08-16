@@ -9,11 +9,11 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
-type Dao[T ddd.Entity] struct {
+type Dao[T ddd_neo4j.ElementEntity] struct {
 	dao *ddd_neo4j.Neo4jDao[T]
 }
 
-func NewDao[T ddd.Entity](labels []string, opts ...*RepositoryOptions) *Dao[T] {
+func NewDao[T ddd_neo4j.ElementEntity](labels []string, opts ...*RepositoryOptions) *Dao[T] {
 	options := NewRepositoryOptions()
 	options.Merge(opts...)
 	return &Dao[T]{

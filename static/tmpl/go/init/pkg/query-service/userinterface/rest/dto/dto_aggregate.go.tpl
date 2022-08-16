@@ -4,6 +4,7 @@ import (
     "github.com/kataras/iris/v12"
     "github.com/liuxd6825/dapr-go-ddd-sdk/assert"
     "github.com/liuxd6825/dapr-go-ddd-sdk/types"
+    "{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/appquery"
     "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/dto"
 )
@@ -25,8 +26,20 @@ func New{{.Name}}FindByIdResponse() *{{.Name}}FindByIdResponse {
 // 分页查询
 
 //
+// {{.Name}}FindPagingRequest
+// @Description: 分页请求数据
+//
+type {{.Name}}FindPagingRequest struct {
+	base.FindPagingRequest
+}
+
+func New{{.Name}}FindPagingRequest() *{{.Name}}FindPagingRequest {
+	return &{{.Name}}FindPagingRequest{}
+}
+
+//
 // {{.Name}}FindPagingResponse
-// @Description: {{.Name}} 分页请求数据
+// @Description: {{.Name}} 分页响应数据
 //
 type {{.Name}}FindPagingResponse struct {
 	base.FindPagingResponse[*{{.Name}}FindPagingResponseItem]
@@ -90,9 +103,9 @@ type {{.Name}}Dto struct {
     {{- else if $property.IsTimeType }}
     {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEnumType }}
-    {{$property.UpperName}} view.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else }}
-    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{$property.UpperName}} {{$property.GoLanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- end}}
 {{- end}}
 }

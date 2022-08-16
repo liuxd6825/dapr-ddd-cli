@@ -5,7 +5,7 @@ type {{.Name}} int
 
 const (
 {{- range  $valueName, $value := .Values}}
-    {{$Name}}{{$valueName}} {{$Name}} = {{$value.Value}}
+    {{$Name}}{{$valueName}} {{$Name}} = {{$value.Value}} // {{$value.Title}}
 {{- end }}
 )
 

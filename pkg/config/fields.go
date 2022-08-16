@@ -29,6 +29,20 @@ func (f *FieldsObjects) init(a *Aggregate) {
 	}
 }
 
+func (f *FieldsObjects) Adds(fields FieldsObjects) {
+	if f == nil || fields == nil {
+		return
+	}
+	em := *f
+	for name, field := range fields {
+		if field != nil {
+			if _, ok := em[name]; !ok {
+				em[name] = field
+			}
+		}
+	}
+}
+
 func (f *FieldsObjects) Find(name string) (*Fields, bool) {
 	if f == nil {
 		return nil, false

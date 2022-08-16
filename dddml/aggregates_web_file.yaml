@@ -1,0 +1,53 @@
+aggregates:
+  ScanFile:
+    description: "扫描文件"
+    properties:
+      Id:
+        type: string
+        description: "主键"
+      Name:
+        type: string
+        description: "标题"
+      DocumentId:
+        type: string
+        description: "文档id"
+      DocumentSize:
+        type: string
+        description: "文件大小"
+      FileId:
+        type: string
+        description: "文件id"
+      Version:
+        type: string
+        description: "版本号"
+      DataRecords:
+        type: DataRecord
+        isArray: true
+        description: "变量记录"
+    entities:
+    commands:
+      ScanFileCreateCommand:
+        description: "创建扫描文件"
+        fields:
+            description: "扫描文件"
+            properties:
+              Id:
+                type: string
+                description: "主键"
+      ScanFileUpdateCommand:
+        description: "更新扫描文件"
+        fields:
+          properties:
+            Id:
+              type: string
+              description: "主键"
+      ScanFileDeleteCommand:
+        description: "删除扫描单"
+        fields:
+          properties:
+            Id:
+              type: string
+              description: "主键"
+    fields:
+
+

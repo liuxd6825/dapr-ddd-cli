@@ -41,7 +41,7 @@ func (a *{{.Name}}QueryApi) BeforeActivation(b mvc.BeforeActivation) {
 // @Failure      404        {object}   string        "按ID找到数据"
 // @Failure      500        {object}   string        "应用错误"
 // @Router       /tenants/{tenantId}/{{$AggregatePluralName}}/{id} [get]
-func (a *{{.Name}}QueryApi) FindById(ictx iris.Context {
+func (a *{{.Name}}QueryApi) FindById(ictx iris.Context) {
 	_, _, _ = restapp.DoQueryOne(ictx, func(ctx context.Context) (interface{}, bool, error) {
 		req, err := {{.Name}}Assembler.AssFindByIdRequest(ictx)
     	if err != nil {

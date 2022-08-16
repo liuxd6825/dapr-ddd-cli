@@ -31,6 +31,20 @@ func (e *Entities) init(a *Aggregate) {
 	}
 }
 
+func (e *Entities) Adds(entities Entities) {
+	if e == nil || entities == nil {
+		return
+	}
+	em := *e
+	for name, entity := range entities {
+		if entity != nil {
+			if _, ok := em[name]; !ok {
+				em[name] = entity
+			}
+		}
+	}
+}
+
 func (e *Entity) int(a *Aggregate, name string) {
 	if e == nil {
 		return

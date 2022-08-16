@@ -3,11 +3,12 @@ package service
 import (
     "sync"
 	"context"
-	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/service"
     "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
     "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/query"
-    "{{.Namespace}}/pkg/query-service/infrastructure/db/session"
-    "{{.Namespace}}/pkg/query-service/infrastructure/domain_impl/{{.aggregate_name}}/service_impl"
+    "{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/appquery"
+    "{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/assembler"
+    "{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/executor"
+    "{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/executor/{{.snake_name}}_impl"
 )
 
 //
@@ -15,12 +16,26 @@ import (
 // @Description: {{.Description}}查询应用服务类
 //
 type {{.Name}}QueryAppService struct {
-	{{.name}}DomainService service.{{.Name}}QueryDomainService
-	{{- if .IsAggregate }}
-    {{- range $entityName, $entity := .Aggregate.Entities}}
-    {{$entity.FirstLowerName}}DomainService service.{{$entity.Name}}QueryDomainService
-    {{- end }}
-    {{- end }}
+	{{.name}}CreateExecutor     executor.{{.Name}}CreateExecutor
+	{{.name}}CreateManyExecutor executor.{{.Name}}CreateManyExecutor
+
+	{{.name}}UpdateExecutor     executor.{{.Name}}UpdateExecutor
+	{{.name}}UpdateManyExecutor executor.{{.Name}}UpdateManyExecutor
+
+	{{.name}}DeleteByIdExecutor executor.{{.Name}}DeleteByIdExecutor
+	{{.name}}DeleteManyExecutor executor.{{.Name}}DeleteManyExecutor
+	{{.name}}DeleteAllExecutor  executor.{{.Name}}DeleteAllExecutor
+	{{- if .IsEntity }}
+	{{.name}}DeleteBy{{.AggregateName}}IdExecutor  executor.{{.Name}}DeleteBy{{.AggregateName}}IdExecutor
+	{{- end}}
+
+    {{.name}}FindAllExecutor    executor.{{.Name}}FindAllExecutor
+    {{.name}}FindByIdExecutor   executor.{{.Name}}FindByIdExecutor
+    {{.name}}FindByIdsExecutor  executor.{{.Name}}FindByIdsExecutor
+    {{.name}}FindPagingExecutor executor.{{.Name}}FindPagingExecutor
+    {{- if .IsEntity }}
+    {{.name}}FindBy{{.AggregateName}}IdExecutor  executor.{{.Name}}FindBy{{.AggregateName}}IdExecutor
+    {{- end}}
 }
 
 // 单例应用服务
@@ -35,12 +50,11 @@ var once{{.Name}} sync.Once
 // @return *{{.Name}}QueryAppService
 //
 func Get{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
-    once{{.Name}}.Do(func() {
-        {{.name}}QueryAppService = new{{.Name}}QueryAppService()
-    })
+	once{{.Name}}.Do(func() {
+		{{.name}}QueryAppService = new{{.Name}}QueryAppService()
+	})
 	return {{.name}}QueryAppService
 }
-
 
 //
 // New{{.Name}}QueryAppService
@@ -49,12 +63,26 @@ func Get{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
 //
 func new{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
 	return &{{.Name}}QueryAppService{
-		{{.name}}DomainService: service_impl.Get{{.Name}}QueryDomainService(),
-		{{- if .IsAggregate }}
-        {{- range $entityName, $entity := .Aggregate.Entities}}
-        {{$entity.FirstLowerName}}DomainService : service_impl.Get{{$entity.Name}}QueryDomainService(),
-        {{- end }}
-        {{- end }}
+        {{.name}}CreateExecutor:     {{.snake_name}}_impl.Get{{.Name}}CreateExecutor(),
+        {{.name}}CreateManyExecutor: {{.snake_name}}_impl.Get{{.Name}}CreateManyExecutor(),
+
+        {{.name}}UpdateExecutor:     {{.snake_name}}_impl.Get{{.Name}}UpdateExecutor(),
+        {{.name}}UpdateManyExecutor: {{.snake_name}}_impl.Get{{.Name}}UpdateManyExecutor(),
+
+        {{.name}}DeleteByIdExecutor: {{.snake_name}}_impl.Get{{.Name}}DeleteByIdExecutor(),
+        {{.name}}DeleteManyExecutor: {{.snake_name}}_impl.Get{{.Name}}DeleteManyExecutor(),
+        {{.name}}DeleteAllExecutor:  {{.snake_name}}_impl.Get{{.Name}}DeleteAllExecutor(),
+        {{- if .IsEntity }}
+        {{.name}}DeleteBy{{.AggregateName}}IdExecutor:  {{.snake_name}}_impl.Get{{.Name}}DeleteBy{{.AggregateName}}IdExecutor(),
+        {{- end}}
+
+		{{.name}}FindAllExecutor:    {{.snake_name}}_impl.Get{{.Name}}FindAllExecutor(),
+		{{.name}}FindByIdExecutor:   {{.snake_name}}_impl.Get{{.Name}}FindByIdExecutor(),
+		{{.name}}FindByIdsExecutor:  {{.snake_name}}_impl.Get{{.Name}}FindByIdsExecutor(),
+		{{.name}}FindPagingExecutor: {{.snake_name}}_impl.Get{{.Name}}FindPagingExecutor(),
+        {{- if .IsEntity }}
+        {{.name}}FindBy{{.AggregateName}}IdExecutor:  {{.snake_name}}_impl.Get{{.Name}}FindBy{{.AggregateName}}IdExecutor(),
+        {{- end}}
 	}
 }
 
@@ -66,9 +94,7 @@ func new{{.Name}}QueryAppService() *{{.Name}}QueryAppService {
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) Create(ctx context.Context, v *view.{{.Name}}View) error {
-	return session.StartSession(ctx, func(ctx context.Context) error {
-	    return a.{{.name}}DomainService.Create(ctx, v)
-	})
+	return a.{{.name}}CreateExecutor.Execute(ctx, v)
 }
 
 //
@@ -79,10 +105,7 @@ func (a *{{.Name}}QueryAppService) Create(ctx context.Context, v *view.{{.Name}}
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) CreateMany(ctx context.Context, vList []*view.{{.Name}}View) error {
-	return session.StartSession(ctx, func(ctx context.Context) error {
-	    return a.{{.name}}DomainService.CreateMany(ctx, vList)
-	})
-
+	return a.{{.name}}CreateManyExecutor.Execute(ctx, vList)
 }
 
 //
@@ -94,11 +117,8 @@ func (a *{{.Name}}QueryAppService) CreateMany(ctx context.Context, vList []*view
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) Update(ctx context.Context, v *view.{{.Name}}View) error {
-	return session.StartSession(ctx, func(ctx context.Context) error {
-	    return a.{{.name}}DomainService.Update(ctx, v)
-	})
+	return a.{{.name}}UpdateExecutor.Execute(ctx, v)
 }
-
 
 //
 // UpdateMany
@@ -108,9 +128,7 @@ func (a *{{.Name}}QueryAppService) Update(ctx context.Context, v *view.{{.Name}}
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) UpdateMany(ctx context.Context, vList []*view.{{.Name}}View) error {
-	return session.StartSession(ctx, func(ctx context.Context) error {
-	    return a.{{.name}}DomainService.UpdateMany(ctx, vList)
-	})
+	return a.{{.name}}UpdateManyExecutor.Execute(ctx, vList)
 }
 
 //
@@ -122,16 +140,7 @@ func (a *{{.Name}}QueryAppService) UpdateMany(ctx context.Context, vList []*view
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id string) error {
-	return session.StartSession(ctx, func(ctx context.Context) error {
-        {{- if .IsAggregate }}
-        {{- range $entityName, $entity := .Aggregate.Entities}}
-        if err:= a.{{$entity.FirstLowerName}}DomainService.DeleteBy{{$AggregateName}}Id(ctx, tenantId, id); err!=nil {
-            return err
-        }
-        {{- end }}
-        {{- end }}
-        return a.{{.name}}DomainService.DeleteById(ctx, tenantId, id)
-	})
+	return a.{{.name}}DeleteByIdExecutor.Execute(ctx, tenantId, id)
 }
 
 //
@@ -143,21 +152,22 @@ func (a *{{.Name}}QueryAppService) DeleteById(ctx context.Context, tenantId, id 
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) DeleteMany(ctx context.Context, tenantId string, vList []*view.{{.Name}}View) error {
-	return session.StartSession(ctx, func(ctx context.Context) error {
-        {{- if .IsAggregate }}
-        {{- if not .Aggregate.Entities.Empty }}
-        for _, item := range vList {
-            {{- range $entityName, $entity := .Aggregate.Entities}}
-            if err:= a.{{$entity.FirstLowerName}}DomainService.DeleteBy{{$AggregateName}}Id(ctx, tenantId, item.Id); err!=nil {
-                return err
-            }
-            {{- end }}
-        }
-        {{- end }}
-        {{- end }}
-        return a.{{.name}}DomainService.DeleteMany(ctx, tenantId, v)
-	})
+	return a.{{.name}}DeleteManyExecutor.Execute(ctx, tenantId, vList)
 }
+
+{{- if .IsEntity }}
+//
+// DeleteBy{{.AggregateName}}Id
+// @Description: 删除多个{{.Name}}View
+// @param ctx
+// @param tenantId 租户ID
+// @param []*view.{{.Name}}View  {{.Name}}实体对象切片
+// @return error 错误
+//
+func (a *{{.Name}}QueryAppService) DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) error {
+	return a.{{.name}}DeleteBy{{.AggregateName}}IdExecutor.Execute(ctx, tenantId, {{.aggregateName}}Id)
+}
+{{- end}}
 
 //
 // DeleteAll
@@ -168,16 +178,8 @@ func (a *{{.Name}}QueryAppService) DeleteMany(ctx context.Context, tenantId stri
 // @return error
 //
 func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId string) error {
-	return session.StartSession(ctx, func(ctx context.Context) error {
-        {{- if .IsAggregate }}
-        {{- range $entityName, $entity := .Aggregate.Entities}}
-        if err:= a.{{$entity.FirstLowerName}}DomainService.DeleteAll(ctx, tenantId); err!=nil {
-            return err
-        }
-        {{- end }}
-        {{- end }}
-        return a.{{.name}}DomainService.DeleteAll(ctx, tenantId)
-	})
+	return a.{{.name}}DeleteAllExecutor.Execute(ctx, tenantId)
+
 }
 
 //
@@ -191,10 +193,41 @@ func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId strin
 // @return error
 //
 func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string, id string) (*view.{{.Name}}View, bool, error) {
-	qry := query.New{{.Name}}FindByIdQuery(tenantId, id)
-	return a.{{.name}}DomainService.FindById(ctx, qry)
+	qry := assembler.Ass{{.Name}}FindByIdQuery(tenantId, id)
+	return a.{{.name}}FindByIdExecutor.Execute(ctx, qry)
 }
 
+//
+// FindByIds
+// @Description:  按多个ID查询{{.Name}}View
+// @receiver a
+// @param ctx
+// @param qry 查询命令
+// @return *view.{{.Name}}View
+// @return bool 是否查询到数据
+// @return error
+//
+func (a *{{.Name}}QueryAppService) FindByIds(ctx context.Context, tenantId string, ids []string) ([]*view.{{.Name}}View, bool, error) {
+	qry := assembler.Ass{{.Name}}FindByIdsQuery(tenantId, ids)
+	return a.{{.name}}FindByIdsExecutor.Execute(ctx, qry)
+}
+
+{{- if .IsEntity }}
+//
+// FindBy{{.AggregateName}}Id
+// @Description:  按{{.aggregateName}}Id查询{{.Name}}View
+// @receiver a
+// @param ctx
+// @param qry 查询命令
+// @return *view.{{.Name}}View
+// @return bool 是否查询到数据
+// @return error
+//
+func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error) {
+	qry := assembler.Ass{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
+	return a.{{.name}}FindBy{{.AggregateName}}IdExecutor.Execute(ctx, qry)
+}
+{{- end }}
 
 //
 // FindAll
@@ -207,10 +240,9 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) ([]*view.{{.Name}}View, bool, error) {
-	qry := query.New{{.Name}}FindAllQuery(tenantId)
-	return a.{{.name}}DomainService.FindAll(ctx, qry)
+	qry := assembler.Ass{{.Name}}FindAllQuery(tenantId)
+	return a.{{.name}}FindAllExecutor.Execute(ctx, qry)
 }
-
 
 //
 // FindPaging
@@ -218,14 +250,13 @@ func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string)
 // @receiver a
 // @param ctx 上下文
 // @param qry 分页查询条件
-// @return *query.FindPagingResult 分页数据
+// @return *appquery.{{.Name}}FindPagingResult 分页数据
 // @return bool 是否查询到数据
 // @return error 错误
 //
-func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, qry *query.{{.Name}}FindPagingQuery) (*query.{{.Name}}FindPagingResult, bool, error) {
-	return a.{{.name}}DomainService.FindPaging(ctx, qry)
+func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, aq *appquery.{{.Name}}FindPagingAppQuery) (*appquery.{{.Name}}FindPagingResult, bool, error) {
+	return a.{{.name}}FindPagingExecutor.Execute(ctx, aq)
 }
-
 
 {{- if .IsEntity }}
 //
@@ -240,7 +271,7 @@ func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, qry *query.{{
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error) {
-	qry := query.New{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
-	return a.{{.name}}DomainService.FindBy{{.AggregateName}}Id(ctx, qry)
+	aq := query.New{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
+	return a.{{.name}}FindBy{{.AggregateName}}IdExecutor.Execute(ctx, aq)
 }
 {{- end }}

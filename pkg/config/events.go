@@ -12,6 +12,20 @@ func (e *Events) isNil() bool {
 	return e == nil || *e == nil
 }
 
+func (e *Events) Adds(events Events) {
+	if e == nil || events == nil {
+		return
+	}
+	em := *e
+	for name, event := range events {
+		if event != nil {
+			if _, ok := em[name]; !ok {
+				em[name] = event
+			}
+		}
+	}
+}
+
 func (e *Events) init(a *Aggregate) {
 	if e.isNil() {
 		return
@@ -125,7 +139,11 @@ func (e *Event) init(a *Aggregate, name string) {
 
 				if itemsProperty, ok := fields.Properties.Find("Items"); ok {
 					fieldItem := a.FieldsObjects[itemsProperty.Type]
-					e.ItemFieldProperties = &fieldItem.Properties
+					if fieldItem != nil {
+						e.ItemFieldProperties = &fieldItem.Properties
+					} else {
+						e.ItemFieldProperties = &Properties{}
+					}
 				}
 			}
 		}

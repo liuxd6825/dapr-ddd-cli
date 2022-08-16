@@ -66,11 +66,11 @@ func (p *Property) init(a *Aggregate, c *Config, name string) {
 // @return string
 //
 func (p *Property) LanType() string {
-	return p.lanType(true)
+	return p.lanType(false)
 }
 
 func (p *Property) GoLanType() string {
-	return p.lanType(false)
+	return p.lanType(true)
 }
 
 func (p *Property) lanType(field bool) string {

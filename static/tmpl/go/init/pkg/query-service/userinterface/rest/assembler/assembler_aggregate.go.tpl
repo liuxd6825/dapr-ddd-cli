@@ -28,12 +28,27 @@ func (a *{{.Name}}Assembler) AssFindByIdResponse(ictx iris.Context, v *view.{{.N
 	return res, true, nil
 }
 
-func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, v *ddd_repository.FindPagingResult[*view.{{.Name}}View], isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindPagingRequest(ctx iris.Context) (*appquery.{{.Name}}FindPagingAppQuery, error) {
+	fpr, err := a.BaseAssembler.AssFindPagingRequest(ctx)
+	if err != nil {
+		return nil, err
+	}
+	query := &appquery.{{.Name}}FindPagingAppQuery{}
+	query.Filter = fpr.Filter
+	query.TenantId = fpr.TenantId
+	query.Sort = fpr.Sort
+	query.PageSize = fpr.PageSize
+	query.PageNum = fpr.PageNum
+	query.Fields = fpr.Fields
+	return query, nil
+}
+
+func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, fpr *appquery.{{.Name}}FindPagingResult, isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
 	if findErr != nil {
 		return nil, isFound, findErr
 	}
 	res := dto.New{{.Name}}FindPagingResponse()
-	err := utils.Mapper(v, res)
+	err := utils.Mapper(fpr, res)
 	if err != nil {
 		return nil, false, err
 	}

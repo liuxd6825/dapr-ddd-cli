@@ -11,6 +11,20 @@ func (e *EnumObjects) init(a *Aggregate) {
 	}
 }
 
+func (e *EnumObjects) Adds(sources EnumObjects) {
+	if e == nil || sources == nil {
+		return
+	}
+	m := *e
+	for name, item := range sources {
+		if m != nil {
+			if _, ok := m[name]; !ok {
+				m[name] = item
+			}
+		}
+	}
+}
+
 func (e *EnumObjects) Find(name string) (*EnumObject, bool) {
 	if e == nil {
 		return nil, false

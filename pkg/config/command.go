@@ -35,6 +35,20 @@ func (c *Commands) init(a *Aggregate) {
 	}
 }
 
+func (c *Commands) Adds(commands Commands) {
+	if c == nil || commands == nil {
+		return
+	}
+	em := *c
+	for name, command := range commands {
+		if command != nil {
+			if _, ok := em[name]; !ok {
+				em[name] = command
+			}
+		}
+	}
+}
+
 func (c *Commands) GetByEventName(eventName string) *Command {
 	if c == nil {
 		return nil

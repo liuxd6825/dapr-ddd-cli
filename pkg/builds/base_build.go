@@ -133,6 +133,7 @@ func (b *BaseBuild) Values() map[string]interface{} {
 
 		res["Name"] = b.Aggregate.Name
 		res["name"] = b.Aggregate.FirstLowerName()
+		res["snake_name"] = utils.SnakeString(b.aggregateName())
 	}
 
 	database := b.Config.Configuration.Database
@@ -146,10 +147,12 @@ func (b *BaseBuild) ValuesOfEntity(entity *config.Entity) map[string]interface{}
 	if entity != nil {
 		res["IsEntity"] = true
 		res["IsAggregate"] = false
+		res["snake_name"] = utils.SnakeString(entity.Name)
 		res["name"] = utils.FirstLower(entity.Name)
 		res["Name"] = utils.FirstUpper(entity.Name)
 		res["Description"] = entity.Description
 		res["Properties"] = entity.Properties
+
 	} else {
 		res["IsEntity"] = false
 		res["IsAggregate"] = true

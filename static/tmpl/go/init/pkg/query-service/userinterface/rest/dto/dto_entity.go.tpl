@@ -128,9 +128,9 @@ type {{.Name}}Dto struct {
     {{- else if $property.IsTimeType }}
     {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else if $property.IsEnumType }}
-    {{$property.UpperName}} view.{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
+    {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else }}
-    {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
+    {{$property.UpperName}} {{$property.GoLanType}}`json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- end}}
 {{- end}}
 }

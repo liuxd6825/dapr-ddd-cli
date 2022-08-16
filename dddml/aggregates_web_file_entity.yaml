@@ -1,0 +1,48 @@
+aggregates:
+  ScanFile:
+    entities:
+      DataRecord:
+        description: "修改记录"
+        properties:
+          Id:
+            type: string
+            description: "Id"
+          FileId:
+            type: string
+            description: "文件Id"
+          UserId:
+            typeName: string
+            description: "用户Id"
+    commands:
+      DataRecordCreateCommand:
+        description: "创建修改记录"
+        fields:
+          properties:
+            Items:
+              type: DataRecordCreateItem
+              isArray: true
+      DataRecordUpdateCommand:
+        description: "创建修改记录"
+        fields:
+          properties:
+            Items:
+              type: DataRecordUpdateItem
+              isArray: true
+    fields:
+      DataRecordCreateItem:
+        properties:
+          Id:
+            type: string
+            description: "Id"
+          UserId:
+            type: string
+            description: "用户Id"
+      DataRecordUpdateItem:
+        properties:
+          Id:
+            type: string
+            description: "Id"
+          UserId:
+            type: string
+            description: "用户Id"
+
