@@ -12,7 +12,7 @@ import (
 
 //
 // {{.name}}CreateCommandCommandExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 查找所有
 //
 type {{.name}}FindAllExecutor struct {
 	domainService service.{{.Name}}QueryDomainService

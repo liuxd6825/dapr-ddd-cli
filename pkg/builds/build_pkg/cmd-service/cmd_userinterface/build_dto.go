@@ -35,7 +35,7 @@ func (b *BuildDto) Values() map[string]interface{} {
 		values["Name"] = b.Aggregate.Name
 		values["Properties"] = b.Aggregate.Properties
 		values["Description"] = b.Aggregate.Description
-		values["Commands"] = b.Aggregate.AggregateCommands
+		values["Commands"] = b.Aggregate.AggregateCommands()
 		b.AddTimePackageValue(values, &b.Aggregate.Properties)
 	}
 	return values

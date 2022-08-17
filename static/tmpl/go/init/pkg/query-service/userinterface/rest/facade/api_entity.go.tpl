@@ -90,7 +90,7 @@ func (a *{{.Name}}QueryApi) FindBy{{.AggregateName}}Id(ictx iris.Context, tenant
 // @Failure      500       {object}  string          "应用错误"
 // @Router       /tenants/{tenantId}/{{.AggregatePluralName}}:all [get]
 func (a *{{.Name}}QueryApi) FindAll(ictx iris.Context, tenantId string) {
-	_, _, _ = restapp.DoQuery(ictx, func(c context.Context) (interface{}, bool, error) {
+	_, _, _ = restapp.DoQuery(ictx, func(ctx context.Context) (interface{}, bool, error) {
 		req, err := {{.Name}}Assembler.AssFindAllRequest(ictx)
     	if err != nil {
     		return nil, false, err

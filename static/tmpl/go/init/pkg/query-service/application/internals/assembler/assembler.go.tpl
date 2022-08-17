@@ -19,6 +19,15 @@ func Ass{{.Name}}FindByIdsQuery(tenantId string, ids []string) *appquery.{{.Name
 	return res
 }
 
+{{- if .IsEntity }}
+func Ass{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId string, {{.aggregateName}}Id string) *appquery.{{.Name}}FindBy{{.AggregateName}}IdAppQuery {
+	res := appquery.New{{.Name}}FindBy{{.AggregateName}}IdAppQuery()
+	res.TenantId = tenantId
+	res.{{.AggregateName}}Id = {{.aggregateName}}Id
+	return res
+}
+{{- end }}
+
 func Ass{{.Name}}FindAllQuery(tenantId string) *appquery.{{.Name}}FindAllAppQuery {
 	return &appquery.{{.Name}}FindAllAppQuery{TenantId: tenantId}
 }

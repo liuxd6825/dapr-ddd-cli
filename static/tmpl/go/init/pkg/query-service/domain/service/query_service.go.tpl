@@ -3,7 +3,9 @@ package service
 import (
 	"context"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/query"
+	{{- if .IsAggregate}}
     "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/repository"
+    {{- end }}
     "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 )
 
@@ -26,6 +28,9 @@ type {{.Name}}QueryDomainService interface {
 	DeleteByIds(ctx context.Context, tenantId string, ids []string, opts ...Options) error
 	DeleteByFilter(ctx context.Context, tenantId, filter string, opts ...Options) error
 	DeleteAll(ctx context.Context, tenantId string, opts ...Options) error
+    {{- if .IsEntity}}
+    DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string, opts ...Options) error
+    {{- end}}
 
 	FindById(ctx context.Context, qry *query.{{.Name}}FindByIdQuery, opts ...Options) (*view.{{.Name}}View, bool, error)
 	FindByIds(ctx context.Context, qry *query.{{.Name}}FindByIdsQuery, opts ...Options) ([]*view.{{.Name}}View, bool, error)

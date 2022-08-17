@@ -29,7 +29,7 @@ func (b *BuildAssembler) Values() map[string]interface{} {
 		values["Commands"] = b.entity.GetCommands()
 		values["DefaultProperties"] = defaultProperties
 	} else {
-		values["Commands"] = b.Aggregate.AggregateCommands
+		values["Commands"] = b.Aggregate.AggregateCommands()
 		values["DefaultProperties"] = b.Aggregate.Properties
 	}
 	return values

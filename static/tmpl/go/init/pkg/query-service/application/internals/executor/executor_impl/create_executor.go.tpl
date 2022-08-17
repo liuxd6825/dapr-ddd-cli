@@ -11,7 +11,7 @@ import (
 
 //
 // {{.name}}DeleteAllExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 新建
 //
 type {{.name}}CreateExecutor struct {
 	{{.name}}Service service.{{.Name}}QueryDomainService

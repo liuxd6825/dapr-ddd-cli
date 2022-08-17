@@ -17,6 +17,6 @@ func GetRegisterEventType() []restapp.RegisterEventType {
 {{- range $name, $agg := .Aggregates}}
     list = append(list, {{$agg.SnakeName}}_event.GetRegisterEventTypes()...)
 {{- end}}
-    return &list
+    return list
 }
 

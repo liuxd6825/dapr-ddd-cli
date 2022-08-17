@@ -22,5 +22,5 @@ func GetRegisterController() []restapp.Controller {
 	{{- end }}
 	{{- end }}
 
-	return &list
+	return list
 }

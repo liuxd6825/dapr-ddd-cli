@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/builds"
 	"github.com/liuxd6825/dapr-ddd-cli/pkg/config"
-	"github.com/liuxd6825/dapr-ddd-cli/pkg/utils"
 )
 
 type BuildEntityObject struct {
@@ -27,14 +26,11 @@ func NewBuildEntityObject(base builds.BaseBuild, Entity *config.Entity, outFile 
 }
 
 func (b *BuildEntityObject) Values() map[string]interface{} {
-	values := b.BaseBuild.Values()
-	values["name"] = utils.FirstLower(b.entity.Name)
-	values["Name"] = utils.FirstUpper(b.entity.Name)
+	values := b.BaseBuild.ValuesOfEntity(b.entity)
 	values["Package"] = fmt.Sprintf("%s_model", b.entity.Aggregate.SnakeName())
 	values["ClassName"] = fmt.Sprintf("%s", b.entity.Name)
-	values["Properties"] = b.entity.Properties
-	values["Description"] = b.entity.Description
-	values["Fields"] = b.entity
+	values["Commands"] = b.entity.EntityCommands()
+	values["Events"] = b.entity.EntityEvents()
 	b.AddTimePackageValue(values, &b.entity.Properties)
 	return values
 }

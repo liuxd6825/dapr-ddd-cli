@@ -23,22 +23,6 @@ type {{.ClassName}} struct {
 }
 
 //
-// NewDomainEvent
-// @Description: 创建领域事件
-//
-func (c *{{.ClassName}}) NewDomainEvent() ddd.DomainEvent {
-    return &event.{{.EventName}}{
-        EventId:    c.CommandId+"_{{.EventName}}",
-        CommandId:  c.CommandId,
-        CreatedTime: time.Now(),
-        {{- if .IsUpdate }}
-        UpdateMask: c.UpdateMask,
-        {{- end }}
-        Data:       c.Data,
-    }
-}
-
-//
 // GetAggregateId
 // @Description: 获取聚合根Id
 //

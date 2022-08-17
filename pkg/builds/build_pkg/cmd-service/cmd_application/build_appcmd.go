@@ -26,7 +26,7 @@ func (b *BuildAppCmd) Values() map[string]interface{} {
 	if b.entity != nil {
 		values["Commands"] = b.entity.GetCommands()
 	} else {
-		values["Commands"] = b.Aggregate.AggregateCommands
+		values["Commands"] = b.Aggregate.AggregateCommands()
 	}
 	return values
 }

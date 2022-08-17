@@ -37,3 +37,32 @@ func (v *BaseView) Set{{$property.UpperName}}(value {{$property.LanType}}) {
 }
 {{- end}}
 {{- end}}
+
+{{- if .IsNeo4j }}
+//
+// BaseNeo4jView
+// @Description: 视图基类
+//
+type BaseNeo4jView struct {
+	BaseView
+	Nid    int64    `json:"-" bson:"nid"`
+	Labels []string `json:"-" bson:"labels"`
+}
+
+func (b *BaseNeo4jView) SetNid(v int64) {
+	b.Nid = v
+}
+
+func (b *BaseNeo4jView) GetNid() int64 {
+	return b.Nid
+}
+
+func (b *BaseNeo4jView) SetLabels(v []string) {
+	b.Labels = v
+}
+
+func (b *BaseNeo4jView) GetLabels() []string {
+	return b.Labels
+}
+
+{{- end }}

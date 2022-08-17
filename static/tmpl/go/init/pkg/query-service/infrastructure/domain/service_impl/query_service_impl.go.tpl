@@ -87,6 +87,13 @@ func (s *{{.Name}}QueryDomainServiceImpl) DeleteByIds(ctx context.Context, tenan
 	return s.repos.DeleteByIds(ctx, tenantId, ids, opt)
 }
 
+{{- if .IsEntity }}
+func (s *{{.Name}}QueryDomainServiceImpl) DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string, opts ...service.Options) error {
+    opt := MergeOptions(opts...)
+    return s.repos.DeleteBy{{.AggregateName}}Id (ctx, tenantId, {{.aggregateName}}Id, opt)
+}
+{{- end }}
+
 func (s *{{.Name}}QueryDomainServiceImpl) DeleteByFilter(ctx context.Context, tenantId, filter string, opts ...service.Options) error {
     opt := MergeOptions(opts...)
 	return s.repos.DeleteByFilter(ctx, tenantId, filter, opt)

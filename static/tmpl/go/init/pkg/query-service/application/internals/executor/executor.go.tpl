@@ -30,13 +30,15 @@ type {{.Name}}DeleteByIdExecutor interface {
 	Execute(ctx context.Context, tenantId string, id string) error
 }
 
+{{- if .IsEntity }}
 //
-// {{.Name}}Delete{{.AggregateName}}IdExecutor
+// {{.Name}}DeleteBy{{.AggregateName}}IdExecutor
 // @Description: 按聚合根Id删除
 //
-type {{.Name}}Delete{{.AggregateName}}IdExecutor interface {
+type {{.Name}}DeleteBy{{.AggregateName}}IdExecutor interface {
 	Execute(ctx context.Context, tenantId string, {{.aggregateName}}Id string) error
 }
+{{- end }}
 
 //
 // {{.Name}}DeleteManyExecutor

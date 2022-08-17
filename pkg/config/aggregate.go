@@ -31,7 +31,8 @@ type Aggregate struct {
 	Events            Events        `yaml:"events"`
 	Commands          Commands      `yaml:"commands"`
 	Factory           Factory       `yaml:"factory"`
-	AggregateCommands *[]Command
+	aggregateCommands []*Command
+	aggregateEvents   []*Event
 	Config            *Config
 }
 
@@ -52,10 +53,10 @@ func (a *Aggregate) init() {
 	a.EnumObjects.init(a)
 	a.ValueObjects.init(a)
 	a.Entities.init(a)
-
 	a.Events.init(a)
 	a.Factory.init(a)
-	a.AggregateCommands = a.getAggregateCommands()
+	a.initAggregateCommands()
+	a.initAggregateEvents()
 }
 
 func (a *Aggregate) initId() *Property {
@@ -132,15 +133,35 @@ func (a *Aggregate) PluralName() string {
 	return utils.PluralMidline(a.Name)
 }
 
-func (a *Aggregate) getAggregateCommands() *[]Command {
-	var commands []Command
+func (a *Aggregate) AggregateCommands() []*Command {
+	return a.aggregateCommands
+}
+
+func (a *Aggregate) AggregateEvents() []*Event {
+	return a.aggregateEvents
+}
+
+func (a *Aggregate) initAggregateCommands() {
+	var commands []*Command
+	commands = []*Command{}
 	for _, event := range a.Events {
 		if event.To == "" || event.To == a.Name {
 			command := a.Commands.GetByEventName(event.Name)
 			if command != nil {
-				commands = append(commands, *command)
+				commands = append(commands, command)
 			}
 		}
 	}
-	return &commands
+	a.aggregateCommands = commands
+}
+
+func (a *Aggregate) initAggregateEvents() {
+	var events []*Event
+	events = []*Event{}
+	for _, event := range a.Events {
+		if event.To == "" || event.To == a.Name {
+			events = append(events, event)
+		}
+	}
+	a.aggregateEvents = events
 }

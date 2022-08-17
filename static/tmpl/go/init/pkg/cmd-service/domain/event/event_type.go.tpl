@@ -37,7 +37,7 @@ func (p {{$AggregateName}}EventType) String() string {
 // @return []restapp.RegisterEventType
 //
 func GetRegisterEventTypes() []restapp.RegisterEventType {
-    return []restapp.RegisterEventType{
+    return []restapp.RegisterEventType {
 {{- range $eventName, $event := .Events}}
         {
             EventType: {{$event.EventType}}Type.String(),

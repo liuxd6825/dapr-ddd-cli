@@ -29,17 +29,8 @@ func (b *BuildAggregate) Values() map[string]interface{} {
 	values["ClassName"] = b.ClassName()
 	values["AggregateType"] = b.AggregateType()
 	values["Properties"] = b.aggregate.Properties
-	values["Events"] = b.aggregate.Events
 	values["Commands"] = b.aggregate.Commands
-	values["Description"] = b.aggregate.Description
-	values["EnumObjects"] = b.aggregate.EnumObjects
-	values["Id"] = b.aggregate.Id
-	values["FieldsObjects"] = b.aggregate.FieldsObjects
-	values["Aggregate"] = b.aggregate
-	values["CommandPackage"] = fmt.Sprintf("%s_command", b.aggregate.SnakeName())
-	values["EventPackage"] = fmt.Sprintf("%s_event", b.aggregate.SnakeName())
-	values["Package"] = fmt.Sprintf("%s_model", b.aggregate.SnakeName())
-	values["Version"] = b.aggregate.Version
+	values["Events"] = b.aggregate.Events
 	b.AddTimePackageValue(values, &b.aggregate.Properties)
 	return values
 }

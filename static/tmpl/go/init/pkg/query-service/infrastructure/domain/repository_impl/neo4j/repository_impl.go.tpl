@@ -2,6 +2,7 @@ package neo4j
 
 import (
 	"context"
+    "fmt"
  	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/repository"
 	"{{.Namespace}}/pkg/query-service/infrastructure/db/dao/neo4j_dao"
@@ -57,6 +58,13 @@ func (r *{{.Name}}ViewRepositoryImpl) DeleteByFilter(ctx context.Context, tenant
 func (r *{{.Name}}ViewRepositoryImpl) DeleteById(ctx context.Context, tenantId string, id string, opt repository.Options) error {
 	return r.dao.DeleteById(ctx, tenantId, id)
 }
+
+{{- if .IsEntity }}
+func (r *{{.Name}}ViewRepositoryImpl) DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string, opt repository.Options) error {
+	filter := fmt.Sprintf("{{.aggregateName}}Id = %s",  {{.aggregateName}}Id)
+	return r.dao.DeleteByFilter(ctx, tenantId, filter)
+}
+{{- end}}
 
 func (r *{{.Name}}ViewRepositoryImpl) DeleteAll(ctx context.Context, tenantId string, opt repository.Options) error {
 	return r.dao.DeleteAll(ctx, tenantId)

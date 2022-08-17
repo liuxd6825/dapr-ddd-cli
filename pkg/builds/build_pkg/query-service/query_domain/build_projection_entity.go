@@ -26,16 +26,18 @@ func NewBuildProjectionEntity(base builds.BaseBuild, entity *config.Entity, outF
 }
 
 func (b *BuildProjectionEntity) Values() map[string]interface{} {
-	res := b.BaseBuild.Values()
+	values := b.BaseBuild.Values()
 	props := config.NewProperties(b.Aggregate, &b.entity.Properties, b.Config.GetDefaultViewProperties())
-	res["name"] = utils.FirstLower(b.entity.Name)
-	res["Name"] = utils.FirstUpper(b.entity.Name)
-	res["ClassName"] = fmt.Sprintf("%sView", utils.FirstUpper(b.entity.Name))
-	res["Properties"] = props
-	res["Description"] = b.entity.Description
-	res["Aggregate"] = b.Aggregate
-	res["HasTimeType"] = b.HasTimeType()
-	return res
+	values["name"] = utils.FirstLower(b.entity.Name)
+	values["Name"] = utils.FirstUpper(b.entity.Name)
+	values["ClassName"] = fmt.Sprintf("%sView", utils.FirstUpper(b.entity.Name))
+	values["Properties"] = props
+	values["Description"] = b.entity.Description
+	values["Aggregate"] = b.Aggregate
+	values["HasTimeType"] = b.HasTimeType()
+	b.AddTimePackageValue(values, props)
+	b.AddTimePackageValue(values, &b.entity.Properties)
+	return values
 }
 
 func (b *BuildProjectionEntity) HasTimeType() bool {

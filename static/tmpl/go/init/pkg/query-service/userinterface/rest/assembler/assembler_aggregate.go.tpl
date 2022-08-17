@@ -5,9 +5,11 @@ import (
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
     "{{.Namespace}}/pkg/query-service/infrastructure/utils"
+    "{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/appquery"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/userinterface/rest/{{.aggregate_name}}/dto"
     base "{{.Namespace}}/pkg/query-service/infrastructure/base/userinterface/rest/assembler"
+	"{{.Namespace}}/pkg/query-service/infrastructure/utils"
 )
 
 type {{.Name}}Assembler struct {

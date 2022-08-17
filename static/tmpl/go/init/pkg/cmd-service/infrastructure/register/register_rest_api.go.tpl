@@ -20,5 +20,5 @@ func GetRegisterController() []restapp.Controller {
     list = append(list, {{$agg.FileName}}_api.New{{$entity.Name}}CommandApi())
     {{- end }}
 	{{- end }}
-	return &list
+	return list
 }

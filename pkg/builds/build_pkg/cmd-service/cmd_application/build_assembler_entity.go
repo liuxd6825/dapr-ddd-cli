@@ -20,12 +20,13 @@ func NewBuildAssembler(base builds.BaseBuild, entity *config.Entity, outFile str
 	res.OutFile = outFile
 	return res
 }
+
 func (b *BuildAssembler) Values() map[string]interface{} {
-	res := b.BaseBuild.ValuesOfEntity(b.entity)
+	values := b.BaseBuild.ValuesOfEntity(b.entity)
 	if b.entity != nil {
-		res["Commands"] = b.entity.GetCommands()
+		values["Commands"] = b.entity.GetCommands()
 	} else {
-		res["Commands"] = b.Aggregate.AggregateCommands
+		values["Commands"] = b.Aggregate.AggregateCommands()
 	}
-	return res
+	return values
 }

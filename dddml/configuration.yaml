@@ -113,7 +113,7 @@ configuration:
   java:
   # Go 扩展点
   go:
-    DaprSrcPath: "/Users/lxd/go/src/github.com/liuxd6825/dapr"
+    DaprSrcPath: "/Users/lxd/go/src/github.com/liuxd6825"
     CommandService:
       Dev:
         AppHttpPort:  9030

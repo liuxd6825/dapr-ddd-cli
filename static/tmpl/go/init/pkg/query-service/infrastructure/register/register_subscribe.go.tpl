@@ -22,5 +22,5 @@ func GetRegisterSubscribe() []restapp.RegisterSubscribe {
 	{{- end }}
 	{{- end }}
 
-	return &list
+	return list
 }

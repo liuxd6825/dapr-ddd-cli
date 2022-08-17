@@ -12,7 +12,7 @@ import (
 
 //
 // {{.name}}CreateCommandCommandExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 分页查询
 //
 type {{.name}}FindPagingExecutor struct {
 	domainService service.{{.Name}}QueryDomainService

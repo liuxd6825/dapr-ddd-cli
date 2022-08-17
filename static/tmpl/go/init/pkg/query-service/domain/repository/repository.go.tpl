@@ -26,6 +26,9 @@ type {{.Name}}ViewRepository interface {
 	DeleteByIds(ctx context.Context, tenantId string, ids []string, opt Options) error
 	DeleteByFilter(ctx context.Context, tenantId, filter string, opt Options) error
 	DeleteAll(ctx context.Context, tenantId string, opt Options) error
+    {{- if .IsEntity }}
+	DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string, opt Options) error
+	{{- end}}
 
 	FindById(ctx context.Context, tenantId string, id string, opt Options) (*view.{{.Name}}View, bool, error)
 	FindByIds(ctx context.Context, tenantId string, ids []string, opt Options) ([]*view.{{.Name}}View, bool, error)

@@ -17,7 +17,7 @@ func NewDao[T ddd_neo4j.ElementEntity](labels []string, opts ...*RepositoryOptio
 	options := NewRepositoryOptions()
 	options.Merge(opts...)
 	return &Dao[T]{
-		dao: ddd_neo4j.Neo4jDao[T](options.driver, ddd_neo4j.NewReflectBuilder(labels...)),
+		dao: ddd_neo4j.NewNeo4jDao[T](options.driver, ddd_neo4j.NewReflectBuilder(labels...)),
 	}
 }
 
@@ -68,6 +68,11 @@ func (u *Dao[T]) FindAll(ctx context.Context, tenantId string, opts ...*ddd_repo
 func (u *Dao[T]) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery, opts ...*ddd_repository.FindOptions) *ddd_repository.FindPagingResult[T] {
 	return u.dao.FindPaging(ctx, query, opts...)
 }
+
+func (u *Dao[T]) FindListByMap(ctx context.Context, tenantId string, filterMap map[string]any) *ddd_repository.FindListResult[T] {
+	return u.dao.FindListByMap(ctx, tenantId, filterMap)
+}
+
 
 type RepositoryOptions struct {
 	driver neo4j.Driver

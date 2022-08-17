@@ -10,7 +10,7 @@ import (
 
 //
 // {{.name}}DeleteAllExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 删除所有
 //
 type {{.name}}DeleteAllExecutor struct {
 	{{- if .IsAggregate }}
@@ -42,7 +42,7 @@ func (e *{{.name}}DeleteAllExecutor) Execute(ctx context.Context, tenantId strin
 	return session.StartSession(ctx, func(ctx context.Context) error {
         {{- if .IsAggregate }}
         {{- range $entityName, $entity := .Aggregate.Entities}}
-        if err:= e.{{$entity.FirstLowerName}}DomainService.DeleteBy{{$AggregateName}}Id(ctx, tenantId, id); err!=nil {
+        if err:= e.{{$entity.FirstLowerName}}DomainService.DeleteAll(ctx, tenantId); err!=nil {
             return err
         }
         {{- end }}

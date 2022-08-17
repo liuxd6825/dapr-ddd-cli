@@ -73,6 +73,14 @@ func (p *Property) GoLanType() string {
 	return p.lanType(true)
 }
 
+func (p *Property) IsObjectType() bool {
+	t, ok := p.Config.TypeDefinitions[p.Type]
+	if ok {
+		return t.IsObjectType
+	}
+	return true
+}
+
 func (p *Property) lanType(field bool) string {
 	dataType := ""
 	if p == nil {

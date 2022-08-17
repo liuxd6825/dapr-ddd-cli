@@ -12,7 +12,7 @@ import (
 
 //
 // {{.name}}CreateCommandCommandExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 按Id查询多个
 //
 type {{.name}}FindByIdsExecutor struct {
 	domainService service.{{.Name}}QueryDomainService

@@ -10,7 +10,7 @@ import (
 
 //
 // {{.name}}DeleteAllExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 按Id删除
 //
 type {{.name}}DeleteByIdExecutor struct {
 	{{- if .IsAggregate }}

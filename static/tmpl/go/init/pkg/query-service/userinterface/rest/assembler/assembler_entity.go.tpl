@@ -6,7 +6,7 @@ import (
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/mapper"
-
+    "{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/appquery"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/userinterface/rest/{{.aggregate_name}}/dto"
 	"{{.Namespace}}/pkg/query-service/infrastructure/utils"
@@ -45,7 +45,7 @@ func (a *{{.Name}}Assembler) AssFindPagingRequest(ctx iris.Context) (*appquery.{
 	return query, nil
 }
 
-func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, fpr *appquery.GraphFindPagingResult, isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
+func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, fpr *appquery.{{.Name}}FindPagingResult, isFound bool, findErr error) (*dto.{{.Name}}FindPagingResponse, bool, error) {
     if findErr != nil {
         return nil, isFound, findErr
     }

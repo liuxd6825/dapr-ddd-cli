@@ -7,11 +7,13 @@ import (
 type Entities map[string]*Entity
 
 type Entity struct {
-	Name        string
-	Description string     `yaml:"description"`
-	IdInfo      *IdInfo    `yaml:"id"`
-	Properties  Properties `yaml:"properties"`
-	Aggregate   *Aggregate
+	Name           string
+	Description    string     `yaml:"description"`
+	IdInfo         *IdInfo    `yaml:"id"`
+	Properties     Properties `yaml:"properties"`
+	Aggregate      *Aggregate
+	entityCommands []*Command
+	entityEvents   []*Event
 }
 
 func (e *Entities) init(a *Aggregate) {
@@ -130,4 +132,39 @@ func (e *Entity) GetCommands() *[]Command {
 		}
 	}
 	return &commands
+}
+
+func (e *Entity) EntityCommands() []*Command {
+	return e.entityCommands
+}
+
+func (e *Entity) EntityEvents() []*Event {
+	return e.entityEvents
+}
+
+func (e *Entity) initEventCommands() {
+	var commands []*Command
+	commands = []*Command{}
+	agg := e.Aggregate
+	for _, event := range agg.Events {
+		if event.To == "" || event.To == e.Name {
+			command := agg.Commands.GetByEventName(event.Name)
+			if command != nil {
+				commands = append(commands, command)
+			}
+		}
+	}
+	e.entityCommands = commands
+}
+
+func (e *Entity) initEntityEvents() {
+	var events []*Event
+	events = []*Event{}
+	agg := e.Aggregate
+	for _, event := range agg.Events {
+		if event.To == "" || event.To == event.Name {
+			events = append(events, event)
+		}
+	}
+	e.entityEvents = events
 }

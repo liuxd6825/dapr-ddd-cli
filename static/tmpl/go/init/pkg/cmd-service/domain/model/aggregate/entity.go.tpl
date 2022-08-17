@@ -1,4 +1,7 @@
 package model
+{{- $ClassName := .ClassName }}
+{{- $EventPackage := .EventPackage}}
+{{- $CommandPackage := .CommandPackage}}
 
 import (
     {{.time}}

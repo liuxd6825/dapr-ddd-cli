@@ -212,23 +212,6 @@ func (a *{{.Name}}QueryAppService) FindByIds(ctx context.Context, tenantId strin
 	return a.{{.name}}FindByIdsExecutor.Execute(ctx, qry)
 }
 
-{{- if .IsEntity }}
-//
-// FindBy{{.AggregateName}}Id
-// @Description:  按{{.aggregateName}}Id查询{{.Name}}View
-// @receiver a
-// @param ctx
-// @param qry 查询命令
-// @return *view.{{.Name}}View
-// @return bool 是否查询到数据
-// @return error
-//
-func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error) {
-	qry := assembler.Ass{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
-	return a.{{.name}}FindBy{{.AggregateName}}IdExecutor.Execute(ctx, qry)
-}
-{{- end }}
-
 //
 // FindAll
 // @Description: 查询所有view.{{.Name}}View
@@ -271,7 +254,7 @@ func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, aq *appquery.
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error) {
-	aq := query.New{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
+	aq := assembler.Ass{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
 	return a.{{.name}}FindBy{{.AggregateName}}IdExecutor.Execute(ctx, aq)
 }
 {{- end }}

@@ -68,6 +68,7 @@ func New{{.Name}}FindAllAppQuery() *{{.Name}}FindAllAppQuery {
 
 type {{.Name}}FindBy{{.AggregateName}}IdAppQuery struct {
 	TenantId string
+	{{.AggregateName}}Id string
 }
 
 func New{{.Name}}FindBy{{.AggregateName}}IdAppQuery() *{{.Name}}FindBy{{.AggregateName}}IdAppQuery {

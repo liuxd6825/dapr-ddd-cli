@@ -8,25 +8,6 @@ import (
 
 type Commands map[string]*Command
 
-type Command struct {
-	Name               string
-	IsHandler          bool       `yaml:"isHandler"`
-	Action             string     `yaml:"action"`
-	EventName          string     `yaml:"event"`
-	AggregateId        string     `yaml:"aggregateId"`
-	Properties         Properties `yaml:"properties"`
-	Description        string     `yaml:"description"`
-	IsAggregateCommand *bool      `yaml:"isAggregateCommand"`
-	Fields             *Fields    `yaml:"fields"`
-	Aggregate          *Aggregate
-	event              *Event
-	utils              CommandUtils
-}
-
-func (c *Command) Event() *Event {
-	return c.event
-}
-
 func (c *Commands) init(a *Aggregate) {
 	if c != nil {
 		for name, cmd := range *c {
@@ -61,6 +42,26 @@ func (c *Commands) GetByEventName(eventName string) *Command {
 	return nil
 }
 
+type Command struct {
+	Name               string
+	IsHandler          bool       `yaml:"isHandler"`
+	Action             string     `yaml:"action"`
+	EventName          string     `yaml:"event"`
+	AggregateId        string     `yaml:"aggregateId"`
+	Properties         Properties `yaml:"properties"`
+	Description        string     `yaml:"description"`
+	IsAggregateCommand *bool      `yaml:"isAggregateCommand"`
+	FieldsRef          string     `yaml:"fieldsRef"`
+	Fields             *Fields    `yaml:"fields"`
+	Aggregate          *Aggregate
+	event              *Event
+	utils              CommandUtils
+}
+
+func (c *Command) Event() *Event {
+	return c.event
+}
+
 func (c *Command) init(a *Aggregate, name string) {
 	c.Aggregate = a
 	c.Name = name
@@ -73,6 +74,14 @@ func (c *Command) init(a *Aggregate, name string) {
 		c.EventName = c.utils.getEventName(c.Name)
 	}
 
+	if c.Fields == nil && len(c.FieldsRef) != 0 {
+		fields, ok := c.Aggregate.FieldsObjects.Find(c.FieldsRef)
+		if ok {
+			c.Fields = fields
+		} else {
+			panic(fmt.Sprintf("在%s聚合根中没有找到%s", c.Aggregate.Name, c.FieldsRef))
+		}
+	}
 	if c.Fields != nil {
 		if len(c.Fields.Name) == 0 {
 			c.Fields.Name = c.utils.getFieldsName(c.Name)

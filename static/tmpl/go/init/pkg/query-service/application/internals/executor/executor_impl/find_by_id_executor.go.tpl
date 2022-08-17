@@ -11,8 +11,8 @@ import (
 )
 
 //
-// {{.name}}CreateCommandCommandExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// {{.name}}FindByIdExecutor
+// @Description: 按Id查询
 //
 type {{.name}}FindByIdExecutor struct {
 	domainService service.{{.Name}}QueryDomainService

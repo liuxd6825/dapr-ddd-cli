@@ -20,7 +20,7 @@ func NewBuildEvent(base builds.BaseBuild, name string, event *config.Event, outF
 		name:      name,
 		event:     event,
 	}
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/event/event.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/domain/event/event.go.tpl"
 	res.OutFile = outFile
 	res.ValuesFunc = res.Values
 	return res

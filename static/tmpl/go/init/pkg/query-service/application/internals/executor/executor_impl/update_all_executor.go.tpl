@@ -11,7 +11,7 @@ import (
 
 //
 // {{.name}}CreateManyExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 创建多个
 //
 type {{.name}}UpdateManyExecutor struct {
 	{{.name}}Service service.{{.Name}}QueryDomainService

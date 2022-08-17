@@ -11,8 +11,8 @@ import (
 )
 
 //
-// {{.name}}CreateCommandCommandExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// {{.name}}FindBy{{.AggregateName}}IdExecutor
+// @Description: 按{{.AggregateName}}Id查询
 //
 type {{.name}}FindBy{{.AggregateName}}IdExecutor struct {
 	domainService service.{{.Name}}QueryDomainService
@@ -25,12 +25,12 @@ type {{.name}}FindBy{{.AggregateName}}IdExecutor struct {
 // @param appCmd 命令
 // @return error 错误
 //
-func (e *{{.name}}FindByIdExecutor) Execute(ctx context.Context, aq *appquery.{{.Name}}FindBy{{.AggregateName}}IdAppQuery) (*view.{{.Name}}View, bool, error) {
+func (e *{{.name}}FindBy{{.AggregateName}}IdExecutor) Execute(ctx context.Context, aq *appquery.{{.Name}}FindBy{{.AggregateName}}IdAppQuery) ([]*view.{{.Name}}View, bool, error) {
 	if err := e.Validate(aq); err != nil {
 		return nil, false, err
 	}
 
-	return e.domainService.FindById(ctx, query.New{{.Name}}FindBy{{.AggregateName}}IdQuery(aq.TenantId, aq.Id))
+	return e.domainService.FindBy{{.AggregateName}}Id(ctx, query.New{{.Name}}FindBy{{.AggregateName}}IdQuery(aq.TenantId, aq.{{.AggregateName}}Id))
 }
 
 //
@@ -39,7 +39,7 @@ func (e *{{.name}}FindByIdExecutor) Execute(ctx context.Context, aq *appquery.{{
 // @param appCmd 应用层命令
 // @return error 错误
 //
-func (e *{{.name}}FindByIdExecutor) Validate(aq *appquery.{{.Name}}FindBy{{.AggregateName}}IdAppQuery) error {
+func (e *{{.name}}FindBy{{.AggregateName}}IdExecutor) Validate(aq *appquery.{{.Name}}FindBy{{.AggregateName}}IdAppQuery) error {
 	if aq == nil {
 		return errors.New("Validate(aq) error: aq is nil")
 	}

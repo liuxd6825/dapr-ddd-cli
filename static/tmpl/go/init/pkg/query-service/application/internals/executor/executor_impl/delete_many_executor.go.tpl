@@ -11,7 +11,7 @@ import (
 
 //
 // {{.Name}}DeleteManyExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 删除多个
 //
 type {{.name}}DeleteManyExecutor struct {
 	{{- if .IsAggregate }}
@@ -38,7 +38,7 @@ func (e *{{.name}}DeleteManyExecutor) Execute(ctx context.Context, tenantId stri
         {{- if not .Aggregate.Entities.Empty }}
         for _, item := range vList {
             {{- range $entityName, $entity := .Aggregate.Entities}}
-            if err:= a.{{$entity.FirstLowerName}}DomainService.DeleteBy{{$AggregateName}}Id(ctx, tenantId, item.Id); err!=nil {
+            if err:= e.{{$entity.FirstLowerName}}DomainService.DeleteBy{{$AggregateName}}Id(ctx, tenantId, item.Id); err!=nil {
                 return err
             }
             {{- end }}

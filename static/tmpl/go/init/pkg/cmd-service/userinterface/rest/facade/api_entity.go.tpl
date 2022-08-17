@@ -57,7 +57,7 @@ func (c *{{$ClassName}}) BeforeActivation(b mvc.BeforeActivation) {
 //
 func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}(ictx iris.Context) {
 	_ = restapp.DoCmd(ictx, func(ctx context.Context) error {
-	    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.Name}}Dto(ictx)
+	    cmd, err := {{$aggregateName}}Assembler.Ass{{$cmd.AppName}}(ictx)
         if err != nil {
 			return err
         }

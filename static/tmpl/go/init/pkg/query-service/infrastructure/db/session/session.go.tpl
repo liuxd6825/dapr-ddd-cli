@@ -11,20 +11,21 @@ import (
 )
 
 type Func func(ctx context.Context) error
-type Type int
+type SessionType int
 
 const (
-	NoSession Type = iota
+	NoSession SessionType = iota
 	ReadSession
 	WriteSession
 )
 
+
 type Options struct {
     {{- if .IsMongo }}
-    mongo *Type
+    mongo *SessionType
     {{- end }}
     {{- if .IsNeo4j }}
-	neo4j *Type
+	neo4j *SessionType
     {{- end }}
 }
 
@@ -62,26 +63,32 @@ func MergeOptions(opts ...*Options) *Options {
 }
 
 {{- if .IsMongo }}
-func (o *Options) SetMongo(v Type) *Options {
+
+func (o *Options) SetMongo(v SessionType) *Options {
     o.mongo = &v
     return o
 }
 
-func (o *Options) GetMongo() Type {
-	t := true
-	return o.mongo == &t
+func (o *Options) GetMongo() SessionType {
+    if o.mongo == nil {
+        return NoSession
+    }
+    return *o.mongo
 }
 {{- end }}
 
 {{- if .IsNeo4j }}
-func (o *Options) SetNeo4j(v Type) *Options {
+
+func (o *Options) SetNeo4j(v SessionType) *Options {
 	o.neo4j = &v
 	return o
 }
 
-func (o *Options) GetNeo4j() Type {
-	t := true
-	return o.neo4j == &t
+func (o *Options) GetNeo4j() SessionType {
+	if o.neo4j == nil {
+		return NoSession
+	}
+	return *o.neo4j
 }
 {{- end }}
 

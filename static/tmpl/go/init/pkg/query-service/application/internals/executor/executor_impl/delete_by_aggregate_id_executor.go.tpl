@@ -10,7 +10,7 @@ import (
 
 //
 // {{.name}}DeleteAllExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 按{{.AggregateName}}Id删除
 //
 type {{.name}}DeleteBy{{.AggregateName}}IdExecutor struct {
 	{{.name}}Service service.{{.Name}}QueryDomainService
@@ -29,12 +29,12 @@ type {{.name}}DeleteBy{{.AggregateName}}IdExecutorValidate struct {
 // @return error 错误
 //
 func (e *{{.name}}DeleteBy{{.AggregateName}}IdExecutor) Execute(ctx context.Context, tenantId string, {{.aggregateName}}Id string) error {
-	data := &{{.name}}DeleteBy{{.AggregateName}}IdExecutorValidate{TenantId: tenantId, Id: {{.aggregateName}}Id}
+	data := &{{.name}}DeleteBy{{.AggregateName}}IdExecutorValidate{TenantId: tenantId, {{.AggregateName}}Id: {{.aggregateName}}Id}
 	if err := e.Validate(data); err != nil {
 		return err
 	}
 	return session.StartSession(ctx, func(ctx context.Context) error {
-		return e.{{.name}}Service.DeleteBy{{$AggregateName}}Id(ctx, tenantId, id)
+		return e.{{.name}}Service.DeleteBy{{$AggregateName}}Id(ctx, data.TenantId, data.{{.AggregateName}}Id)
 	})
 }
 
@@ -46,13 +46,13 @@ func (e *{{.name}}DeleteBy{{.AggregateName}}IdExecutor) Execute(ctx context.Cont
 //
 func (e *{{.name}}DeleteBy{{.AggregateName}}IdExecutor) Validate(v *{{.name}}DeleteBy{{.AggregateName}}IdExecutorValidate) error {
 	if v == nil {
-		return errors.New("Validate() error: view is nil")
+		return errors.New("Validate(v) error: v is nil")
 	}
     if len(v.TenantId) == 0 {
-        return errors.New("Validate() error: tenantId is nil")
+        return errors.New("Validate(v) error: v.TenantId is nil")
     }
     if len(v.{{.AggregateName}}Id) == 0 {
-        return errors.New("Validate() error: {{.AggregateName}}Id is nil")
+        return errors.New("Validate(v) error: v.{{.AggregateName}}Id is nil")
     }
 	return nil
 }

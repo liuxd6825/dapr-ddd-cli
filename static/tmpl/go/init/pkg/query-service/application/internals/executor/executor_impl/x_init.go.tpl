@@ -9,6 +9,12 @@ func Get{{.Name}}FindByIdExecutor() executor.{{.Name}}FindByIdExecutor {
 	return singleutils.GetObject[*{{.name}}FindByIdExecutor]()
 }
 
+{{- if .IsEntity }}
+func Get{{.Name}}FindBy{{.AggregateName}}IdExecutor() executor.{{.Name}}FindBy{{.AggregateName}}IdExecutor {
+	return singleutils.GetObject[*{{.name}}FindBy{{.AggregateName}}IdExecutor]()
+}
+{{- end }}
+
 func Get{{.Name}}FindByIdsExecutor() executor.{{.Name}}FindByIdsExecutor {
 	return singleutils.GetObject[*{{.name}}FindByIdsExecutor]()
 }
@@ -41,6 +47,12 @@ func Get{{.Name}}DeleteByIdExecutor() executor.{{.Name}}DeleteByIdExecutor {
 	return singleutils.GetObject[*{{.name}}DeleteByIdExecutor]()
 }
 
+{{- if .IsEntity }}
+func Get{{.Name}}DeleteBy{{.AggregateName}}IdExecutor() executor.{{.Name}}DeleteBy{{.AggregateName}}IdExecutor {
+	return singleutils.GetObject[*{{.name}}DeleteBy{{.AggregateName}}IdExecutor]()
+}
+{{- end }}
+
 func Get{{.Name}}DeleteManyExecutor() executor.{{.Name}}DeleteManyExecutor {
 	return singleutils.GetObject[*{{.name}}DeleteManyExecutor]()
 }
@@ -53,6 +65,11 @@ func init() {
 	if err := singleutils.Set[*{{.name}}FindByIdExecutor](func() *{{.name}}FindByIdExecutor { return new{{.Name}}FindByIdExecutor() }); err != nil {
 		panic(err)
 	}
+	{{- if .IsEntity }}
+    if err := singleutils.Set[*{{.name}}FindBy{{.AggregateName}}IdExecutor](func() *{{.name}}FindBy{{.AggregateName}}IdExecutor { return new{{.Name}}FindBy{{.AggregateName}}IdExecutor() }); err != nil {
+        panic(err)
+    }
+    {{- end }}
 	if err := singleutils.Set[*{{.name}}FindByIdsExecutor](func() *{{.name}}FindByIdsExecutor { return new{{.Name}}FindByIdsExecutor() }); err != nil {
 		panic(err)
 	}
@@ -77,6 +94,11 @@ func init() {
 	if err := singleutils.Set[*{{.name}}DeleteByIdExecutor](func() *{{.name}}DeleteByIdExecutor { return new{{.Name}}DeleteByIdExecutor() }); err != nil {
 		panic(err)
 	}
+    {{- if .IsEntity }}
+    if err := singleutils.Set[*{{.name}}DeleteBy{{.AggregateName}}IdExecutor](func() *{{.name}}DeleteBy{{.AggregateName}}IdExecutor { return new{{.Name}}DeleteBy{{.AggregateName}}IdExecutor() }); err != nil {
+        panic(err)
+    }
+    {{- end }}
 	if err := singleutils.Set[*{{.name}}DeleteManyExecutor](func() *{{.name}}DeleteManyExecutor { return new{{.Name}}DeleteManyExecutor() }); err != nil {
 		panic(err)
 	}

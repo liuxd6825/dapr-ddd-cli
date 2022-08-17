@@ -11,7 +11,7 @@ import (
 
 //
 // {{.name}}UpdateExecutor
-// @Description: 新建分析图命令 命令执行器实现类
+// @Description: 更新多个
 //
 type {{.name}}UpdateExecutor struct {
 	{{.name}}Service service.{{.Name}}QueryDomainService

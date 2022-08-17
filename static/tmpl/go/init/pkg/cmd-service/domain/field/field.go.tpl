@@ -10,7 +10,7 @@ import (
 //
 type {{.ClassName}} struct {
 {{- range $name, $property := .Properties}}
-    {{$property.UpperName}} {{if $property.IsArray}}[]*{{end}}{{$property.LanType}} `{{$property.GoTags}}` {{$property.GoDescription}}
+    {{$property.UpperName}} {{if $property.IsArray}}[]{{if $property.IsObjectType}}*{{end}}{{end}}{{$property.LanType}} `{{$property.GoTags}}` {{$property.GoDescription}}
 {{- end}}
 }
 

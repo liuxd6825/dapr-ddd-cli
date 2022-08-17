@@ -9,6 +9,7 @@ import (
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/command"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
     "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
+    "{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/factory"
     "{{.Namespace}}/pkg/cmd-service/infrastructure/utils"
     "github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 )
@@ -78,14 +79,18 @@ func NewAggregate() ddd.Aggregate {
 // @return error 错误
 //
 func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.Name}}, metadata *map[string]string) (any, error) {
+    e, err := factory.New{{$cmd.EventName}}(ctx, cmd, metadata)
+    if err!=nil {
+        return nil, err
+    }
     {{- if $cmd.IsCreateAggregate }}
-    return ddd.CreateEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
+    return ddd.CreateEvent(ctx, a, e, ddd.NewApplyEventOptions(metadata))
     {{- else if  $cmd.IsUpdateAggregate }}
-    return ddd.ApplyEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
+    return ddd.ApplyEvent(ctx, a, e, ddd.NewApplyEventOptions(metadata))
     {{- else if  $cmd.IsDeleteAggregate }}
-    return ddd.DeleteEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
+    return ddd.DeleteEvent(ctx, a, e, ddd.NewApplyEventOptions(metadata))
     {{- else }}
-    return ddd.ApplyEvent(ctx, a, cmd.NewDomainEvent(), ddd.NewApplyEventOptions(metadata))
+    return ddd.ApplyEvent(ctx, a, e, ddd.NewApplyEventOptions(metadata))
     {{- end }}
 }
 {{- end }}

@@ -33,8 +33,14 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 	res.initEnumObjects()
 	res.initEventTypes()
 	res.initEntityItems()
-
+	res.initEventFactory()
 	return res
+}
+
+func (b *BuildDomainLayer) initEventFactory() {
+	outFile := fmt.Sprintf("%s/%s/factory/event_factory.go", b.outDir, b.aggregate.FileName())
+	build := NewBuildEventFactory(b.BaseBuild, utils.ToLower(outFile))
+	b.AddBuild(build)
 }
 
 func (b *BuildDomainLayer) initCommands() {
