@@ -16,7 +16,7 @@ type {{$AggregateName}}Assembler struct {
 {{- range $cmdName, $cmd := .Commands}}
 
 //
-// Ass{{$cmd.Name}}Dto
+// Ass{{$cmd.AppName}}
 // @Description: {{$cmd.Description}}
 // @receiver a
 // @param ictx

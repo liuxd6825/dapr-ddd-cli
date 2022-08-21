@@ -198,9 +198,29 @@ func (e *Event) MethodName() string {
 	return methodName
 }
 
+//
+// EventSourcingHandler
+// @Description: 根据事件类型名称获取接受事件方法名称
+// @param eventType
+// @param revision
+// @return string
+//
+func (e *Event) EventSourcingHandler() string {
+	names := strings.Split(e.Name, ".")
+	name := names[len(names)-1]
+	ver := strings.Replace(e.Version, ".", "s", -1)
+	if strings.HasPrefix(ver, "v") || strings.HasPrefix(ver, "V") {
+		ver = "V" + ver[1:]
+	} else {
+		ver = "V" + ver
+	}
+	return fmt.Sprintf("On%s%s", name, ver)
+}
+
 func (e *Event) FirstUpperName() string {
 	return utils.FirstUpper(e.Name)
 }
+
 func (e *Event) FirstLowerName() string {
 	return utils.FirstLower(e.Name)
 }
@@ -284,7 +304,7 @@ func (e *Event) ToPluralName() string {
 }
 
 func (e *Event) DataIsItems() bool {
-	b := e.DataFieldProperties.IsItems()
+	b := e.DataFieldProperties.HasItems()
 	return b
 }
 

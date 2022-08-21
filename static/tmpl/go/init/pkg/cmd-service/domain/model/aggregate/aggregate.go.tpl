@@ -67,66 +67,6 @@ func NewAggregate() ddd.Aggregate {
 	return New{{.ClassName}}()
 }
 
-{{- range $cmdName, $cmd := .Commands }}
-
-//
-// {{$cmd.Name}}
-// @Description: 执行 {{$cmd.Name}} {{$cmd.Description}} 命令
-// @receiver a
-// @param ctx 上下文
-// @param cmd {{$cmd.Name}} 命令
-// @param metadata 元数据
-// @return error 错误
-//
-func (a *{{$ClassName}}) {{$cmd.Name}}(ctx context.Context, cmd *command.{{$cmd.Name}}, metadata *map[string]string) (any, error) {
-    e, err := factory.New{{$cmd.EventName}}(ctx, cmd, metadata)
-    if err!=nil {
-        return nil, err
-    }
-    {{- if $cmd.IsCreateAggregate }}
-    return ddd.CreateEvent(ctx, a, e, ddd.NewApplyEventOptions(metadata))
-    {{- else if  $cmd.IsUpdateAggregate }}
-    return ddd.ApplyEvent(ctx, a, e, ddd.NewApplyEventOptions(metadata))
-    {{- else if  $cmd.IsDeleteAggregate }}
-    return ddd.DeleteEvent(ctx, a, e, ddd.NewApplyEventOptions(metadata))
-    {{- else }}
-    return ddd.ApplyEvent(ctx, a, e, ddd.NewApplyEventOptions(metadata))
-    {{- end }}
-}
-{{- end }}
-
-{{- range $eventName, $event := .Events }}
-//
-// On{{$event.Name}}
-// @Description: {{$event.Name}} {{$event.Description}} 事件溯源处理器
-// @receiver a
-// @param ctx 上下文件
-// @param event 领域事件
-// @return err 错误
-//
-func (a *{{$ClassName}}) On{{$event.Name}}(ctx context.Context, e *event.{{$event.Name}}) error {
-    {{- if $event.IsAggregateCreateEvent }}
-    return utils.Mapper(e.Data, a)
-    {{- else if $event.IsAggregateUpdateEvent }}
-    return utils.MaskMapperRemove(e.Data, a, e.UpdateMask, aggMapperRemove)
-    {{- else if $event.IsAggregateDeleteByIdEvent }}
-	a.IsDeleted = true
-	return nil
-    {{- else if $event.IsEntityCreateEvent }}
-    _, err := a.{{$event.ToPluralName}}.AddMapper(ctx, e.Data.Id, &e.Data)
-    return err
-    {{- else if $event.IsEntityUpdateEvent }}
-    _, _, err := a.{{$event.ToPluralName}}.UpdateMapper(ctx, e.Data.Id, &e.Data, e.UpdateMask)
-    return err
-    {{- else if $event.IsEntityDeleteByIdEvent}}
-    return a.{{$event.ToPluralName}}.DeleteById(ctx, e.Data.Id)
-    {{- else }}
-	panic("{{$ClassName}}.On{{$event.Name}} to={{$event.To}} error")
-	return nil
-    {{- end }}
-}
-{{- end }}
-
 //
 // GetAggregateVersion
 // @Description: 聚合的版本号

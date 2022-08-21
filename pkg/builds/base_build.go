@@ -162,6 +162,8 @@ func (b *BaseBuild) ValuesOfEntity(entity *config.Entity) map[string]interface{}
 
 func (b *BaseBuild) ValuesOfEvent(event *config.Event) map[string]interface{} {
 	res := b.Values()
+	res["IsEntity"] = false
+	res["IsAggregate"] = true
 	if event != nil {
 		res["Name"] = event.FirstUpperName()
 		res["name"] = event.FirstLowerName()
@@ -177,9 +179,8 @@ func (b *BaseBuild) ValuesOfEvent(event *config.Event) map[string]interface{} {
 		res["Event"] = event
 		res["HasDataProperty"] = event.HasDataProperty()
 		res["Description"] = event.Description
-	} else {
-		res["IsEntity"] = false
-		res["IsAggregate"] = true
+		res["IsAggregate"] = event.IsAggregate()
+		res["IsEntity"] = !event.IsAggregate()
 	}
 	return res
 }

@@ -26,6 +26,7 @@ func New{{.Name}}QueryApi() *{{.Name}}QueryApi {
 func (a *{{.Name}}QueryApi) BeforeActivation(b mvc.BeforeActivation) {
 	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{$AggregatePluralName}}/{id}", "FindById")
 	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{$AggregatePluralName}}:all", "FindAll")
+	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{$AggregatePluralName}}:ids", "FindByIds")
 	restapp.Handle(b, "GET", "/tenants/{tenantId}/{{$AggregatePluralName}}", "FindPaging")
 }
 
@@ -36,7 +37,7 @@ func (a *{{.Name}}QueryApi) BeforeActivation(b mvc.BeforeActivation) {
 // @Accept       json
 // @Produce      json
 // @Param        tenantId   path       int           true  "Tenant ID"
-// @Param        id         path       int           true  "User ID"
+// @Param        id         path       int           true  "{{.Name}} ID"
 // @Success      200        {object}   dto.{{.Name}}FindByIdResponse
 // @Failure      404        {object}   string        "按ID找到数据"
 // @Failure      500        {object}   string        "应用错误"
@@ -52,14 +53,37 @@ func (a *{{.Name}}QueryApi) FindById(ictx iris.Context) {
 	})
 }
 
+// FindByIds godoc
+// @Summary      按多个ID获取{{.Description}}
+// @Description  get string by ID
+// @Tags         {{$AggregatePluralName}}
+// @Accept       json
+// @Produce      json
+// @Param        tenantId  path      string     true    "Tenant ID"
+// @Param        id        path      string     true    "{{.Name}} ID"
+// @Success      200       {object}  dto.{{.Name}}FindByIdsResponse
+// @Failure      500       {object}  string          "应用错误"
+// @Router       /tenants/{tenantId}/{{$AggregatePluralName}}:ids [get]
+func (a *{{.Name}}QueryApi) FindByIds(ictx iris.Context, tenantId string) {
+	_, _, _ = restapp.DoQuery(ictx, func(ctx context.Context) (interface{}, bool, error) {
+		req, err := {{.Name}}Assembler.AssFindByIdsRequest(ictx)
+    	if err != nil {
+    		return nil, false, err
+    	}
+		fpr, b, e := a.queryService.FindByIds(ctx, req.TenantId, req.Ids)
+		return {{.Name}}Assembler.AssFindByIdsResponse(ictx, fpr, b, e)
+	})
+}
+
+
 // FindAll godoc
-// @Summary      获取所有用户
+// @Summary      获取所有{{.Description}}
 // @Description  get string by ID
 // @Tags         {{$AggregatePluralName}}
 // @Accept       json
 // @Produce      json
 // @Param        tenantId  path      int     true    "Tenant ID"
-// @Success      200       {object}  dto.UserFindAllResponse
+// @Success      200       {object}  dto.{{.Name}}FindAllResponse
 // @Failure      500       {object}  string          "应用错误"
 // @Router       /tenants/{tenantId}/{{$AggregatePluralName}}:all [get]
 func (a *{{.Name}}QueryApi) FindAll(ictx iris.Context, tenantId string) {
@@ -75,8 +99,8 @@ func (a *{{.Name}}QueryApi) FindAll(ictx iris.Context, tenantId string) {
 
 
 // FindPaging godoc
-// @Summary      分页查询
-// @Description  分页查询
+// @Summary      分页查询{{.Description}}
+// @Description  分页查询{{.Description}}
 // @Tags         {{$AggregatePluralName}}
 // @Accept       json
 // @Produce      json

@@ -150,6 +150,10 @@ func (p *Property) BsonName() string {
 	return v
 }
 
+func (p *Property) IsItems() bool {
+	return strings.ToLower(p.Name) == "items"
+}
+
 func (p *Property) IsData() bool {
 	return strings.ToLower(p.Name) == "data"
 }
@@ -188,16 +192,39 @@ func (p *Property) GoDescription() string {
 	return ""
 }
 
-func (p *Property) IsTimeType() bool {
-	return p.IsDateTimeType()
+func (p *Property) IsTime() bool {
+	return strings.ToLower(p.Type) == "time"
 }
 
-func (p *Property) IsDateTimeType() bool {
-	return strings.ToLower(p.Type) == "datetime"
+func (p *Property) IsPTime() bool {
+	return strings.ToLower(p.Type) == "ptime"
 }
 
-func (p *Property) IsDateType() bool {
+func (p *Property) IsDate() bool {
 	return strings.ToLower(p.Type) == "date"
+}
+
+func (p *Property) IsPDate() bool {
+	return strings.ToLower(p.Type) == "pdate"
+}
+
+func (p *Property) IsTimes() bool {
+	return p.IsTimeOrPTime()
+}
+
+func (p *Property) IsTimeOrPTime() bool {
+	return p.IsTime() || p.IsPTime()
+}
+
+func (p *Property) IsDates() bool {
+	return p.IsDateOrPDate()
+}
+func (p *Property) IsDateOrPDate() bool {
+	return p.IsDate() || p.IsPDate()
+}
+
+func (p *Property) IsTimesOrDates() bool {
+	return p.IsDateOrPDate() || p.IsTimeOrPTime()
 }
 
 func (p *Property) IsEntityType() bool {

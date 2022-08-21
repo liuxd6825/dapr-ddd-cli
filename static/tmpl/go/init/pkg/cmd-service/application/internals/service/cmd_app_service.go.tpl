@@ -83,3 +83,23 @@ func (s *{{.ClassName}}) QueryById(ctx context.Context, tenantId string, id stri
 	}
 	return &resp, isFound, nil
 }
+
+//
+// QueryByIds
+// @Description: 按ids获取{{.Description}}投影类
+// @receiver s queryAppService
+// @param ctx 上下文
+// @param tenantId  租户id
+// @param ids 多个{{.Description}}Id
+// @return data {{.Description}} 信息
+// @return isFound 是否找到
+// @return err 错误信息
+//
+func (s *{{.ClassName}}) QueryByIds(ctx context.Context, tenantId string, ids []string) (*query_dto.{{.Name}}FindByIdsResponse, bool, error) {
+	var resp query_dto.{{.Name}}FindByIdsResponse
+	isFound, err := s.BaseQueryAppService.QueryByIds(ctx, tenantId, ids, &resp)
+	if err != nil {
+		return nil, false, err
+	}
+	return &resp, isFound, nil
+}

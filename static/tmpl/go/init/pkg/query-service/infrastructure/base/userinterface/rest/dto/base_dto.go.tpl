@@ -9,6 +9,11 @@ type FindByIdRequest struct {
 	Id       string
 }
 
+type FindByIdsRequest struct {
+	TenantId string
+	Ids      []string
+}
+
 type FindAllRequest struct {
 	TenantId string
 }
@@ -71,9 +76,9 @@ type BaseDto struct {
     {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
     {{- else if $property.IsEntityType}}
     {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
-    {{- else if $property.IsDateType }}
+    {{- else if $property.IsDates }}
     {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
-    {{- else if $property.IsTimeType }}
+    {{- else if $property.IsTimes }}
     {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}
     {{- else }}
     {{$property.UpperName}} {{$property.LanType}}`json:"{{$property.LowerName}},omitempty"{{if $property.HasValidate}}  validate:"{{$property.Validate}}"{{- end}}`  // {{$property.Description}}

@@ -47,6 +47,15 @@ func (e *Entities) Adds(entities Entities) {
 	}
 }
 
+func (e *Entities) Find(name string) (*Entity, bool) {
+	if e == nil {
+		return nil, false
+	}
+	em := *e
+	entity, ok := em[name]
+	return entity, ok
+}
+
 func (e *Entity) int(a *Aggregate, name string) {
 	if e == nil {
 		return

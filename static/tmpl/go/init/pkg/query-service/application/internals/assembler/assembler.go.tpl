@@ -5,14 +5,19 @@ import (
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/query"
 )
 
-func Ass{{.Name}}FindByIdQuery(tenantId, id string) *appquery.{{.Name}}FindByIdAppQuery {
+type {{.name}}Assembler struct {
+}
+
+var {{.Name}} = {{.name}}Assembler{}
+
+func (a {{.name}}Assembler) AssFindByIdAppQuery(tenantId, id string) *appquery.{{.Name}}FindByIdAppQuery {
 	res := appquery.New{{.Name}}FindByIdAppQuery()
 	res.TenantId = tenantId
 	res.Id = id
 	return res
 }
 
-func Ass{{.Name}}FindByIdsQuery(tenantId string, ids []string) *appquery.{{.Name}}FindByIdsAppQuery {
+func (a {{.name}}Assembler) AssFindByIdsAppQuery(tenantId string, ids []string) *appquery.{{.Name}}FindByIdsAppQuery {
 	res := appquery.New{{.Name}}FindByIdsAppQuery()
 	res.TenantId = tenantId
 	res.Ids = ids
@@ -20,7 +25,7 @@ func Ass{{.Name}}FindByIdsQuery(tenantId string, ids []string) *appquery.{{.Name
 }
 
 {{- if .IsEntity }}
-func Ass{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId string, {{.aggregateName}}Id string) *appquery.{{.Name}}FindBy{{.AggregateName}}IdAppQuery {
+func (a {{.name}}Assembler) AssFindBy{{.AggregateName}}IdAppQuery(tenantId string, {{.aggregateName}}Id string) *appquery.{{.Name}}FindBy{{.AggregateName}}IdAppQuery {
 	res := appquery.New{{.Name}}FindBy{{.AggregateName}}IdAppQuery()
 	res.TenantId = tenantId
 	res.{{.AggregateName}}Id = {{.aggregateName}}Id
@@ -28,11 +33,11 @@ func Ass{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId string, {{.aggregateNa
 }
 {{- end }}
 
-func Ass{{.Name}}FindAllQuery(tenantId string) *appquery.{{.Name}}FindAllAppQuery {
+func (a {{.name}}Assembler) AssFindAllAppQuery(tenantId string) *appquery.{{.Name}}FindAllAppQuery {
 	return &appquery.{{.Name}}FindAllAppQuery{TenantId: tenantId}
 }
 
-func Ass{{.Name}}FindPagingResult(fpr *query.{{.Name}}FindPagingResult) *appquery.{{.Name}}FindPagingResult {
+func (a {{.name}}Assembler) AssFindPagingResult(fpr *query.{{.Name}}FindPagingResult) *appquery.{{.Name}}FindPagingResult {
 	res := &appquery.{{.Name}}FindPagingResult{}
 	res.Sort = fpr.Sort
 	res.PageNum = fpr.PageNum

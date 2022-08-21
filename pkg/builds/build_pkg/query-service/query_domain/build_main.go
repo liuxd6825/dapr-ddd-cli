@@ -23,7 +23,7 @@ func NewBuildDomainLayer(cfg *config.Config, aggregate *config.Aggregate, outDir
 		outDir:    outDir,
 	}
 
-	res.initFields()
+	//res.initFields()
 	res.initProjectionAggregate()
 	res.initProjectionEntities()
 	res.initRepository()

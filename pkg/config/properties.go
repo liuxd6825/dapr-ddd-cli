@@ -46,11 +46,6 @@ func (p *Properties) Find(name string) (*Property, bool) {
 	return v, ok
 }
 
-func (p *Properties) IsItems() bool {
-	_, ok := p.Find("Items")
-	return ok
-}
-
 func (p *Properties) Adds(sources *Properties) {
 	if p.IsNull() || sources.IsNull() {
 		return
@@ -113,6 +108,16 @@ func (p *Properties) HasDateType() bool {
 
 func (p *Properties) HasTimeType() bool {
 	return p.HasType("time")
+}
+
+func (p *Properties) HasItems() bool {
+	_, ok := p.Find("Items")
+	return ok
+}
+
+func (p *Properties) GetItems() *Property {
+	items, _ := p.Find("Items")
+	return items
 }
 
 func (p *Properties) GetDataFieldProperties() *Properties {

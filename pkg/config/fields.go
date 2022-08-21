@@ -59,7 +59,7 @@ func (e *Fields) init(a *Aggregate, name string) {
 
 	e.Name = name
 	e.Properties.Init(a, a.Config)
-	isItems := e.Properties.IsItems()
+	isItems := e.Properties.HasItems()
 	if !isItems {
 		e.Properties.Adds(a.Config.GetDefaultFieldProperties())
 	}

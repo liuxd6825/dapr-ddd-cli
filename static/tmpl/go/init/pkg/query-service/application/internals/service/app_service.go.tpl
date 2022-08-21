@@ -193,7 +193,7 @@ func (a *{{.Name}}QueryAppService) DeleteAll(ctx context.Context, tenantId strin
 // @return error
 //
 func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string, id string) (*view.{{.Name}}View, bool, error) {
-	qry := assembler.Ass{{.Name}}FindByIdQuery(tenantId, id)
+	qry := assembler.{{.Name}}.AssFindByIdAppQuery(tenantId, id)
 	return a.{{.name}}FindByIdExecutor.Execute(ctx, qry)
 }
 
@@ -208,7 +208,7 @@ func (a *{{.Name}}QueryAppService) FindById(ctx context.Context, tenantId string
 // @return error
 //
 func (a *{{.Name}}QueryAppService) FindByIds(ctx context.Context, tenantId string, ids []string) ([]*view.{{.Name}}View, bool, error) {
-	qry := assembler.Ass{{.Name}}FindByIdsQuery(tenantId, ids)
+	qry := assembler.{{.Name}}.AssFindByIdsAppQuery(tenantId, ids)
 	return a.{{.name}}FindByIdsExecutor.Execute(ctx, qry)
 }
 
@@ -223,7 +223,7 @@ func (a *{{.Name}}QueryAppService) FindByIds(ctx context.Context, tenantId strin
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindAll(ctx context.Context, tenantId string) ([]*view.{{.Name}}View, bool, error) {
-	qry := assembler.Ass{{.Name}}FindAllQuery(tenantId)
+	qry := assembler.{{.Name}}.AssFindAllAppQuery(tenantId)
 	return a.{{.name}}FindAllExecutor.Execute(ctx, qry)
 }
 
@@ -254,7 +254,7 @@ func (a *{{.Name}}QueryAppService) FindPaging(ctx context.Context, aq *appquery.
 // @return error 错误
 //
 func (a *{{.Name}}QueryAppService) FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string) ([]*view.{{.Name}}View, bool, error) {
-	aq := assembler.Ass{{.Name}}FindBy{{.AggregateName}}IdQuery(tenantId, {{.aggregateName}}Id)
+	aq := assembler.{{.Name}}.AssFindBy{{.AggregateName}}IdAppQuery(tenantId, {{.aggregateName}}Id)
 	return a.{{.name}}FindBy{{.AggregateName}}IdExecutor.Execute(ctx, aq)
 }
 {{- end }}

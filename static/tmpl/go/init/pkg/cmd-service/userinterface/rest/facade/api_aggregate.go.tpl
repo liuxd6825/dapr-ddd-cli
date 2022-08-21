@@ -113,7 +113,11 @@ func (c *{{$ClassName}}) {{$cmd.ControllerMethod}}AndGet(ictx iris.Context) {
         _, _, err = restapp.DoCmdAndQueryOne(ictx, c.service.QueryAppId, appCmd, func(ctx context.Context) error {
             return c.service.{{$cmd.ServiceFuncName}}(ctx, appCmd)
         }, func(ctx context.Context) (interface{}, bool, error) {
+            {{- if $cmd.DataIsItems }}
+            return c.service.QueryByIds(ctx, appCmd.GetTenantId(), appCmd.Data.GetIds())
+            {{- else }}
             return c.service.QueryById(ctx, appCmd.GetTenantId(), appCmd.Data.Id)
+            {{- end }}
         })
         return err
     })

@@ -60,7 +60,11 @@ func (e *{{.Name}}) GetTenantId() string {
 }
 
 func (e *{{.Name}}) GetAggregateId() string {
+    {{- if .IsEntity }}
+    return e.Data.{{.AggregateName}}Id
+    {{- else }}
     return e.Data.Id
+    {{- end }}
 }
 
 func (e *{{.Name}}) GetCreatedTime() time.Time {

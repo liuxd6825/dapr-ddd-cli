@@ -54,6 +54,16 @@ func (c *{{.ClassName}}) GetIsValidOnly() bool {
 	return c.IsValidOnly
 }
 
+{{- if .IsAggregateCreateCommand }}
+//
+// IsAggregateCreateCommand
+// @Description: 标识此命令为是聚合根创建命令，DDD框架层使用。
+//
+func (c *{{.ClassName}}) IsAggregateCreateCommand() {
+
+}
+
+{{- end }}
 //
 // Validate
 // @Description: 命令数据验证

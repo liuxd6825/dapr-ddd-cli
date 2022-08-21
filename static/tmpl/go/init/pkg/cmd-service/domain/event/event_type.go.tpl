@@ -41,7 +41,7 @@ func GetRegisterEventTypes() []restapp.RegisterEventType {
 {{- range $eventName, $event := .Events}}
         {
             EventType: {{$event.EventType}}Type.String(),
-            Version:  (&{{$eventName}}{}).GetEventVersion(),
+            Version:   New{{$eventName}}("").GetEventVersion(),
             NewFunc:   func() interface{} { return &{{$eventName}}{} },
         },
 {{- end}}

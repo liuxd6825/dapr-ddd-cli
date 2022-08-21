@@ -26,6 +26,10 @@ func New{{.ClassName}}()*{{.ClassName}}{
     return &{{.ClassName}}{}
 }
 
+//
+// GetId
+// @Description: 取ID值
+//
 func (e *{{.ClassName}}) GetId() string {
     return e.Id
 }

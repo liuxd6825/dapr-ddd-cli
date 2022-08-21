@@ -123,9 +123,9 @@ type {{.Name}}Dto struct {
     {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else if $property.IsEntityType}}
     {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
-    {{- else if $property.IsDateType }}
+    {{- else if $property.IsDates }}
     {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
-    {{- else if $property.IsTimeType }}
+    {{- else if $property.IsTimes }}
     {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}
     {{- else if $property.IsEnumType }}
     {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"` // {{$property.Description}}

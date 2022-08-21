@@ -57,6 +57,18 @@ func (a *{{.Name}}Assembler) AssFindPagingResponse(ictx iris.Context, fpr *appqu
 	return res, isFound, nil
 }
 
+func (a *{{.Name}}Assembler) AssFindByIdsResponse(ictx iris.Context, vList []*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindByIdsResponse, bool, error) {
+	if findErr != nil  {
+		return nil, isFound, findErr
+	}
+	res := dto.New{{.Name}}FindByIdsResponse()
+	err := utils.Mapper(vList, res)
+	if err != nil {
+		return nil, false, err
+	}
+	return res, true, nil
+}
+
 func (a *{{.Name}}Assembler) AssFindAllResponse(ictx iris.Context, vList []*view.{{.Name}}View, isFound bool, findErr error) (*dto.{{.Name}}FindAllResponse, bool, error) {
 	if findErr != nil  {
 		return nil, isFound, findErr

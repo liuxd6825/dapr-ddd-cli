@@ -1,5 +1,5 @@
 package dto
-
+{{- $aggregate := .Aggregate}}
 import (
 	"github.com/liuxd6825/dapr-go-ddd-sdk/types"
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/field"
@@ -32,23 +32,59 @@ type {{$cmd.Name}}RequestData struct {
     {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEntityType}}
     {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
-    {{- else if $property.IsDateType }}
+    {{- else if $property.IsDates }}
     {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
-    {{- else if $property.IsTimeType }}
-    {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- else if $property.IsTimes }}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEnumType }}
     {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- else if $property.IsItems}}
+    {{$property.UpperName}} []*{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else }}
     {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- end}}
 {{- end}}
 }
 
+{{- if $cmd.Properties.GetDataFieldProperties.HasItems }}
+{{- $itemProperty := $cmd.Properties.GetDataFieldProperties.GetItems }}
+{{- if  $aggregate.HasType $itemProperty.Type }}
+{{- $type := $aggregate.FindType $itemProperty.Type}}
+
+
+//
+// {{$itemProperty.LanType}}
+// @Description: {{$itemProperty.Description}}
+//
+type {{$itemProperty.LanType}} struct {
+{{- range $name, $property := $type.Properties}}
+    {{- if $property.IsArrayEntityType }}
+    {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- else if $property.IsEntityType}}
+    {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- else if $property.IsDates }}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- else if $property.IsTimes }}
+    {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- else if $property.IsEnumType }}
+    {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- else if $property.IsItems}}
+    {{$property.UpperName}} []*{{$property.LanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- else }}
+    {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
+    {{- end}}
+{{- end}}
+}
+{{- end }}
+{{- end }}
+
 //
 // {{$cmd.Name}}Response
 // @Description: {{$cmd.Description}}
 type {{$cmd.Name}}Response struct {
+
 }
+
 
 {{- end }}
 
@@ -63,9 +99,9 @@ type {{.Name}}Dto struct {
     {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEntityType}}
     {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
-    {{- else if $property.IsDateType }}
+    {{- else if $property.IsDates }}
     {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
-    {{- else if $property.IsTimeType }}
+    {{- else if $property.IsTimes }}
     {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEnumType }}
     {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}

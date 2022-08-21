@@ -30,6 +30,15 @@ func (c *Commands) Adds(commands Commands) {
 	}
 }
 
+func (c *Commands) Find(name string) (*Command, bool) {
+	if c == nil {
+		return nil, false
+	}
+	em := *c
+	command, ok := em[name]
+	return command, ok
+}
+
 func (c *Commands) GetByEventName(eventName string) *Command {
 	if c == nil {
 		return nil
@@ -94,8 +103,16 @@ func (c *Command) init(a *Aggregate, name string) {
 			aggIdName := c.Aggregate.Name + "Id"
 			if _, ok := c.Fields.Properties[aggIdName]; !ok {
 				aggIdProp := NewProperty(aggIdName, "string")
+				aggIdProp.Description = "聚合根ID"
 				c.Fields.Properties.Add(aggIdProp)
 				aggIdProp.init(c.Aggregate, c.Aggregate.Config, aggIdName)
+			}
+			tenantId := "tenantId"
+			if _, ok := c.Fields.Properties[tenantId]; !ok {
+				tenantIdProp := NewProperty(tenantId, "string")
+				tenantIdProp.Description = "租户ID"
+				c.Fields.Properties.Add(tenantIdProp)
+				tenantIdProp.init(c.Aggregate, c.Aggregate.Config, tenantId)
 			}
 		}
 	}
@@ -266,6 +283,10 @@ func (c *Command) ControllerMethod() string {
 
 func (c *Command) IsAggregate() bool {
 	return c.event.IsAggregate()
+}
+
+func (c *Command) DataIsItems() bool {
+	return c.event.DataIsItems()
 }
 
 func (c *Command) IsEntity() bool {

@@ -105,6 +105,35 @@ func (a *Aggregate) initValues() {
 	}
 }
 
+func (a *Aggregate) FindType(typeName string) interface{} {
+	v, _ := a.findType(typeName)
+	return v
+}
+
+func (a *Aggregate) HasType(typeName string) bool {
+	_, ok := a.findType(typeName)
+	return ok
+}
+
+func (a *Aggregate) findType(typeName string) (interface{}, bool) {
+	if e, ok := a.Events.Find(typeName); ok {
+		return e, ok
+	}
+	if e, ok := a.Commands.Find(typeName); ok {
+		return e, ok
+	}
+	if e, ok := a.FieldsObjects.Find(typeName); ok {
+		return e, ok
+	}
+	if e, ok := a.Entities.Find(typeName); ok {
+		return e, ok
+	}
+	if e, ok := a.ValueObjects.Find(typeName); ok {
+		return e, ok
+	}
+	return nil, false
+}
+
 func (a *Aggregate) LowerName() string {
 	return strings.ToLower(a.Name)
 }

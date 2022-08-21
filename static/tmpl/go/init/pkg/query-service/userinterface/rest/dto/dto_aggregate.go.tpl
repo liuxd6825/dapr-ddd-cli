@@ -23,6 +23,30 @@ func New{{.Name}}FindByIdResponse() *{{.Name}}FindByIdResponse {
 	return &{{.Name}}FindByIdResponse{}
 }
 
+// 按多个ID查询
+
+//
+// {{.Name}}FindByIdsResponse
+// @Description: {{.Description}}  查询所有响应体
+//
+type {{.Name}}FindByIdsResponse []*{{.Name}}FindByIdsResponse
+
+func New{{.Name}}FindByIdsResponse() *{{.Name}}FindByIdsResponse {
+	return &{{.Name}}FindByIdsResponse{}
+}
+
+//
+// {{.Name}}FindByIdsResponseItem
+// @Description: {{.Description}}  请求业务数据
+//
+type {{.Name}}FindByIdsResponseItem struct {
+    {{.Name}}Dto
+}
+
+func New{{.Name}}FindByIdsResponseItem() *{{.Name}}FindByIdsResponseItem {
+	return &{{.Name}}FindByIdsResponseItem{}
+}
+
 // 分页查询
 
 //
@@ -98,9 +122,9 @@ type {{.Name}}Dto struct {
     {{$property.UpperName}} []*{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}""`  // {{$property.Description}}
     {{- else if $property.IsEntityType}}
     {{$property.UpperName}} *{{$property.LanType}}Dto `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}""`  // {{$property.Description}}
-    {{- else if $property.IsDateType }}
+    {{- else if $property.IsDates }}
     {{$property.UpperName}} *types.JSONDate `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
-    {{- else if $property.IsTimeType }}
+    {{- else if $property.IsTimes }}
     {{$property.UpperName}} *types.JSONTime `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}
     {{- else if $property.IsEnumType }}
     {{$property.UpperName}} {{$property.GoLanType}} `json:"{{$property.LowerName}},omitempty" validate:"{{$property.GetValidate}}"`  // {{$property.Description}}

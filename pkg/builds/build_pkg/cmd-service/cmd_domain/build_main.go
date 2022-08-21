@@ -71,6 +71,14 @@ func (b *BuildDomainLayer) initModel() {
 	outFile := fmt.Sprintf("%s/%s/model/%s_aggregate.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
 	buildAggregate := NewBuildAggregate(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
 	b.AddBuild(buildAggregate)
+
+	outFile = fmt.Sprintf("%s/%s/model/%s_aggregate_event.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	buildAggregateEvent := NewBuildAggregateEvent(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	b.AddBuild(buildAggregateEvent)
+
+	outFile = fmt.Sprintf("%s/%s/model/%s_aggregate_command.go", b.outDir, b.aggregate.FileName(), b.aggregate.FileName())
+	buildAggregateCommand := NewBuildAggregateCommand(b.BaseBuild, b.aggregate, utils.ToLower(outFile))
+	b.AddBuild(buildAggregateCommand)
 }
 
 func (b *BuildDomainLayer) initDomainService() {

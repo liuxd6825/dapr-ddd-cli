@@ -71,7 +71,7 @@ func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, eve
 
         {{- else if $event.IsEntityDeleteByIdEvent }}
         {{- if $event.DataIsItems }}
-        v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
+        v, err := factory.{{$entityName}}View.NewBy{{$event.Name}}(ctx, event)
         if err != nil {
             return err
         }

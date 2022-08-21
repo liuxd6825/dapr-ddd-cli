@@ -34,7 +34,7 @@ func (e *{{.name}}FindPagingExecutor) Execute(ctx context.Context, aq *appquery.
 	if err != nil {
 		return nil, false, err
 	}
-	res := assembler.Ass{{.Name}}FindPagingResult(fpr)
+	res := assembler.{{.Name}}.AssFindPagingResult(fpr)
 	return res, ok, nil
 }
 

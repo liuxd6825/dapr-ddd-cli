@@ -22,4 +22,14 @@ func (f *{{.ClassName}}) GetId() string {
 func (f *{{.ClassName}}) GetTenantId() string {
     return f.TenantId
 }
+{{- else }}
+
+func (f *{{.ClassName}}) GetIds() []string {
+    var ids []string
+    ids =[]string{}
+    for _, item := range f.Items {
+        ids = append(ids, item.GetId())
+    }
+    return ids
+}
 {{- end }}

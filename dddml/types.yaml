@@ -1,5 +1,15 @@
 # 领域基础类型
 typeDefinitions:
+  ptime:
+    sqlType: DATETIME
+    cSharpType: DateTime?
+    javaType: java.sql.Timestamp
+    goType: "*time.Time"
+  time:
+    sqlType: DATETIME
+    cSharpType: DateTime?
+    javaType: java.sql.Timestamp
+    goType: "time.Time"
   dateTime:
     sqlType: DATETIME
     cSharpType: DateTime?
@@ -19,12 +29,12 @@ typeDefinitions:
     sqlType: DECIMAL(18,6)
     cSharpType: decimal?
     javaType: java.math.BigDecimal
-    goType: decimal
+    goType: float64
   money:
     sqlType: DECIMAL(18,6)
     cSharpType: MyMoneyLib.Money
     javaType: MyMoneyLib.Money
-    goType: decimal
+    goType: float64
   long:
     sqlType: DECIMAL(18,6)
     cSharpType: long
