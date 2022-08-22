@@ -57,7 +57,7 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 // @param event {{$event.Name}} {{$event.Description}}
 // @return error 错误
 //
-func (h *{{$AggregateName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
+func (h *{{$AggregateName}}QueryHandler) On{{$event.EventSourcingHandler}}(ctx context.Context, event *event.{{$event.Name}}) error {
 	return h.DoSession(ctx, h, event, func(ctx context.Context) error {
 		{{- if $event.IsAggregateCreateEvent }}
         v, err := factory.{{$AggregateName}}View.NewBy{{$event.Name}}(ctx, event)
