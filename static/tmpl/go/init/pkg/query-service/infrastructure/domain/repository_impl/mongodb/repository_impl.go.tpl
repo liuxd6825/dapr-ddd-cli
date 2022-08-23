@@ -15,7 +15,7 @@ type {{.Name}}ViewRepositoryImpl struct {
 
 func New{{.Name}}ViewRepository() repository.{{.Name}}ViewRepository {
 	return &{{.Name}}ViewRepositoryImpl{
-		dao: mongo_dao.NewDao[*view.{{.Name}}View]("{{.aggregate_name}}"),
+		dao: mongo_dao.NewDao[*view.{{.Name}}View]("{{.snake_name}}"),
 	}
 }
 

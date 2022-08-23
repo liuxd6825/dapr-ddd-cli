@@ -13,7 +13,7 @@ func NewBuildDomainBaseCmdService(base builds.BaseBuild, outFile string) *BuildD
 		BaseBuild: base,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/infrastructure/domain/service/base_command_service.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/infrastructure/base/domain/service/base_command_service.go.tpl"
 	res.OutFile = outFile
 	return res
 }

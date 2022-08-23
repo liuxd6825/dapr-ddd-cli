@@ -29,7 +29,14 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	res.initRegisterRestController()
 	res.initBuildUtilsAssembler()
 	res.initBaseEvent()
+	res.initLogs()
 	return res
+}
+
+func (b *BuildInfrastructureLayer) initLogs() {
+	outFile := fmt.Sprintf("%s/logs/logs.go", b.outDir)
+	build := NewBuildLogs(b.BaseBuild, utils.ToLower(outFile))
+	b.AddBuild(build)
 }
 
 func (b *BuildInfrastructureLayer) initRegisterRestController() {

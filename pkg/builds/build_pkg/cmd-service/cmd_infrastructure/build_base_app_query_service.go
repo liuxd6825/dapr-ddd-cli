@@ -13,7 +13,7 @@ func NewBuildAppBaseQueryService(base builds.BaseBuild, outFile string) *BuildAp
 		BaseBuild: base,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/infrastructure/application/service/base_query_appservice.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/infrastructure/base/application/service/base_query_appservice.go.tpl"
 	res.OutFile = outFile
 
 	return res

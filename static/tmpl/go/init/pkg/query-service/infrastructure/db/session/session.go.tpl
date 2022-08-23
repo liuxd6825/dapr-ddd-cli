@@ -8,6 +8,7 @@ import (
 	{{- if .IsNeo4j }}
 	"{{.Namespace}}/pkg/query-service/infrastructure/db/dao/neo4j_dao"
 	{{- end }}
+	"{{.Namespace}}/pkg/cmd-service/infrastructure/logs"
 )
 
 type Func func(ctx context.Context) error
@@ -94,45 +95,52 @@ func (o *Options) GetNeo4j() SessionType {
 
 func StartSession(ctx context.Context, fun Func, opts ...*Options) error {
 	opt := MergeOptions(opts...)
+    do := func() error {
+        {{- if and .IsMongo .IsNeo4j }}
+        if opt.GetMongo() != NoSession && opt.GetNeo4j() != NoSession {
+            mongoSession := mongo_dao.NewSession(opt.GetMongo() == WriteSession)
+            neo4jSession := neo4j_dao.NewSession(opt.GetNeo4j() == WriteSession)
+            return mongoSession.UseTransaction(ctx, func(ctx context.Context) error {
+                return neo4jSession.UseTransaction(ctx, func(ctx context.Context) error {
+                    return fun(ctx)
+                })
+            })
+        } else if opt.GetMongo() != NoSession {
+            mongoSession := mongo_dao.NewSession(opt.GetMongo() == WriteSession)
+            return mongoSession.UseTransaction(ctx, func(ctx context.Context) error {
+                return fun(ctx)
+            })
+        } else if opt.GetNeo4j() != NoSession {
+            neo4jSession := neo4j_dao.NewSession(opt.GetNeo4j() == WriteSession)
+            return neo4jSession.UseTransaction(ctx, func(ctx context.Context) error {
+                return fun(ctx)
+            })
+        }
+        return fun(ctx)
 
-	{{- if and .IsMongo .IsNeo4j }}
-	if opt.GetMongo() != NoSession && opt.GetNeo4j() != NoSession {
-		mongoSession := mongo_dao.NewSession(opt.GetMongo() == WriteSession)
-		neo4jSession := neo4j_dao.NewSession(opt.GetNeo4j() == WriteSession)
-		return mongoSession.UseTransaction(ctx, func(ctx context.Context) error {
-			return neo4jSession.UseTransaction(ctx, func(ctx context.Context) error {
-				return fun(ctx)
-			})
-		})
-	} else if opt.GetMongo() != NoSession {
-		mongoSession := mongo_dao.NewSession(opt.GetMongo() == WriteSession)
-		return mongoSession.UseTransaction(ctx, func(ctx context.Context) error {
-			return fun(ctx)
-		})
-	} else if opt.GetNeo4j() != NoSession {
-		neo4jSession := neo4j_dao.NewSession(opt.GetNeo4j() == WriteSession)
-		return neo4jSession.UseTransaction(ctx, func(ctx context.Context) error {
-			return fun(ctx)
-		})
-	}
-	return fun(ctx)
+        {{- else if .IsMongo }}
+        if opt.GetMongo() != NoSession {
+            mongoSession := mongo_dao.NewSession(opt.GetMongo() == WriteSession)
+            return mongoSession.UseTransaction(ctx, func(ctx context.Context) error {
+                return fun(ctx)
+            })
+        }
+        return fun(ctx)
 
-	{{- else if .IsMongo }}
-	if opt.GetMongo() != NoSession {
-	    mongoSession := mongo_dao.NewSession(opt.GetMongo() == WriteSession)
-        return mongoSession.UseTransaction(ctx, func(ctx context.Context) error {
-            return fun(ctx)
-        })
-	}
-	return fun(ctx)
-
-    {{- else if .IsNeo4j }}
-    if opt.GetNeo4j() != NoSession {
-        neo4jSession := neo4j_dao.NewSession(opt.GetNeo4j() == WriteSession)
-        return neo4jSession.UseTransaction(ctx, func(ctx context.Context) error {
-            return fun(ctx)
-        })
-    }
-    return fun(ctx)
+        {{- else if .IsNeo4j }}
+        if opt.GetNeo4j() != NoSession {
+            neo4jSession := neo4j_dao.NewSession(opt.GetNeo4j() == WriteSession)
+            return neo4jSession.UseTransaction(ctx, func(ctx context.Context) error {
+                return fun(ctx)
+            })
+        }
+        return fun(ctx)
     {{- end}}
+    }
+
+    err := do()
+	if err != nil {
+        logs.Errorln("db.StartSession()", err)
+    }
+	return err
 }

@@ -16,7 +16,7 @@ func NewBuildBaseEvent(base builds.BaseBuild, aggregate *config.Aggregate, outFi
 		aggregate: aggregate,
 	}
 	res.ValuesFunc = res.Values
-	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/infrastructure/domain/event/base_event.go.tpl"
+	res.TmplFile = "static/tmpl/go/init/pkg/cmd-service/infrastructure/base/domain/event/base_event.go.tpl"
 	res.OutFile = outFile
 	return res
 }

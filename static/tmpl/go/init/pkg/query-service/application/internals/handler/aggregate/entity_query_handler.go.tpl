@@ -6,6 +6,7 @@ package handler
 import (
 	"context"
 	"{{.Namespace}}/pkg/cmd-service/domain/{{.aggregate_name}}/event"
+    "{{.Namespace}}/pkg/cmd-service/infrastructure/logs"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/factory"
 	"{{.Namespace}}/pkg/query-service/application/internals/{{.aggregate_name}}/service"
@@ -37,16 +38,16 @@ func New{{.Name}}QueryHandler() ddd.QueryEventHandler {
 {{- $factoryPackage := .AggregateFactoryPackage}}
 {{- range $eventName, $event := .Events}}
 //
-// On{{$event.Name}}
+// {{$event.EventSourcingHandler}}
 // @Description: {{$event.Name}}事件处理器
 // @receiver h
 // @param ctx 上下文
 // @param event {{$event.Name}} {{$event.Description}}
 // @return error 错误
 //
-func (h *{{$entityName}}QueryHandler) On{{$event.Name}}(ctx context.Context, event *event.{{$event.Name}}) error {
+func (h *{{$entityName}}QueryHandler) {{$event.EventSourcingHandler}}(ctx context.Context, event *event.{{$event.Name}}) error {
+	logs.DebugEvent(event, "On{{$event.EventSourcingHandler}}")
 	return h.DoSession(ctx, h, event, func(ctx context.Context) error {
-
 		{{- if $event.IsEntityCreateEvent }}
         v, err := factory.{{$entityName}}View.NewBy{{$event.Name}}(ctx, event)
         if err != nil {
