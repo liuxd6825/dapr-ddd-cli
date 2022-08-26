@@ -17,3 +17,12 @@ func (t *TypeDefinitions) init() {
 		return
 	}
 }
+
+func (t *TypeDefinitions) FindByName(name string) (*TypeDefinition, bool) {
+	if t == nil {
+		return nil, false
+	}
+	m := *t
+	typeDef, ok := m[name]
+	return typeDef, ok
+}

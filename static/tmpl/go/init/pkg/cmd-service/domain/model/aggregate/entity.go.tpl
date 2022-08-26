@@ -33,3 +33,8 @@ func New{{.ClassName}}()*{{.ClassName}}{
 func (e *{{.ClassName}}) GetId() string {
     return e.Id
 }
+
+func (e *{{.ClassName}}) SetId(v string) {
+    e.Id = v
+}
+

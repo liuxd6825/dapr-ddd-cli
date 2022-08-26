@@ -19,8 +19,16 @@ func (f *{{.ClassName}}) GetId() string {
     return f.Id
 }
 
+func (f *{{.ClassName}}) SetId(v string) string {
+    f.Id = v
+}
+
 func (f *{{.ClassName}}) GetTenantId() string {
     return f.TenantId
+}
+
+func (f *{{.ClassName}}) SetTenantId(v string) string {
+    f.TenantId = v
 }
 {{- else }}
 
