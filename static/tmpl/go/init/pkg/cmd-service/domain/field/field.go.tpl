@@ -27,7 +27,7 @@ func (f *{{.ClassName}}) GetTenantId() string {
     return f.TenantId
 }
 
-func (f *{{.ClassName}}) SetTenantId(v string) string {
+func (f *{{.ClassName}}) SetTenantId(v string) {
     f.TenantId = v
 }
 {{- else }}
