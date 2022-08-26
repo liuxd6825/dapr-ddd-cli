@@ -29,6 +29,9 @@ func NewBuildInfrastructureLayer(cfg *config.Config, aggregate *config.Aggregate
 	if database.Neo4j {
 		res.initRepositoryImpl("neo4j")
 	}
+	if database.MySql {
+		res.initRepositoryImpl("mysql")
+	}
 	res.initQueryService()
 	res.initRegisterSubscribe()
 	res.initRegisterEventType()
