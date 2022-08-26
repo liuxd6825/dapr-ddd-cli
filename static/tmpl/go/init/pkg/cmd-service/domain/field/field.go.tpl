@@ -19,7 +19,7 @@ func (f *{{.ClassName}}) GetId() string {
     return f.Id
 }
 
-func (f *{{.ClassName}}) SetId(v string) string {
+func (f *{{.ClassName}}) SetId(v string)  {
     f.Id = v
 }
 

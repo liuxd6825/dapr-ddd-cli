@@ -1,0 +1,139 @@
+aggregates:
+  # 定义聚合根
+  Graph:
+    properties:
+      Users:
+        type: User
+        isArray: true
+        description: "授权用户"
+    # 实体类
+    entities:
+      User:
+        description: "图中授权用户"
+        # 聚合根的属性
+        properties:
+          Id:
+            type: string
+            description: "授权用户id"
+          UserId:
+            type: string
+            description: "用户Id"
+          UserName:
+            type: string
+            description: "用户名称"
+          Write:
+            type: bool
+            description: "写权限"
+          Read:
+            type: bool
+            description: "读权限"
+    # 领域中的数据字段， 供Command与Event使用。
+    fields:
+      UserCreateItem:
+        properties:
+          Id:
+            type: string
+            description: "授权用户id"
+          UserId:
+            type: string
+            description: "用户Id"
+          UserName:
+            type: string
+            description: "用户名称"
+          Write:
+            type: bool
+            description: "写权限"
+          Read:
+            type: bool
+            description: "读权限"
+      UserUpdateItem:
+        properties:
+          Id:
+            type: string
+            description: "授权用户id"
+          UserId:
+            type: string
+            description: "用户Id"
+          UserName:
+            type: string
+            description: "用户名称"
+          Write:
+            type: bool
+            description: "写权限"
+          Read:
+            type: bool
+            description: "读权限"
+      UserDeleteItem:
+        properties:
+          Id:
+            type: string
+            description: "用户Id"
+    # 领域命令
+    commands:
+      UserCreateCommand:
+        description: "新建用户"
+        fields:
+          properties:
+            GraphId:
+              type: string
+              description: "图Id"
+            TenantId:
+              type: string
+              description: "租户Id"
+            Id:
+              type: string
+              description: "授权用户id"
+            UserId:
+              type: string
+              description: "用户Id"
+            UserName:
+              type: string
+              description: "用户名称"
+            Write:
+              type: bool
+              description: "写权限"
+            Read:
+              type: bool
+              description: "读权限"
+      UserUpdateCommand:
+        description: "更新用户"
+        fields:
+          properties:
+            GraphId:
+              type: string
+              description: "图Id"
+            Id:
+              type: string
+              description: "授权用户id"
+            UserId:
+              type: string
+              description: "用户Id"
+            UserName:
+              type: string
+              description: "用户名称"
+            Write:
+              type: bool
+              description: "写权限"
+            Read:
+              type: bool
+              description: "读权限"
+      UserDeleteCommand:
+        description: "删除分析图命令"
+        fields:
+          properties:
+            GraphId:
+              type: string
+              description: "图Id"
+            Id:
+              type: string
+              description: "授权用户id"
+    # 值对象
+    valueObjects:
+
+    # 枚举类型
+    enumObjects:
+
+
+
+
+

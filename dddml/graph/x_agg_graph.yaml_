@@ -1,0 +1,547 @@
+aggregates:
+  # 定义聚合根
+  Graph:
+    # 聚合根的属性
+    properties:
+      Id:
+        type: string
+        description: 分析图Id
+      Name:
+        type: string
+        description: 分析图名称
+      Nodes:
+        type: Node
+        isArray: true
+        description: 节点
+      Lines:
+        type: Line
+        isArray: true
+        description: 关系
+      LineTypes:
+        type: LineType
+        isArray: true
+        description: 关系类型
+      AuthUsers:
+        type: AuthUser
+        isArray: true
+        description: 图授权用户列表
+    # 实体类
+    entities:
+      AuthUser:
+        description: 授权用户
+        id:
+          name: Id
+        properties:
+          Id:
+            type: string
+            description: 用户Id
+          Name:
+            type: string
+            description: 用户名称
+          Write:
+            type: bool
+            description: 写权限
+          Read:
+            type: bool
+            description: 读权限
+      Node:
+        id:
+          name: Id
+        properties:
+          Id:
+            type: string
+            description: 节点Id
+          Name:
+            type: string
+            description: 节点名称
+          NodeType:
+            type: NodeType
+            description: 节点类型
+          BusId:
+            type: string
+            description: 业务数据id
+          BusData:
+            type: map
+            description: 业务数据
+      Line:
+        id:
+          name: Id
+        properties:
+          Id:
+            type: string
+            description: 关系Id
+          Name:
+            type: string
+            description: 关系名称
+          TypeId:
+            type: string
+            description: 关系类型Id
+          TypeName:
+            type: string
+            description: 关系类型名称
+          BusId:
+            type: string
+            description: 业务数据id
+          BusData:
+            type: map
+            description: 业务数据
+      LineType:
+        description: 关系类型
+        id:
+          name: Id
+        properties:
+          Id:
+            type: string
+            description: 关系类型Id
+          Name:
+            type: string
+            description: 关系类型名称
+          StartNodeType:
+            type: NodeType
+            description: 开始节点类型
+          EndNodeType:
+            type: NodeType
+            description: 结束节点类型
+    # 领域中的数据字段， 供Command与Event使用。
+    fields:
+
+      GraphCreateFieldsV1s0:
+        properties:
+          Id:
+            type: string
+          Name:
+            type: string
+          Nodes:
+            type: NodeCreateFieldsV1
+            isArray: true
+          Lines:
+            type: LineCreateFields
+            isArray: true
+      GraphUpdateFieldsV1s0:
+        properties:
+          Id:
+            type: string
+          Name:
+            type: string
+          CreateNodes:
+            type: NodeCreateFieldsV1
+            isArray: true
+          CreateLines:
+            type: LineCreateFields
+            isArray: true
+          UpdateNodes:
+            type: NodeUpdateFieldsV1
+            isArray: true
+          UpdateLines:
+            type: LineUpdateFields
+            isArray: true
+          DeleteNodes:
+            type: NodeDeleteFields
+            isArray: true
+          DeleteLines:
+            type: LineDeleteFields
+            isArray: true
+      GraphDeleteFieldsV1s0:
+        properties:
+          Id:
+            type: string
+
+
+      NodeManyCreateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Items:
+            type: NodeCreateFieldsV1
+            isArray: true
+      NodeCreateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Id:
+            type: string
+          Name:
+            type: string
+          Type:
+            type: string
+          BusId:
+            type: string
+            description: 业务数据id
+          BusData:
+            type: map
+            description: 业务数据
+
+      NodeManyUpdateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Items:
+            type: NodeUpdateFieldsV1
+            isArray: true
+      NodeUpdateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Id:
+            type: string
+          Name:
+            type: string
+          Type:
+            type: string
+          BusId:
+            type: string
+            description: 业务数据id
+          BusData:
+            type: map
+            description: 业务数据
+
+      NodeManyDeleteFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Items:
+            type: NodeDeleteFields
+            isArray: true
+      NodeDeleteFieldsV1s0:
+        properties:
+          Id:
+            type: string
+          GraphId:
+            type: string
+
+      LineManyCreateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Items:
+            type: LineCreateFields
+            isArray: true
+      LineCreateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Id:
+            type: string
+          Name:
+            type: string
+          StartNodeId:
+            type: string
+          EndNodeId:
+            type: string
+          Type:
+            type: string
+          BusId:
+            type: string
+            description: 业务数据id
+          BusData:
+            type: map
+            description: 业务数据
+
+      LineManyUpdateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Items:
+            type: LineUpdateFields
+            isArray: true
+      LineUpdateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Id:
+            type: string
+          Type:
+            type: string
+          Name:
+            type: string
+          StartNodeId:
+            type: string
+          EndNodeId:
+            type: string
+          BusId:
+            type: string
+            description: 业务数据id
+          BusData:
+            type: map
+            description: 业务数据
+
+      LineManyDeleteFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+          Items:
+            type: LineDeleteFields
+            isArray: true
+      LineDeleteFieldsV1s0:
+        properties:
+          Id:
+            type: string
+          GraphId:
+            type: string
+
+
+      AuthUserManyCreateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+            description: 图Id
+          Items:
+            type: AuthUserCreateFieldsV1
+            isArray: true
+      AuthUserCreateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+            description: 图Id
+          Id:
+            type: string
+            description: 用户Id
+          Name:
+            type: string
+            description: 用户名称
+          Write:
+            type: bool
+            description: 写权限
+          Read:
+            type: bool
+            description: 读权限
+
+      AuthUserManyUpdateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+            description: 图Id
+          Items:
+            type: AuthUserUpdateFieldsV1
+            isArray: true
+      AuthUserUpdateFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+            description: 图Id
+          Id:
+            type: string
+            description: 用户Id
+          Name:
+            type: string
+            description: 用户名称
+          Write:
+            type: bool
+            description: 写权限
+          Read:
+            type: bool
+            description: 读权限
+
+      AuthUserManyDeleteFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+            description: 图Id
+          Items:
+            type: AuthUserDeleteFieldsV1
+            isArray: true
+      AuthUserDeleteFieldsV1s0:
+        properties:
+          GraphId:
+            type: string
+            description: 图Id
+          Id:
+            type: string
+            description: 用户Id
+
+
+    # 领域命令
+    commands:
+      GraphCreateCommand:
+        description: 新建分析图命令
+        aggregateId: Data.Id
+        action: create
+        event: GraphCreateEventV1
+        isAggregateCommand: true
+        properties:
+          Data:
+            type: GraphCreateFieldsV1s0
+            description: 业务数据
+      GraphUpdateCommand:
+        description: 更新分析图命令
+        aggregateId: Data.Id
+        action: update
+        event: GraphUpdateEventV1s0
+        isAggregateCommand: true
+        properties:
+          Data:
+            type: GraphUpdateFieldsV1s0
+            referenceType: GraphUpdateFieldsV1s0
+            description: 业务数据
+      GraphDeleteCommand:
+        description: 删除分析图命令
+        aggregateId: data.id
+        event: GraphDeleteEventV1s0
+        action: delete
+        isAggregateCommand: true
+        properties:
+          Data:
+            type: GraphDeleteFieldsV1s0
+            referenceType: GraphDeleteFieldsV1s0
+            description: 业务数据
+      NodeCreateCommand:
+        description: 添加节点命令
+        aggregateId: Data.GraphId
+        action: create
+        event: NodeCreateEventV1s0
+        properties:
+          Data:
+            type: NodeManyCreateFieldsV1s0
+            referenceType: NodeManyCreateFieldsV1s0
+      NodeUpdateCommand:
+        description: 更新节点命令
+        aggregateId: Data.GraphId
+        action: update
+        event: NodeUpdateEventV1s0
+        properties:
+          Data:
+            type: NodeManyUpdateFieldsV1s0
+            referenceType: NodeManyUpdateFieldsV1s0
+      NodeDeleteCommand:
+        description: 删除节点命令
+        aggregateId: Data.GraphId
+        event: NodeDeleteEventV1s0
+        action: delete
+        properties:
+          Data:
+            type: NodeManyDeleteFieldsV1s0
+            referenceType: NodeManyDeleteFieldsV1s0
+      LineCreateCommand:
+        description: 创建关系命令
+        aggregateId: Data.GraphId
+        action: update
+        event: LineCreateEventV1s0
+        properties:
+          Data:
+            type: LineManyCreateFieldsV1s0
+            referenceType: LineManyCreateFieldsV1s0
+      LineUpdateCommand:
+        aggregateId: Data.GraphId
+        action: update
+        event: LineUpdateEventV1s0
+        properties:
+          Data:
+            type: LineManyUpdateFieldsV1s0
+            referenceType: LineManyUpdateFieldsV1s0
+      LineDeleteCommand:
+        aggregateId: Data.GraphId
+        action: update
+        event: LineDeleteEventV1s0
+        properties:
+          Data:
+            type: LineManyDeleteFieldsV1s0
+            referenceType: LineManyDeleteFieldsV1s0
+    # 领域事件
+    events:
+      GraphCreateEventV1:
+        aggregateId: Data.Id
+        eventType: GraphCreateEvent
+        action: create
+        version: V1
+        properties:
+          Data:
+            type: GraphFieldsV1s0
+      GraphUpdateEventV1:
+        aggregateId: Data.Id
+        eventType: GraphUpdateEvent
+        version: V1
+        action: update
+        properties:
+          Data:
+            type: GraphFieldsV1s0
+      GraphDeleteEventV1:
+        aggregateId: Data.Id
+        eventType: GraphDeleteEvent
+        version: V1
+        action: delete
+        properties:
+          Data:
+            type: GraphDeleteFieldsV1s0
+
+      NodeCreateEventV1:
+        aggregateId: Data.Id
+        eventType: NodeCreateEvent
+        action: create
+        version: V1
+        to: Node
+        properties:
+          Data:
+            type: NodeManyCreateFieldsV1s0
+      NodeUpdateEventV1:
+        aggregateId: Data.Id
+        eventType: NodeUpdateEvent
+        version: V1
+        action: update
+        to: Node
+        properties:
+          Data:
+            type: NodeManyUpdateFieldsV1
+
+      NodeDeleteEventV1:
+        aggregateId: Data.Id
+        eventType: NodeDeleteEvent
+        version: V1
+        action: delete
+        to: Node
+        properties:
+          Data:
+            type: NodeManyDeleteFieldsV1
+
+      LineCreateEventV1:
+        aggregateId: Data.Id
+        eventType: LineCreateEvent
+        action: create
+        version: V1
+        to: Line
+        properties:
+          Data:
+            type: LineManyCreateFields
+      LineUpdateEventV1:
+        aggregateId: Data.Id
+        eventType: LineUpdateEvent
+        version: V1
+        action: update
+        to: Line
+        properties:
+          Data:
+            type: LineManyUpdateFields
+      LineDeleteEventV1:
+        aggregateId: Data.Id
+        eventType: LineDeleteEvent
+        version: V1
+        action: delete
+        to: Line
+        properties:
+          Data:
+            type: LineManyDeleteFields
+    # 值对象
+    valueObjects:
+
+    # 枚举类型
+    enumObjects:
+      NodeType:
+        values:
+          Human:
+            value: 0
+            title: 人员
+          Company:
+            value: 1
+            title: 公司
+          Product:
+            value: 2
+            title: 产品
+          Contract:
+            value: 3
+            title: 合同
+          Account:
+            value: 5
+            title: 账户
+
+
+
+

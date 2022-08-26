@@ -107,7 +107,7 @@ func (c *Command) init(a *Aggregate, name string) {
 				c.Fields.Properties.Add(aggIdProp)
 				aggIdProp.init(c.Aggregate, c.Aggregate.Config, aggIdName)
 			}
-			tenantId := "tenantId"
+			tenantId := "TenantId"
 			if _, ok := c.Fields.Properties[tenantId]; !ok {
 				tenantIdProp := NewProperty(tenantId, "string")
 				tenantIdProp.Description = "租户ID"

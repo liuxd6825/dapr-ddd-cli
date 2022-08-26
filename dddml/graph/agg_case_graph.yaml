@@ -1,0 +1,36 @@
+aggregates:
+  # 定义聚合根
+  Graph:
+    description: "案件分析图（人员/公司/合同/产品/账户）"
+    # 聚合根的属性
+    properties:
+      Id:
+        type: string
+        description: "分析图Id"
+      Name:
+        type: string
+        description: "分析图名称"
+    entities:
+
+    # 领域命令
+    commands:
+      GraphCreateCommand:
+        description: "新建分析图命令"
+        fields:
+          properties:
+            Name:
+              type: string
+      GraphUpdateCommand:
+        description: "更新分析图命令"
+        fields:
+          properties:
+            Name:
+              type: string
+      GraphDeleteCommand:
+        description: "删除分析图命令"
+        fields:
+          properties:
+            Id:
+              type: string
+
+

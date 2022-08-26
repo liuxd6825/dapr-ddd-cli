@@ -1,0 +1,71 @@
+aggregates:
+  Graph:
+    properties:
+      ProductNodes:
+        type: ProductNode
+        isArray: true
+        description: "关系"
+    # 实体类
+    entities:
+      # 定义聚合根
+      ProductNode:
+        description: "图节点"
+        # 聚合根的属性
+        properties:
+          GraphId:
+            type: string
+            description: "图Id"
+          Id:
+            type: string
+            description: "节点Id"
+          Name:
+            type: string
+            description: "节点名称"
+          Labels:
+            type: string
+            isArray: true
+            description: "标签"
+    # 领域命令
+    commands:
+      ProductNodeCreateCommand:
+        description: "添加节点命令"
+        fields:
+          properties:
+            GraphId:
+              type: string
+              description: "图Id"
+            Id:
+              type: string
+              description: "节点Id"
+            Name:
+              type: string
+              description: "节点名称"
+      ProductNodeUpdateCommand:
+        description: "更新节点命令"
+        fields:
+          properties:
+            GraphId:
+              type: string
+              description: "图Id"
+            Id:
+              type: string
+              description: "节点Id"
+            Name:
+              type: string
+              description: "节点名称"
+      ProductNodeDeleteCommand:
+        description: "删除节点命令"
+        fields:
+          properties:
+            Id:
+              type: string
+              description: "节点Id"
+    # 领域中的数据字段， 供Command与Event使用。
+    fields:
+    # 值对象
+    valueObjects:
+    # 枚举类型
+    enumObjects:
+
+
+

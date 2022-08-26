@@ -1,0 +1,99 @@
+aggregates:
+  # 定义聚合根
+  Graph:
+    properties:
+      Relations:
+        type: Relation
+        isArray: true
+        description: "关系"
+    # 实体类
+    entities:
+      Relation:
+        # 聚合根的属性
+        properties:
+          GraphId:
+            type: string
+            description: "图Id"
+          Id:
+            type: string
+            description: "关系Id"
+          Name:
+            type: string
+            description: "关系名称"
+          StartNodeId:
+            type: string
+            description: "开始节点Id"
+          EndNodeId:
+            type: string
+            description: "结束节点Id"
+          Labels:
+            type: string
+            isArray: true
+            description: "标签"
+    # 领域中的数据字段， 供Command与Event使用。
+    fields:
+    # 领域命令
+    commands:
+      RelationCreateCommand:
+        description: "创建关系命令"
+        fields:
+          properties:
+            GraphId:
+              type: string
+              description: "图Id"
+            Id:
+              type: string
+              description: "关系Id"
+            Name:
+              type: string
+              description: "关系名称"
+            StartNodeId:
+              type: string
+              description: "开始节点Id"
+            EndNodeId:
+              type: string
+              description: "结束节点Id"
+            Labels:
+              type: string
+              isArray: true
+              description: "标签"
+      RelationUpdateCommand:
+        description: "更新关系命令"
+        fields:
+          properties:
+            GraphId:
+              type: string
+              description: "图Id"
+            Id:
+              type: string
+              description: "唯一值"
+            Name:
+              type: string
+              description: "关系名称"
+            StartNodeId:
+              type: string
+              description: "开始节点Id"
+            EndNodeId:
+              type: string
+              description: "结束节点Id"
+            Labels:
+              type: string
+              isArray: true
+              description: "标签"
+      RelationDeleteCommand:
+        description: "删除关系命令"
+        fields:
+          properties:
+            Id:
+              type: string
+              description: "关系Id"
+    # 值对象
+    valueObjects:
+
+    # 枚举类型
+    enumObjects:
+
+
+
+
+
