@@ -5,17 +5,25 @@ import (
 	"fmt"
  	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/repository"
-    "{{.Namespace}}/pkg/query-service/infrastructure/db/dao/mongo_dao"
+    "{{.Namespace}}/pkg/query-service/infrastructure/db/dao/mysql_dao"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 )
 
 type {{.Name}}ViewRepositoryImpl struct {
-	dao *mongo_dao.Dao[*view.{{.Name}}View]
+	dao *mysql_dao.Dao[*view.{{.Name}}View]
+}
+
+var new{{.Name}}Func = func() *view.{{.Name}}View {
+	return &view.{{.Name}}View{}
+}
+
+var newList{{.Name}}Func = func() []*view.{{.Name}}View {
+	return []*view.{{.Name}}View{}
 }
 
 func New{{.Name}}ViewRepository() repository.{{.Name}}ViewRepository {
 	return &{{.Name}}ViewRepositoryImpl{
-		dao: mongo_dao.NewDao[*view.{{.Name}}View]("{{.snake_name}}"),
+		dao: mysql_dao.NewDao[*view.{{.Name}}View](nil, new{{.Name}}Func, newList{{.Name}}Func),
 	}
 }
 

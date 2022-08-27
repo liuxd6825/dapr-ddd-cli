@@ -61,6 +61,12 @@ func (b *BuildInfrastructureLayer) initDb(database config.Database) {
 		b.AddBuild(buildNeo4jDao)
 	}
 
+	if database.MySql {
+		neo4jOutFile := fmt.Sprintf("%s/db/dao/mysql_dao/dao.go", b.outDir)
+		buildNeo4jDao := NewBuildDbDao(b.BaseBuild, b.aggregate, neo4jOutFile, "mysql_dao")
+		b.AddBuild(buildNeo4jDao)
+	}
+
 	if database.HaveDb() {
 		sessionFile := fmt.Sprintf("%s/db/session/session.go", b.outDir)
 		buildSession := NewBuildDbSession(b.BaseBuild, sessionFile)

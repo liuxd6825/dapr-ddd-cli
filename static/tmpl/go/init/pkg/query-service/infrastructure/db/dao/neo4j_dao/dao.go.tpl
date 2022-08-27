@@ -2,7 +2,6 @@ package neo4j_dao
 
 import (
 	"context"
-	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/ddd/ddd_repository/ddd_neo4j"
 	"github.com/liuxd6825/dapr-go-ddd-sdk/restapp"
@@ -21,58 +20,57 @@ func NewDao[T ddd_neo4j.ElementEntity](labels []string, opts ...*RepositoryOptio
 	}
 }
 
-func (u *Dao[T]) Insert(ctx context.Context, entity T, opts ...*ddd_repository.SetOptions) error {
+func (u *Dao[T]) Insert(ctx context.Context, entity T, opts ...ddd_repository.Options) error {
 	return u.dao.Insert(ctx, entity, opts...).GetError()
 }
 
-func (u *Dao[T]) InsertMany(ctx context.Context, entity []T, opts ...*ddd_repository.SetOptions) error {
+func (u *Dao[T]) InsertMany(ctx context.Context, entity []T, opts ...ddd_repository.Options) error {
 	return u.dao.InsertMany(ctx, entity, opts...).GetError()
 }
 
-func (u *Dao[T]) Update(ctx context.Context, entity T, opts ...*ddd_repository.SetOptions) error {
+func (u *Dao[T]) Update(ctx context.Context, entity T, opts ...ddd_repository.Options) error {
 	return u.dao.Update(ctx, entity, opts...).GetError()
 }
 
-func (u *Dao[T]) UpdateMany(ctx context.Context, entity []T, opts ...*ddd_repository.SetOptions) error {
+func (u *Dao[T]) UpdateMany(ctx context.Context, entity []T, opts ...ddd_repository.Options) error {
 	return u.dao.UpdateMany(ctx, entity, opts...).GetError()
 }
 
-func (u *Dao[T]) DeleteById(ctx context.Context, tenantId string, id string, opts ...*ddd_repository.SetOptions) error {
+func (u *Dao[T]) DeleteById(ctx context.Context, tenantId string, id string, opts ...ddd_repository.Options) error {
 	return u.dao.DeleteById(ctx, tenantId, id, opts...)
 }
 
-func (u *Dao[T]) DeleteByIds(ctx context.Context, tenantId string, ids []string, opts ...*ddd_repository.SetOptions) error {
+func (u *Dao[T]) DeleteByIds(ctx context.Context, tenantId string, ids []string, opts ...ddd_repository.Options) error {
 	return u.dao.DeleteByIds(ctx, tenantId, ids)
 }
 
-func (u *Dao[T]) DeleteByFilter(ctx context.Context, tenantId string, filter string, opts ...*ddd_repository.SetOptions) error {
+func (u *Dao[T]) DeleteByFilter(ctx context.Context, tenantId string, filter string, opts ...ddd_repository.Options) error {
 	return u.dao.DeleteByFilter(ctx, tenantId, filter, opts...)
 }
 
-func (u *Dao[T]) DeleteAll(ctx context.Context, tenantId string, opts ...*ddd_repository.SetOptions) error {
+func (u *Dao[T]) DeleteAll(ctx context.Context, tenantId string, opts ...ddd_repository.Options) error {
 	return u.dao.DeleteAll(ctx, tenantId, opts...)
 }
 
-func (u *Dao[T]) FindById(ctx context.Context, tenantId string, id string, opts ...*ddd_repository.FindOptions) (T, bool, error) {
+func (u *Dao[T]) FindById(ctx context.Context, tenantId string, id string, opts ...ddd_repository.Options) (T, bool, error) {
 	return u.dao.FindById(ctx, tenantId, id, opts...)
 }
 
-func (u *Dao[T]) FindByIds(ctx context.Context, tenantId string, ids []string, opts ...*ddd_repository.FindOptions) ([]T, bool, error) {
+func (u *Dao[T]) FindByIds(ctx context.Context, tenantId string, ids []string, opts ...ddd_repository.Options) ([]T, bool, error) {
 	return u.dao.FindByIds(ctx, tenantId, ids, opts...)
 }
 
-func (u *Dao[T]) FindAll(ctx context.Context, tenantId string, opts ...*ddd_repository.FindOptions) *ddd_repository.FindListResult[T] {
+func (u *Dao[T]) FindAll(ctx context.Context, tenantId string, opts ...ddd_repository.Options) *ddd_repository.FindListResult[T] {
 	return u.dao.FindAll(ctx, tenantId, opts...)
 }
 
-func (u *Dao[T]) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery, opts ...*ddd_repository.FindOptions) *ddd_repository.FindPagingResult[T] {
+func (u *Dao[T]) FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery, opts ...ddd_repository.Options) *ddd_repository.FindPagingResult[T] {
 	return u.dao.FindPaging(ctx, query, opts...)
 }
 
-func (u *Dao[T]) FindListByMap(ctx context.Context, tenantId string, filterMap map[string]any) *ddd_repository.FindListResult[T] {
-	return u.dao.FindListByMap(ctx, tenantId, filterMap)
+func (u *Dao[T]) FindListByMap(ctx context.Context, tenantId string, filterMap map[string]any, opts ...ddd_repository.Options) *ddd_repository.FindListResult[T] {
+	return u.dao.FindListByMap(ctx, tenantId, filterMap, opts...)
 }
-
 
 type RepositoryOptions struct {
 	driver neo4j.Driver

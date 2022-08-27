@@ -8,33 +8,36 @@ import (
 
 {{if .IsAggregate}}
 type Options interface {
-    Timeout() *int
-	UpdateMask() *[]string
+	GetTimeout() *time.Duration
+	SetTimeout(v *time.Duration) Options
+	GetUpdateFields() *[]string
+	SetUpdateFields(*[]string) Options
+	Merge(opts ...Options) Options
 }
 {{- end }}
 
 type {{.Name}}ViewRepository interface {
-	Create(ctx context.Context, view *view.{{.Name}}View, opt Options) error
-    CreateMany(ctx context.Context, views []*view.{{.Name}}View, opt Options) error
+	Create(ctx context.Context, view *view.{{.Name}}View, opts ...Options) error
+    CreateMany(ctx context.Context, views []*view.{{.Name}}View, opts ...Options) error
 
-	Update(ctx context.Context, view *view.{{.Name}}View, opt Options) error
-    UpdateMany(ctx context.Context, views []*view.{{.Name}}View, opt Options) error
+	Update(ctx context.Context, view *view.{{.Name}}View, opts ...Options) error
+    UpdateMany(ctx context.Context, views []*view.{{.Name}}View, opts ...Options) error
 
-	Delete(ctx context.Context, view *view.{{.Name}}View, opt Options) error
-	DeleteMany(ctx context.Context, tenantId string, views []*view.{{.Name}}View, opt Options) error
-	DeleteById(ctx context.Context, tenantId string, id string, opt Options) error
-	DeleteByIds(ctx context.Context, tenantId string, ids []string, opt Options) error
-	DeleteByFilter(ctx context.Context, tenantId, filter string, opt Options) error
-	DeleteAll(ctx context.Context, tenantId string, opt Options) error
+	Delete(ctx context.Context, view *view.{{.Name}}View, opts ...Options) error
+	DeleteMany(ctx context.Context, tenantId string, views []*view.{{.Name}}View, opts ...Options) error
+	DeleteById(ctx context.Context, tenantId string, id string, opts ...Options) error
+	DeleteByIds(ctx context.Context, tenantId string, ids []string, opts ...Options) error
+	DeleteByFilter(ctx context.Context, tenantId, filter string, opts ...Options) error
+	DeleteAll(ctx context.Context, tenantId string, opts ...Options) error
     {{- if .IsEntity }}
-	DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string, opt Options) error
+	DeleteBy{{.AggregateName}}Id(ctx context.Context, tenantId string, {{.aggregateName}}Id string, opts ...Options) error
 	{{- end}}
 
-	FindById(ctx context.Context, tenantId string, id string, opt Options) (*view.{{.Name}}View, bool, error)
-	FindByIds(ctx context.Context, tenantId string, ids []string, opt Options) ([]*view.{{.Name}}View, bool, error)
-	FindAll(ctx context.Context, tenantId string, opt Options) ([]*view.{{.Name}}View, bool, error)
-	FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery, opt Options) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)
+	FindById(ctx context.Context, tenantId string, id string, opts ...Options) (*view.{{.Name}}View, bool, error)
+	FindByIds(ctx context.Context, tenantId string, ids []string, opts ...Options) ([]*view.{{.Name}}View, bool, error)
+	FindAll(ctx context.Context, tenantId string, opts ...Options) ([]*view.{{.Name}}View, bool, error)
+	FindPaging(ctx context.Context, query ddd_repository.FindPagingQuery, opts ...Options) (*ddd_repository.FindPagingResult[*view.{{.Name}}View], bool, error)
 	{{- if .IsEntity }}
-	FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string,{{.aggregateName}}Id string, opt Options) ([]*view.{{.Name}}View, bool, error)
+	FindBy{{.AggregateName}}Id(ctx context.Context, tenantId string,{{.aggregateName}}Id string, opts ...Options) ([]*view.{{.Name}}View, bool, error)
 	{{- end}}
 }

@@ -7,8 +7,6 @@ import (
 )
 
 func main() {
-    logrus.SetReportCaller(true)
-
 	help := flag.Bool("help", false, "参数提示。")
 	env := flag.String("env", "", "替换配置文件中的env值。")
 	config := flag.String("config", "./config/query-config.yaml", "配置文件。")

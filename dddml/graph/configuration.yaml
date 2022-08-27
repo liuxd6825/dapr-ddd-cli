@@ -15,8 +15,9 @@ configuration:
     c#: "com.liuxu6825.duxm-graph"
     java: "com.liuxu6825.duxm-graph"
   database:
-    mongo: false
+    mongo: true
     neo4j: true
+    mysql: true
   # 上下文中每个实体都需要的保留属性
   defaultReservedProperties:
     aggregate:
