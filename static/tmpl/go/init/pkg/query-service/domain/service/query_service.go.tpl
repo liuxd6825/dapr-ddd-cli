@@ -3,15 +3,16 @@ package service
 import (
 	"context"
 	"{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/query"
-	{{- if .IsAggregate}}
-    "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/repository"
-    {{- end }}
     "{{.Namespace}}/pkg/query-service/domain/{{.aggregate_name}}/view"
 )
 
 {{if .IsAggregate}}
 type Options interface {
-	repository.Options
+	GetTimeout() *time.Duration
+	SetTimeout(v *time.Duration) Options
+	GetUpdateMask() *[]string
+	SetUpdateMask(*[]string) Options
+	Merge(opts ...Options) Options
 }
 {{- end }}
 

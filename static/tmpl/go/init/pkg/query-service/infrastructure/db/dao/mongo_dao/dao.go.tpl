@@ -65,8 +65,8 @@ func (d *Dao[T]) FindById(ctx context.Context, tenantId string, id string, opts 
 	return d.dao.FindById(ctx, tenantId, id, opts...).Result()
 }
 
-func (d *Dao[T]) FindByIds(ctx context.Context, tenantId string, ids []string) ([]T, bool, error) {
-	return d.dao.FindByIds(ctx, tenantId, ids).Result()
+func (d *Dao[T]) FindByIds(ctx context.Context, tenantId string, ids []string, opts ...ddd_repository.Options) ([]T, bool, error) {
+	return d.dao.FindByIds(ctx, tenantId, ids, opts...).Result()
 }
 
 func (d *Dao[T]) FindAll(ctx context.Context, tenantId string, opts ...ddd_repository.Options) *ddd_repository.FindListResult[T] {
